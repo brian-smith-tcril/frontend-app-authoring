@@ -8,21 +8,18 @@ const messages = defineMessages({
   },
   allowDownloadHint: {
     id: 'authoring.pdfEditor.formGroups.downloadOptions.allowDownload.hint',
-    defaultMessage: 'Display a download link to this PDF for convenience. Please note that even if this is disabled, '
-      + 'the embedded PDF viewer may still display its own download button.',
+    defaultMessage: 'Display a download link to this PDF for convenience. Please note that even if this is disabled, ' + 'the embedded PDF viewer may still display its own download button.',
     description: 'Hint for the "Allow Download" setting, which toggles the Download link for a PDF.',
   },
   sourceDocumentButtonTextLabel: {
     id: 'authoring.pdfEditor.formGroups.downloadOptions.sourceDocumentButtonText.label',
     defaultMessage: 'Original File Link Text',
-    description: 'Label for the source document button text setting, which allows the instructor to customize '
-      + 'the text on the source download button for PDFs.',
+    description: 'Label for the source document button text setting, which allows the instructor to customize ' + 'the text on the source download button for PDFs.',
   },
   sourceDocumentButtonTextPlaceholder: {
     id: 'authoring.pdfEditor.formGroups.downloadOptions.sourceDocumentButtonText.placeholder',
     defaultMessage: 'Download the source document',
-    description: 'Placeholder text for the source document button text setting, which allows the instructor to '
-      + 'customize the text on the source download button for PDFs.',
+    description: 'Placeholder text for the source document button text setting, which allows the instructor to ' + 'customize the text on the source download button for PDFs.',
   },
   sourceUrlLabel: {
     id: 'authoring.pdfEditor.formGroups.downloadOptions.sourceUrl.label',

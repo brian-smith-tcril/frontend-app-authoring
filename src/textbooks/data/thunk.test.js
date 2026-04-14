@@ -1,10 +1,5 @@
 import { showToastOutsideReact, closeToastOutsideReact } from '../../generic/toast-context';
-import {
-  fetchTextbooksQuery,
-  createTextbookQuery,
-  editTextbookQuery,
-  deleteTextbookQuery,
-} from './thunk';
+import { fetchTextbooksQuery, createTextbookQuery, editTextbookQuery, deleteTextbookQuery } from './thunk';
 import {
   fetchTextbooks,
   updateLoadingStatus,
@@ -15,9 +10,7 @@ import {
 } from './slice';
 import { RequestStatus } from '../../data/constants';
 import { NOTIFICATION_MESSAGES } from '../../constants';
-import {
-  getTextbooks, createTextbook, editTextbook, deleteTextbook,
-} from './api';
+import { getTextbooks, createTextbook, editTextbook, deleteTextbook } from './api';
 
 jest.mock('../../generic/toast-context', () => ({
   showToastOutsideReact: jest.fn(),

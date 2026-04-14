@@ -30,13 +30,8 @@ export const SubsectionSidebar = () => {
   const { data: subsectionData, isLoading } = useCourseItemData(subsectionId);
   const { data: section } = useCourseItemData<XBlock>(selectedContainerState?.sectionId);
   const { openUnlinkModal } = useCourseAuthoringContext();
-  const {
-    openPublishModal,
-    handleDuplicateSubsectionSubmit,
-    sections,
-    updateSubsectionOrderByIndex,
-    openDeleteModal,
-  } = useCourseOutlineContext();
+  const { openPublishModal, handleDuplicateSubsectionSubmit, sections, updateSubsectionOrderByIndex, openDeleteModal } =
+    useCourseOutlineContext();
   const sectionIndex = sections.findIndex((s) => s.id === selectedContainerState?.sectionId);
 
   const handlePublish = () => {
@@ -51,18 +46,15 @@ export const SubsectionSidebar = () => {
   if (isLoading || !subsectionData) {
     return <Loading />;
   }
-  
+
   // re-create actions object for customizations
   const actions = { ...subsectionData.actions };
   actions.deletable = actions.deletable && !section?.upstreamInfo?.upstreamRef;
   actions.duplicable = actions.duplicable && !section?.upstreamInfo?.upstreamRef;
 
-  const getPossibleMoves = section ? possibleSubsectionMoves(
-    [...sections],
-    sectionIndex ?? -1,
-    section,
-    section.childInfo.children,
-  ) : undefined;
+  const getPossibleMoves = section
+    ? possibleSubsectionMoves([...sections], sectionIndex ?? -1, section, section.childInfo.children)
+    : undefined;
 
   const canMoveSubsection = (oldIndex: number, step: number) => {
     if (getPossibleMoves && section) {
@@ -82,23 +74,27 @@ export const SubsectionSidebar = () => {
         // A subsection can move to a different section (cross-section move)
         const isCrossSection = newSectionId !== section.id;
         // istanbul ignore next
-        const newSectionIndex = isCrossSection
-          ? sections.findIndex((s) => s.id === newSectionId)
-          : sectionIndex;
+        const newSectionIndex = isCrossSection ? sections.findIndex((s) => s.id === newSectionId) : sectionIndex;
         // Cross-section up: goes to end of previous section; cross-section down: goes to start of next section
         // istanbul ignore next
         const newIndex = isCrossSection
-          ? (step === -1 ? sections[newSectionIndex].childInfo.children.length : 0)
+          ? step === -1
+            ? sections[newSectionIndex].childInfo.children.length
+            : 0
           : index + step;
         // istanbul ignore next
-        setSelectedContainerState(selectedContainerState ? {
-          ...selectedContainerState,
-          sectionId: newSectionId,
-          index: newIndex,
-        } : undefined);
+        setSelectedContainerState(
+          selectedContainerState
+            ? {
+                ...selectedContainerState,
+                sectionId: newSectionId,
+                index: newIndex,
+              }
+            : undefined
+        );
       }
     }
-  }
+  };
 
   return (
     <>
@@ -114,10 +110,11 @@ export const SubsectionSidebar = () => {
           onClickDuplicate: handleDuplicateSubsectionSubmit,
           onClickMoveUp: () => handleMove(-1),
           onClickMoveDown: () => handleMove(1),
-          onClickUnlink: () => openUnlinkModal({
-            value: subsectionData,
-            sectionId: selectedContainerState?.sectionId,
-          }),
+          onClickUnlink: () =>
+            openUnlinkModal({
+              value: subsectionData,
+              sectionId: selectedContainerState?.sectionId,
+            }),
           onClickDelete: openDeleteModal,
           onClickViewLibrary: () => {
             const upstreamRef = subsectionData?.upstreamInfo?.upstreamRef;

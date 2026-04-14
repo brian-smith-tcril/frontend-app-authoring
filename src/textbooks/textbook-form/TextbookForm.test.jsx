@@ -1,7 +1,4 @@
-import {
-  initializeMocks,
-  render, waitFor, within,
-} from '@src/testUtils';
+import { initializeMocks, render, waitFor, within } from '@src/testUtils';
 import userEvent from '@testing-library/user-event';
 
 import { executeThunk } from '@src/utils';
@@ -21,16 +18,17 @@ const initialFormValuesMock = getTextbookFormInitialValues();
 const onSubmitMock = jest.fn();
 const onSavingStatus = jest.fn();
 
-const renderComponent = () => render(
-  <CourseAuthoringProvider>
-    <TextbookForm
-      closeTextbookForm={closeTextbookFormMock}
-      initialFormValues={initialFormValuesMock}
-      onSubmit={onSubmitMock}
-      onSavingStatus={onSavingStatus}
-    />
-  </CourseAuthoringProvider>,
-);
+const renderComponent = () =>
+  render(
+    <CourseAuthoringProvider>
+      <TextbookForm
+        closeTextbookForm={closeTextbookFormMock}
+        initialFormValues={initialFormValuesMock}
+        onSubmit={onSubmitMock}
+        onSavingStatus={onSavingStatus}
+      />
+    </CourseAuthoringProvider>
+  );
 
 describe('<TextbookForm />', () => {
   beforeEach(async () => {
@@ -41,9 +39,7 @@ describe('<TextbookForm />', () => {
   });
 
   it('renders TextbooksForm component correctly', async () => {
-    const {
-      getByText, getByRole, getByPlaceholderText, getByTestId,
-    } = renderComponent();
+    const { getByText, getByRole, getByPlaceholderText, getByTestId } = renderComponent();
 
     await waitFor(() => {
       expect(getByText(`${messages.tabTitleLabel.defaultMessage} *`)).toBeInTheDocument();
@@ -51,9 +47,11 @@ describe('<TextbookForm />', () => {
       expect(getByText(messages.tabTitleHelperText.defaultMessage)).toBeInTheDocument();
 
       expect(getByText(`${messages.chapterTitleLabel.defaultMessage} *`)).toBeInTheDocument();
-      expect(getByPlaceholderText(
-        messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', initialFormValuesMock.chapters.length),
-      )).toBeInTheDocument();
+      expect(
+        getByPlaceholderText(
+          messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', initialFormValuesMock.chapters.length)
+        )
+      ).toBeInTheDocument();
       expect(getByText(messages.chapterTitleHelperText.defaultMessage)).toBeInTheDocument();
 
       expect(getByText(`${messages.chapterUrlLabel.defaultMessage} *`)).toBeInTheDocument();
@@ -75,7 +73,7 @@ describe('<TextbookForm />', () => {
 
     const tabTitleInput = getByPlaceholderText(messages.tabTitlePlaceholder.defaultMessage);
     const chapterInput = getByPlaceholderText(
-      messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', initialFormValuesMock.chapters.length),
+      messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', initialFormValuesMock.chapters.length)
     );
     const urlInput = getByPlaceholderText(messages.chapterUrlPlaceholder.defaultMessage);
 
@@ -99,13 +97,11 @@ describe('<TextbookForm />', () => {
       expect(onSubmitMock).toHaveBeenCalledTimes(1);
       expect(onSubmitMock).toHaveBeenCalledWith(
         formValues,
-        expect.objectContaining({ submitForm: expect.any(Function) }),
+        expect.objectContaining({ submitForm: expect.any(Function) })
       );
     });
 
-    axiosMock
-      .onPost(getUpdateTextbooksApiUrl(courseId))
-      .reply(200);
+    axiosMock.onPost(getUpdateTextbooksApiUrl(courseId)).reply(200);
 
     await executeThunk(createTextbookQuery(courseId, formValues), store.dispatch);
   });

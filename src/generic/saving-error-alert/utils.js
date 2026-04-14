@@ -17,7 +17,7 @@ const handleResponseErrors = (error, dispatch, savingStatusFunction) => {
     savingStatusFunction({
       status: RequestStatus.FAILED,
       errorMessage,
-    }),
+    })
   );
   return false;
 };

@@ -12,8 +12,8 @@ import messages from './messages';
 declare type UploadForm = FormikConfig<{ url: string }>;
 
 declare interface RenderOpts {
-  props: UploadWidgetProps,
-  formikProps: UploadForm,
+  props: UploadWidgetProps;
+  formikProps: UploadForm;
 }
 
 const defaultProps: (overrides?: Partial<UploadWidgetProps>) => UploadWidgetProps = (overrides) => ({
@@ -32,12 +32,13 @@ const defaultFormikProps: (overrides?: Partial<UploadForm>) => UploadForm = (ove
   ...overrides,
 });
 
-const renderWidget = ({ props, formikProps }: RenderOpts) => editorRender(
-  <Formik {...formikProps}>
-    <UploadWidget {...props} />
-  </Formik>,
-  { initialState: { app: { studioEndpointUrl: 'https://studio.local' } } },
-);
+const renderWidget = ({ props, formikProps }: RenderOpts) =>
+  editorRender(
+    <Formik {...formikProps}>
+      <UploadWidget {...props} />
+    </Formik>,
+    { initialState: { app: { studioEndpointUrl: 'https://studio.local' } } }
+  );
 
 describe('UploadWidget', () => {
   let axiosMock: MockAdapter;
@@ -50,14 +51,14 @@ describe('UploadWidget', () => {
   });
   it('handles a file upload in a course.', async () => {
     const user = userEvent.setup();
-    axiosMock.onPost('https://studio.local/assets/course-v1:Org+COURSE+RUN/').withDelayInMs(1000).reply(
-      201,
-      {
+    axiosMock
+      .onPost('https://studio.local/assets/course-v1:Org+COURSE+RUN/')
+      .withDelayInMs(1000)
+      .reply(201, {
         asset: {
           external_url: 'https://studio.local/asset-v1:course-v1:Org+COURSE+RUN+type@asset+block@my-saved-pdf.pdf',
         },
-      },
-    );
+      });
     const screen = renderWidget({ props: defaultProps(), formikProps: defaultFormikProps() });
     const dropdown = screen.getByLabelText(messages.actionsDropdown.defaultMessage);
     screen.getByText(messages.courseFileHint.defaultMessage);
@@ -72,12 +73,12 @@ describe('UploadWidget', () => {
   });
   it('handles a file upload in a library.', async () => {
     const user = userEvent.setup();
-    axiosMock.onPut('http://localhost:18010/api/libraries/v2/blocks/pdf-block/assets/static/my-test-pdf.pdf').withDelayInMs(1000).reply(
-      201,
-      {
+    axiosMock
+      .onPut('http://localhost:18010/api/libraries/v2/blocks/pdf-block/assets/static/my-test-pdf.pdf')
+      .withDelayInMs(1000)
+      .reply(201, {
         path: '/static/my-saved-pdf.pdf',
-      },
-    );
+      });
     const screen = renderWidget({ props: defaultProps({ isLibrary: true }), formikProps: defaultFormikProps() });
     const dropdown = screen.getByLabelText(messages.actionsDropdown.defaultMessage);
     screen.getByText(messages.libraryFileHint.defaultMessage);

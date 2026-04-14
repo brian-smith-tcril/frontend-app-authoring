@@ -12,10 +12,7 @@ import useLayout from './hooks/useLayout';
 const MainLayout = ({ courseId, showHeaderButtons, children }) => {
   const intl = useIntl();
 
-  const {
-    errorMessage,
-    savingStatus,
-  } = useLayout();
+  const { errorMessage, savingStatus } = useLayout();
 
   return (
     <>
@@ -36,9 +33,7 @@ const MainLayout = ({ courseId, showHeaderButtons, children }) => {
             xl={[{ span: 9 }, { span: 3 }]}
           >
             <Layout.Element>
-              <article role="main">
-                {children}
-              </article>
+              <article role="main">{children}</article>
             </Layout.Element>
             <Layout.Element>
               <CertificatesSidebar courseId={courseId} />
@@ -47,10 +42,7 @@ const MainLayout = ({ courseId, showHeaderButtons, children }) => {
         </section>
       </Container>
       <div className="certificates alert-toast">
-        <SavingErrorAlert
-          savingStatus={savingStatus}
-          errorMessage={errorMessage}
-        />
+        <SavingErrorAlert savingStatus={savingStatus} errorMessage={errorMessage} />
       </div>
     </>
   );

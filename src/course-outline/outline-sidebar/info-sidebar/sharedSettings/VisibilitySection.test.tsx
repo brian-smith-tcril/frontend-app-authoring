@@ -1,6 +1,4 @@
-import {
-  initializeMocks, render, screen, waitFor,
-} from '@src/testUtils';
+import { initializeMocks, render, screen, waitFor } from '@src/testUtils';
 import userEvent from '@testing-library/user-event';
 import { useCourseItemData } from '@src/course-outline/data/apiHooks';
 import { VisibilityTypes } from '@src/data/constants';

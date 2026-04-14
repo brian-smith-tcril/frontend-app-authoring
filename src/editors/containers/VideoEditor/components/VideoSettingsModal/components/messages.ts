@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   validateErrorTitle: {
     id: 'authoring.videoeditor.validate.error.title',
-    defaultMessage: 'We couldn\'t add your video.',
+    defaultMessage: "We couldn't add your video.",
     description: 'Title of validation error.',
   },
   validateErrorBody: {

@@ -1,6 +1,4 @@
-import {
-  render, waitFor, within, initializeMocks,
-} from '@src/testUtils';
+import { render, waitFor, within, initializeMocks } from '@src/testUtils';
 import userEvent from '@testing-library/user-event';
 
 import { CourseAuthoringProvider } from '@src/CourseAuthoringContext';
@@ -21,17 +19,19 @@ const onEditSubmitMock = jest.fn();
 const onDeleteSubmitMock = jest.fn();
 const handleSavingStatusDispatchMock = jest.fn();
 
-const renderComponent = () => render(
-  <CourseAuthoringProvider courseId={courseId}>
-    <TextbookCard
-      textbook={textbook}
-      courseId={courseId}
-      onEditSubmit={onEditSubmitMock}
-      onDeleteSubmit={onDeleteSubmitMock}
-      handleSavingStatusDispatch={handleSavingStatusDispatchMock}
-    />,
-  </CourseAuthoringProvider>,
-);
+const renderComponent = () =>
+  render(
+    <CourseAuthoringProvider courseId={courseId}>
+      <TextbookCard
+        textbook={textbook}
+        courseId={courseId}
+        onEditSubmit={onEditSubmitMock}
+        onDeleteSubmit={onDeleteSubmitMock}
+        handleSavingStatusDispatch={handleSavingStatusDispatchMock}
+      />
+      ,
+    </CourseAuthoringProvider>
+  );
 
 describe('<TextbookCard />', () => {
   let user;
@@ -95,7 +95,7 @@ describe('<TextbookCard />', () => {
 
     const tabTitleInput = getByPlaceholderText(messages.tabTitlePlaceholder.defaultMessage);
     const chapterInput = getByPlaceholderText(
-      messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', textbooksMock.textbooks[1].chapters.length),
+      messages.chapterTitlePlaceholder.defaultMessage.replace('{value}', textbooksMock.textbooks[1].chapters.length)
     );
     const urlInput = getByPlaceholderText(messages.chapterUrlPlaceholder.defaultMessage);
 
@@ -123,13 +123,11 @@ describe('<TextbookCard />', () => {
       expect(onEditSubmitMock).toHaveBeenCalledTimes(1);
       expect(onEditSubmitMock).toHaveBeenCalledWith(
         newFormValues,
-        expect.objectContaining({ submitForm: expect.any(Function) }),
+        expect.objectContaining({ submitForm: expect.any(Function) })
       );
     });
 
-    axiosMock
-      .onPost(getEditTextbooksApiUrl(courseId, textbooksMock.textbooks[1].id))
-      .reply(200);
+    axiosMock.onPost(getEditTextbooksApiUrl(courseId, textbooksMock.textbooks[1].id)).reply(200);
 
     await executeThunk(editTextbookQuery(courseId, newFormValues), store.dispatch);
   });
@@ -143,11 +141,12 @@ describe('<TextbookCard />', () => {
     await waitFor(() => {
       const deleteModal = getByRole('dialog');
 
-      const modalTitle = within(deleteModal)
-        .getByText(textbookCardMessages.deleteModalTitle.defaultMessage
-          .replace('{textbookTitle}', textbook.tabTitle));
-      const modalDescription = within(deleteModal)
-        .getByText(textbookCardMessages.deleteModalDescription.defaultMessage);
+      const modalTitle = within(deleteModal).getByText(
+        textbookCardMessages.deleteModalTitle.defaultMessage.replace('{textbookTitle}', textbook.tabTitle)
+      );
+      const modalDescription = within(deleteModal).getByText(
+        textbookCardMessages.deleteModalDescription.defaultMessage
+      );
 
       expect(modalTitle).toBeInTheDocument();
       expect(modalDescription).toBeInTheDocument();
@@ -163,17 +162,14 @@ describe('<TextbookCard />', () => {
     await waitFor(async () => {
       const deleteModal = getByRole('dialog');
 
-      const modalSubmitButton = within(deleteModal)
-        .getByRole('button', { name: 'Delete' });
+      const modalSubmitButton = within(deleteModal).getByRole('button', { name: 'Delete' });
 
       await user.click(modalSubmitButton);
 
       const textbookId = textbooksMock.textbooks[1].id;
 
       expect(onDeleteSubmitMock).toHaveBeenCalledTimes(1);
-      axiosMock
-        .onDelete(getEditTextbooksApiUrl(courseId, textbookId))
-        .reply(200);
+      axiosMock.onDelete(getEditTextbooksApiUrl(courseId, textbookId)).reply(200);
 
       await executeThunk(deleteTextbookQuery(courseId, textbookId), store.dispatch);
     });

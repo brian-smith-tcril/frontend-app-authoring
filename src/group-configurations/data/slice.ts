@@ -17,7 +17,7 @@ const slice = createSlice({
     },
     updateGroupConfigurationsSuccess: (state, { payload }) => {
       const groupIndex = state.groupConfigurations.allGroupConfigurations.findIndex(
-        group => payload.data.id === group.id,
+        (group) => payload.data.id === group.id
       );
 
       if (groupIndex !== -1) {
@@ -27,11 +27,13 @@ const slice = createSlice({
     deleteGroupConfigurationsSuccess: (state, { payload }) => {
       const { parentGroupId, groupId } = payload;
       const parentGroupIndex = state.groupConfigurations.allGroupConfigurations.findIndex(
-        group => parentGroupId === group.id,
+        (group) => parentGroupId === group.id
       );
       if (parentGroupIndex !== -1) {
-        state.groupConfigurations.allGroupConfigurations[parentGroupIndex].groups = state
-          .groupConfigurations.allGroupConfigurations[parentGroupIndex].groups.filter(group => group.id !== groupId);
+        state.groupConfigurations.allGroupConfigurations[parentGroupIndex].groups =
+          state.groupConfigurations.allGroupConfigurations[parentGroupIndex].groups.filter(
+            (group) => group.id !== groupId
+          );
       }
     },
     updateLoadingStatus: (state, { payload }) => {
@@ -45,23 +47,18 @@ const slice = createSlice({
     updateExperimentConfigurationSuccess: (state, { payload }) => {
       const { configuration } = payload;
       const experimentConfigurationState = state.groupConfigurations.experimentGroupConfigurations;
-      const configurationIdx = experimentConfigurationState.findIndex(
-        (conf) => configuration.id === conf.id,
-      );
+      const configurationIdx = experimentConfigurationState.findIndex((conf) => configuration.id === conf.id);
 
       if (configurationIdx !== -1) {
         experimentConfigurationState[configurationIdx] = configuration;
       } else {
-        state.groupConfigurations.experimentGroupConfigurations = [
-          ...experimentConfigurationState,
-          configuration,
-        ];
+        state.groupConfigurations.experimentGroupConfigurations = [...experimentConfigurationState, configuration];
       }
     },
     deleteExperimentConfigurationSuccess: (state, { payload }) => {
       const { configurationId } = payload;
       const filteredGroups = state.groupConfigurations.experimentGroupConfigurations.filter(
-        (configuration) => configuration.id !== configurationId,
+        (configuration) => configuration.id !== configurationId
       );
       state.groupConfigurations.experimentGroupConfigurations = filteredGroups;
     },

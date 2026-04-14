@@ -1,10 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  initializeMocks,
-  within,
-} from '../../testUtils';
+import { fireEvent, render, screen, initializeMocks, within } from '../../testUtils';
 
 import CompareChangesWidget from './CompareChangesWidget';
 
@@ -28,7 +22,7 @@ describe('<CompareChangesWidget />', () => {
     expect(newIframe).toBeVisible();
     expect(newIframe).toHaveAttribute(
       'src',
-      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=draft`,
+      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=draft`
     );
 
     // Now switch to the "old version" tab:
@@ -41,7 +35,7 @@ describe('<CompareChangesWidget />', () => {
     expect(oldIframe).toBeVisible();
     expect(oldIframe).toHaveAttribute(
       'src',
-      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=published`,
+      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=published`
     );
   });
 
@@ -58,7 +52,7 @@ describe('<CompareChangesWidget />', () => {
     expect(newIframe).toBeVisible();
     expect(newIframe).toHaveAttribute(
       'src',
-      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=published`,
+      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=published`
     );
 
     // Now switch to the "old version" tab:
@@ -71,7 +65,7 @@ describe('<CompareChangesWidget />', () => {
     expect(oldIframe).toBeVisible();
     expect(oldIframe).toHaveAttribute(
       'src',
-      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=7`,
+      `http://localhost:18010/xblocks/v2/${usageKey}/embed/student_view/?version=7`
     );
   });
 });

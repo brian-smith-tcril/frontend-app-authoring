@@ -27,13 +27,8 @@ export const SectionSidebar = () => {
   const { sectionId = '', index } = selectedContainerState ?? {};
   const { data: sectionData, isLoading } = useCourseItemData(sectionId);
   const { openUnlinkModal } = useCourseAuthoringContext();
-  const {
-    openPublishModal,
-    handleDuplicateSectionSubmit,
-    sections,
-    updateSectionOrderByIndex,
-    openDeleteModal,
-  } = useCourseOutlineContext();
+  const { openPublishModal, handleDuplicateSectionSubmit, sections, updateSectionOrderByIndex, openDeleteModal } =
+    useCourseOutlineContext();
 
   const handlePublish = () => {
     if (sectionData?.hasChanges) {
@@ -51,7 +46,9 @@ export const SectionSidebar = () => {
   const handleMove = (step: number) => {
     if (index !== undefined) {
       updateSectionOrderByIndex(index, index + step);
-      setSelectedContainerState(selectedContainerState ? { ...selectedContainerState, index: index + step } : undefined);
+      setSelectedContainerState(
+        selectedContainerState ? { ...selectedContainerState, index: index + step } : undefined
+      );
     }
   };
 
@@ -92,10 +89,7 @@ export const SectionSidebar = () => {
         <Tab eventKey="info" title={intl.formatMessage(messages.infoTabText)}>
           <InfoSection itemId={sectionId} />
         </Tab>
-        <Tab
-          eventKey="settings"
-          title={intl.formatMessage(messages.settingsTabText)}
-        >
+        <Tab eventKey="settings" title={intl.formatMessage(messages.settingsTabText)}>
           <SectionSettings key={sectionId} sectionId={sectionId} />
         </Tab>
       </Tabs>

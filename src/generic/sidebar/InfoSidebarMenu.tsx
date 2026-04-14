@@ -1,7 +1,5 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Dropdown, Icon, IconButton, Stack,
-} from '@openedx/paragon';
+import { Dropdown, Icon, IconButton, Stack } from '@openedx/paragon';
 import {
   ArrowDownward,
   ArrowOutward,
@@ -55,21 +53,14 @@ export const InfoSidebarMenu = (props: InfoSidebarMenuProps) => {
     return null;
   }
 
-  const { upstreamInfo } = item;  
+  const { upstreamInfo } = item;
 
   return (
     <Dropdown>
-      <Dropdown.Toggle
-        as={IconButton}
-        iconAs={Icon}
-        src={MoreVert}
-        alt={intl.formatMessage(messages.itemMenuAlt)}
-      />
+      <Dropdown.Toggle as={IconButton} iconAs={Icon} src={MoreVert} alt={intl.formatMessage(messages.itemMenuAlt)} />
       <Dropdown.Menu>
         {actions?.duplicable && onClickDuplicate && (
-          <Dropdown.Item
-            onClick={onClickDuplicate}
-          >
+          <Dropdown.Item onClick={onClickDuplicate}>
             <Stack direction="horizontal" gap={2}>
               <Icon src={ContentCopy} />
               {intl.formatMessage(messages.menuDuplicate)}
@@ -102,19 +93,13 @@ export const InfoSidebarMenu = (props: InfoSidebarMenuProps) => {
         )}
         {actions?.draggable && onClickMoveUp && onClickMoveDown && canMoveItem && (
           <>
-            <Dropdown.Item
-              onClick={onClickMoveUp}
-              disabled={!canMoveItem(index, -1)}
-            >
+            <Dropdown.Item onClick={onClickMoveUp} disabled={!canMoveItem(index, -1)}>
               <Stack direction="horizontal" gap={2}>
                 <Icon src={ArrowUpward} />
                 {intl.formatMessage(messages.menuMoveUp)}
               </Stack>
             </Dropdown.Item>
-            <Dropdown.Item
-              onClick={onClickMoveDown}
-              disabled={!canMoveItem(index, 1)}
-            >
+            <Dropdown.Item onClick={onClickMoveDown} disabled={!canMoveItem(index, 1)}>
               <Stack direction="horizontal" gap={2}>
                 <Icon src={ArrowDownward} />
                 {intl.formatMessage(messages.menuMoveDown)}
@@ -123,9 +108,7 @@ export const InfoSidebarMenu = (props: InfoSidebarMenuProps) => {
           </>
         )}
         {upstreamInfo?.upstreamRef && (
-          <Dropdown.Item
-            onClick={onClickViewLibrary}
-          >
+          <Dropdown.Item onClick={onClickViewLibrary}>
             <Stack direction="horizontal" gap={2}>
               <Icon src={Newsstand} />
               {intl.formatMessage(messages.menuViewLibrary)}
@@ -146,10 +129,7 @@ export const InfoSidebarMenu = (props: InfoSidebarMenuProps) => {
           </Dropdown.Item>
         )}
         {actions?.deletable && (
-          <Dropdown.Item
-            onClick={onClickDelete}
-            className="text-danger-700"
-          >
+          <Dropdown.Item onClick={onClickDelete} className="text-danger-700">
             <Stack direction="horizontal" gap={2}>
               <Icon src={Delete} />
               {intl.formatMessage(messages.menuDelete)}

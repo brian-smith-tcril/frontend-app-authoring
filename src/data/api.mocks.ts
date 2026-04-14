@@ -178,11 +178,12 @@ mockGetMigrationStatus.migrationStatusInProgressData = {
     },
   ],
 } as api.MigrateTaskStatusData;
-mockGetMigrationStatus.applyMock = () => jest.spyOn(api, 'getModulestoreMigrationStatus').mockImplementation(mockGetMigrationStatus);
+mockGetMigrationStatus.applyMock = () =>
+  jest.spyOn(api, 'getModulestoreMigrationStatus').mockImplementation(mockGetMigrationStatus);
 
 export async function mockGetPreviewModulestoreMigration(
   _: string,
-  sourceKey: string,
+  sourceKey: string
 ): Promise<api.PreviewMigrationInfo> {
   switch (sourceKey) {
     case mockGetPreviewModulestoreMigration.sourceKeyGood:
@@ -235,4 +236,5 @@ mockGetPreviewModulestoreMigration.blockLimitData = {
   units: 5,
 } as api.PreviewMigrationInfo;
 mockGetPreviewModulestoreMigration.sourceKeyBlockLoading = 'course-v1:HarvardX+4+2023';
-mockGetPreviewModulestoreMigration.applyMock = () => jest.spyOn(api, 'getPreviewModulestoreMigration').mockImplementation(mockGetPreviewModulestoreMigration);
+mockGetPreviewModulestoreMigration.applyMock = () =>
+  jest.spyOn(api, 'getPreviewModulestoreMigration').mockImplementation(mockGetPreviewModulestoreMigration);

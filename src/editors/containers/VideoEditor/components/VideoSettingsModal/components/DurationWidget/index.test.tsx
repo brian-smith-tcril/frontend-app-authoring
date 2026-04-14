@@ -33,7 +33,7 @@ describe('DurationWidget', () => {
     });
     test('duration from video.duration', () => {
       expect(
-        mapStateToProps(testState).duration,
+        mapStateToProps(testState).duration
         // @ts-expect-error: test override for selector
       ).toEqual(selectors.video.duration(testState));
     });

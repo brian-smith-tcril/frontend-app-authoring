@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  screen, fireEvent, initializeMocks,
-} from '@src/testUtils';
+import { screen, fireEvent, initializeMocks } from '@src/testUtils';
 import { editorRender } from '@src/editors/editorTestRender';
 import SelectTypeWrapper from './index';
 import * as hooks from '../hooks';
@@ -17,7 +15,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="foo" onClose={mockOnClose}>
         <div>Child Content</div>
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     expect(screen.getByText('Child Content')).toBeInTheDocument();
   });
@@ -26,7 +24,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="foo" onClose={mockOnClose}>
         <div />
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     fireEvent.click(screen.getByLabelText('Exit the editor'));
     expect(mockOnClose).toHaveBeenCalled();
@@ -36,7 +34,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="foo" onClose={mockOnClose}>
         <div />
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     expect(mockOnClose).toHaveBeenCalled();
@@ -49,7 +47,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="foo" onClose={mockOnClose}>
         <div />
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     fireEvent.click(screen.getByRole('button', { name: 'Select' }));
     expect(hooks.onSelect).toHaveBeenCalledWith(
@@ -58,7 +56,7 @@ describe('SelectTypeWrapper', () => {
         updateField: expect.any(Function),
         setBlockTitle: expect.any(Function),
         defaultSettings: expect.any(Object),
-      }),
+      })
     );
     expect(onSelectMock).toHaveBeenCalled();
   });
@@ -67,7 +65,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="" onClose={mockOnClose}>
         <div />
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     const selectBtn = screen.getByRole('button', { name: 'Select' });
     expect(selectBtn).toBeDisabled();
@@ -77,7 +75,7 @@ describe('SelectTypeWrapper', () => {
     editorRender(
       <SelectTypeWrapper selected="bar" onClose={mockOnClose}>
         <div />
-      </SelectTypeWrapper>,
+      </SelectTypeWrapper>
     );
     const selectBtn = screen.getByRole('button', { name: 'Select' });
     expect(selectBtn).not.toBeDisabled();

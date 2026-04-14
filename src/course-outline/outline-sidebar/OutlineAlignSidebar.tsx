@@ -30,7 +30,7 @@ export const OutlineAlignSidebar = () => {
           : contentData?.courseDisplayNameWithDefault || ''
       }
       contentId={sidebarContentId}
-      onBackBtnClick={(sidebarContentId !== courseId) ? handleBack : undefined}
+      onBackBtnClick={sidebarContentId !== courseId ? handleBack : undefined}
     />
   );
 };

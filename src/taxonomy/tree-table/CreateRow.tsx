@@ -105,17 +105,10 @@ const DraftRow: React.FC<DraftRowProps> = ({
           />
         </div>
       </td>
-      <td
-        colSpan={Math.max(columns.length - 1, 1)}
-        className="tree-table-create-row-actions-cell p-2 align-top"
-      >
+      <td colSpan={Math.max(columns.length - 1, 1)} className="tree-table-create-row-actions-cell p-2 align-top">
         <span className="d-flex justify-content-end">
           <span className="mr-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onCancel}
-            >
+            <Button variant="secondary" size="sm" onClick={onCancel}>
               {intl.formatMessage(messages.cancelButtonLabel)}
             </Button>
           </span>

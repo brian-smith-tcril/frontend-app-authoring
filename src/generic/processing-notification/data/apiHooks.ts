@@ -11,7 +11,9 @@ export const useMutationWithProcessingNotification = <
   TError = DefaultError,
   TVariables = void,
   TOnMutateResult = unknown,
->(...args: Parameters<typeof useMutation<TData, TError, TVariables, TOnMutateResult>>) => {
+>(
+  ...args: Parameters<typeof useMutation<TData, TError, TVariables, TOnMutateResult>>
+) => {
   const { showToast, closeToast } = useToastContext();
   const originalOptions = args[0] || {};
   return useMutation({

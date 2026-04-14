@@ -2,12 +2,7 @@ import React from 'react';
 import type MockAdapter from 'axios-mock-adapter';
 import userEvent from '@testing-library/user-event';
 
-import {
-  initializeMocks,
-  render,
-  screen,
-  waitFor,
-} from '@src/testUtils';
+import { initializeMocks, render, screen, waitFor } from '@src/testUtils';
 import studioHomeMock from '@src/studio-home/__mocks__/studioHomeMock';
 import { getStudioHomeApiUrl } from '@src/studio-home/data/api';
 import { getApiWaffleFlagsUrl } from '@src/data/api';
@@ -34,9 +29,7 @@ jest.mock('@src/generic/data/apiHooks', () => ({
 describe('<CreateLegacyLibrary />', () => {
   beforeEach(() => {
     axiosMock = initializeMocks().axiosMock;
-    axiosMock
-      .onGet(getApiWaffleFlagsUrl(undefined))
-      .reply(200, {});
+    axiosMock.onGet(getApiWaffleFlagsUrl(undefined)).reply(200, {});
     Object.defineProperty(window, 'location', {
       value: { assign: jest.fn() },
     });
@@ -75,7 +68,7 @@ describe('<CreateLegacyLibrary />', () => {
     await waitFor(() => {
       expect(axiosMock.history.post.length).toBe(1);
       expect(axiosMock.history.post[0].data).toBe(
-        '{"display_name":"Test Library Name","org":"org1","number":"test_library_slug"}',
+        '{"display_name":"Test Library Name","org":"org1","number":"test_library_slug"}'
       );
       expect(window.location.assign).toHaveBeenCalledWith('http://localhost:18010/library/library-id');
     });
@@ -152,7 +145,7 @@ describe('<CreateLegacyLibrary />', () => {
     await waitFor(() => {
       expect(axiosMock.history.post.length).toBe(1);
       expect(axiosMock.history.post[0].data).toBe(
-        '{"display_name":"Test Library Name","org":"NewOrg","number":"test_library_slug"}',
+        '{"display_name":"Test Library Name","org":"NewOrg","number":"test_library_slug"}'
       );
       expect(window.location.assign).toHaveBeenCalledWith('http://localhost:18010/library/library-id');
     });
@@ -183,7 +176,7 @@ describe('<CreateLegacyLibrary />', () => {
     await waitFor(async () => {
       expect(axiosMock.history.post.length).toBe(1);
       expect(axiosMock.history.post[0].data).toBe(
-        '{"display_name":"Test Library Name","org":"org1","number":"test_library_slug"}',
+        '{"display_name":"Test Library Name","org":"org1","number":"test_library_slug"}'
       );
       expect(mockNavigate).not.toHaveBeenCalled();
     });

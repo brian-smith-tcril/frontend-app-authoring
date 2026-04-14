@@ -1,7 +1,6 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
-
   advanceProblemButtonLabel: {
     id: 'authoring.problemEditor.problemSelect.advanceButton.label',
     defaultMessage: 'Advanced problem types',
@@ -119,7 +118,7 @@ const messages = defineMessages({
   problemSupportStatus: {
     id: 'authoring.problemEditor.advanceProblem.supportStatus',
     defaultMessage: '{supportStatus}',
-    description: 'Text for advance problem type\'s support status',
+    description: "Text for advance problem type's support status",
   },
   supportStatusTooltipMessage: {
     id: 'authoring.problemEditor.advanceProblem.supportStatus.tooltipMessage',

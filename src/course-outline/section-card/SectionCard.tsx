@@ -1,9 +1,5 @@
-import {
-  useContext, useEffect, useState, useRef, useCallback, ReactNode, useMemo,
-} from 'react';
-import {
-  Bubble, Button, useToggle,
-} from '@openedx/paragon';
+import { useContext, useEffect, useState, useRef, useCallback, ReactNode, useMemo } from 'react';
+import { Bubble, Button, useToggle } from '@openedx/paragon';
 import { useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useQueryClient } from '@tanstack/react-query';
@@ -29,18 +25,18 @@ import { handleResponseErrors } from '@src/generic/saving-error-alert';
 import messages from './messages';
 
 interface SectionCardProps {
-  section: XBlock,
-  isSelfPaced: boolean,
-  isCustomRelativeDatesActive: boolean,
-  children: ReactNode,
-  onOpenHighlightsModal: (section: XBlock) => void,
-  onOpenConfigureModal: () => void,
-  onOpenDeleteModal: () => void,
-  onDuplicateSubmit: () => void,
-  isSectionsExpanded: boolean,
-  index: number,
-  canMoveItem: (oldIndex: number, newIndex: number) => boolean,
-  onOrderChange: (oldIndex: number, newIndex: number) => void,
+  section: XBlock;
+  isSelfPaced: boolean;
+  isCustomRelativeDatesActive: boolean;
+  children: ReactNode;
+  onOpenHighlightsModal: (section: XBlock) => void;
+  onOpenConfigureModal: () => void;
+  onOpenDeleteModal: () => void;
+  onDuplicateSubmit: () => void;
+  isSectionsExpanded: boolean;
+  index: number;
+  canMoveItem: (oldIndex: number, newIndex: number) => boolean;
+  onOrderChange: (oldIndex: number, newIndex: number) => void;
 }
 
 const SectionCard = ({
@@ -108,10 +104,12 @@ const SectionCard = ({
   useEffect(() => {
     // istanbul ignore if
     if (moment(initialData.editedOnRaw).isAfter(moment(section.editedOnRaw))) {
-      queryClient.cancelQueries({
-        queryKey: courseOutlineQueryKeys.courseItemId(initialData.id),
-      // eslint-disable-next-line no-console
-      }).catch((error) => console.error('Error cancelling query:', error));
+      queryClient
+        .cancelQueries({
+          queryKey: courseOutlineQueryKeys.courseItemId(initialData.id),
+          // eslint-disable-next-line no-console
+        })
+        .catch((error) => console.error('Error cancelling query:', error));
       queryClient.setQueryData(courseOutlineQueryKeys.courseItemId(initialData.id), initialData);
     }
   }, [initialData, section]);
@@ -229,25 +227,22 @@ const SectionCard = ({
       isExpanded={isExpanded}
       onTitleClick={handleExpandContent}
       namePrefix={namePrefix}
-      prefixIcon={(
-        <UpstreamInfoIcon
-          upstreamInfo={upstreamInfo}
-          size="md"
-          openSyncModal={openSyncModal}
-        />
-      )}
+      prefixIcon={<UpstreamInfoIcon upstreamInfo={upstreamInfo} size="md" openSyncModal={openSyncModal} />}
     />
   );
 
   const isDraggable = actions.draggable && (actions.allowMoveUp || actions.allowMoveDown);
 
-  const onClickCard = useCallback((e: React.MouseEvent, preventNodeEvents: boolean) => {
-    if (!preventNodeEvents || e.target === e.currentTarget) {
-      openContainerInfoSidebar(section.id, undefined, section.id, index);
-      handleClickMenuButton();
-      setIsExpanded(true);
-    }
-  }, [openContainerInfoSidebar]);
+  const onClickCard = useCallback(
+    (e: React.MouseEvent, preventNodeEvents: boolean) => {
+      if (!preventNodeEvents || e.target === e.currentTarget) {
+        openContainerInfoSidebar(section.id, undefined, section.id, index);
+        handleClickMenuButton();
+        setIsExpanded(true);
+      }
+    },
+    [openContainerInfoSidebar]
+  );
 
   return (
     <>
@@ -267,13 +262,10 @@ const SectionCard = ({
         onClick={(e) => onClickCard(e, true)}
       >
         <div
-          className={classNames(
-            'section-card',
-            {
-              highlight: isScrolledToElement,
-              'outline-card-selected': section.id === selectedContainerState?.currentId,
-            },
-          )}
+          className={classNames('section-card', {
+            highlight: isScrolledToElement,
+            'outline-card-selected': section.id === selectedContainerState?.currentId,
+          })}
           data-testid="section-card"
           ref={currentRef}
         >
@@ -285,10 +277,13 @@ const SectionCard = ({
                 status={sectionStatus}
                 hasChanges={hasChanges}
                 onClickMenuButton={handleClickMenuButton}
-                onClickPublish={/* istanbul ignore next */ () => openPublishModal({
-                  value: section,
-                  sectionId: section.id,
-                })}
+                onClickPublish={
+                  /* istanbul ignore next */ () =>
+                    openPublishModal({
+                      value: section,
+                      sectionId: section.id,
+                    })
+                }
                 onClickConfigure={onOpenConfigureModal}
                 onClickDelete={onOpenDeleteModal}
                 onClickUnlink={() => openUnlinkModal({ value: section, sectionId: section.id })}
@@ -305,11 +300,9 @@ const SectionCard = ({
               />
             )}
             <div className="section-card__content" data-testid="section-card__content">
-              {
-                /* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
+              {/* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
                 `SortableItem` component handles that for the whole `SectionCard`.
-                This `onClick` allows the user to select the Card by clicking on white areas of this component. */
-              }
+                This `onClick` allows the user to select the Card by clicking on white areas of this component. */}
               <div // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
                 className="outline-section__status mb-1"
                 onClick={
@@ -323,17 +316,13 @@ const SectionCard = ({
                   variant="tertiary"
                   onClick={handleOpenHighlightsModal}
                 >
-                  <Bubble className="mr-1">
-                    {highlights.length}
-                  </Bubble>
+                  <Bubble className="mr-1">{highlights.length}</Bubble>
                   <p className="m-0 text-black">{messages.sectionHighlightsBadge.defaultMessage}</p>
                 </Button>
               </div>
-              {
-                /* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
+              {/* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
                 `SortableItem` component handles that for the whole `SectionCard`.
-                This `onClick` allows the user to select the Card by clicking on white areas of this component. */
-              }
+                This `onClick` allows the user to select the Card by clicking on white areas of this component. */}
               <div // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
                 onClick={
                   /* istanbul ignore next */

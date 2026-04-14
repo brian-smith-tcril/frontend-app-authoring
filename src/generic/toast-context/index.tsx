@@ -11,11 +11,7 @@ export interface ToastContextData {
   toastMessage: string | null;
   toastAction?: ToastActionData;
   toastDelay?: number;
-  showToast: (
-    message: string,
-    action?: ToastActionData,
-    delay?: number,
-  ) => void;
+  showToast: (message: string, action?: ToastActionData, delay?: number) => void;
   closeToast: () => void;
 }
 
@@ -60,20 +56,22 @@ export const ToastProvider = (props: ToastProviderProps) => {
     setToastDelay(undefined);
   }, []);
 
-  React.useEffect(() => () => {
-    // Cleanup function to avoid updating state on unmounted component
-    resetState();
-  }, []);
+  React.useEffect(
+    () => () => {
+      // Cleanup function to avoid updating state on unmounted component
+      resetState();
+    },
+    []
+  );
 
-  const showToast = React.useCallback((
-    message,
-    action?: ToastActionData,
-    delay?: number,
-  ) => {
-    setToastMessage(message);
-    setToastAction(action);
-    setToastDelay(delay);
-  }, [setToastMessage, setToastAction]);
+  const showToast = React.useCallback(
+    (message, action?: ToastActionData, delay?: number) => {
+      setToastMessage(message);
+      setToastAction(action);
+      setToastDelay(delay);
+    },
+    [setToastMessage, setToastAction]
+  );
   const closeToast = React.useCallback(() => resetState(), [setToastMessage, setToastAction]);
 
   // Keep the module-level references up to date whenever the callbacks change.
@@ -82,24 +80,21 @@ export const ToastProvider = (props: ToastProviderProps) => {
     internalCloseToast = closeToast;
   }, [showToast, closeToast]);
 
-  const context = React.useMemo(() => ({
-    toastMessage,
-    toastAction,
-    toastDelay,
-    showToast,
-    closeToast,
-  }), [
-    toastMessage,
-    toastAction,
-    toastDelay,
-    showToast,
-    closeToast,
-  ]);
+  const context = React.useMemo(
+    () => ({
+      toastMessage,
+      toastAction,
+      toastDelay,
+      showToast,
+      closeToast,
+    }),
+    [toastMessage, toastAction, toastDelay, showToast, closeToast]
+  );
 
   return (
     <ToastContext.Provider value={context}>
       {props.children}
-      { toastMessage && (
+      {toastMessage && (
         <ProcessingNotification
           isShow={toastMessage !== null}
           title={toastMessage}

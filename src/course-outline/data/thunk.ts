@@ -2,10 +2,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import { RequestStatus } from '@src/data/constants';
 import { NOTIFICATION_MESSAGES } from '@src/constants';
 import { showToastOutsideReact, closeToastOutsideReact } from '@src/generic/toast-context';
-import {
-  getCourseBestPracticesChecklist,
-  getCourseLaunchChecklist,
-} from '../utils/getChecklistForStatusBar';
+import { getCourseBestPracticesChecklist, getCourseLaunchChecklist } from '../utils/getChecklistForStatusBar';
 import { getErrorDetails } from '../utils/getErrorDetails';
 import {
   enableCourseHighlightsEmails,
@@ -17,7 +14,8 @@ import {
   setSectionOrderList,
   setVideoSharingOption,
   setCourseItemOrderList,
-  dismissNotification, createDiscussionsTopics,
+  dismissNotification,
+  createDiscussionsTopics,
 } from './api';
 import {
   fetchOutlineIndexSuccess,
@@ -58,27 +56,33 @@ export function fetchCourseOutlineIndexQuery(courseId: string): (dispatch: any) 
         },
       } = outlineIndex;
       dispatch(fetchOutlineIndexSuccess(outlineIndex));
-      dispatch(updateStatusBar({
-        courseReleaseDate,
-        highlightsEnabledForMessaging,
-        videoSharingOptions,
-        videoSharingEnabled,
-        endDate: end,
-        hasChanges,
-      }));
+      dispatch(
+        updateStatusBar({
+          courseReleaseDate,
+          highlightsEnabledForMessaging,
+          videoSharingOptions,
+          videoSharingEnabled,
+          endDate: end,
+          hasChanges,
+        })
+      );
       dispatch(updateCourseActions(actions));
 
       dispatch(updateOutlineIndexLoadingStatus({ status: RequestStatus.SUCCESSFUL }));
     } catch (error: any) {
       if (error.response && error.response.status === 403) {
-        dispatch(updateOutlineIndexLoadingStatus({
-          status: RequestStatus.DENIED,
-        }));
+        dispatch(
+          updateOutlineIndexLoadingStatus({
+            status: RequestStatus.DENIED,
+          })
+        );
       } else {
-        dispatch(updateOutlineIndexLoadingStatus({
-          status: RequestStatus.FAILED,
-          errors: getErrorDetails(error, false),
-        }));
+        dispatch(
+          updateOutlineIndexLoadingStatus({
+            status: RequestStatus.FAILED,
+            errors: getErrorDetails(error, false),
+          })
+        );
       }
     }
   };
@@ -94,36 +98,32 @@ export function syncDiscussionsTopics(courseId: string) {
   };
 }
 
-export function fetchCourseLaunchQuery({
-  courseId,
-  gradedOnly = true,
-  validateOras = true,
-  all = true,
-}) {
+export function fetchCourseLaunchQuery({ courseId, gradedOnly = true, validateOras = true, all = true }) {
   return async (dispatch) => {
     dispatch(updateCourseLaunchQueryStatus({ status: RequestStatus.IN_PROGRESS }));
     try {
       const data = await getCourseLaunch({
-        courseId, gradedOnly, validateOras, all,
+        courseId,
+        gradedOnly,
+        validateOras,
+        all,
       });
       dispatch(fetchStatusBarSelfPacedSuccess({ isSelfPaced: data.isSelfPaced }));
       dispatch(fetchStatusBarChecklistSuccess(getCourseLaunchChecklist(data)));
 
       dispatch(updateCourseLaunchQueryStatus({ status: RequestStatus.SUCCESSFUL }));
     } catch (error) {
-      dispatch(updateCourseLaunchQueryStatus({
-        status: RequestStatus.FAILED,
-        errors: getErrorDetails(error),
-      }));
+      dispatch(
+        updateCourseLaunchQueryStatus({
+          status: RequestStatus.FAILED,
+          errors: getErrorDetails(error),
+        })
+      );
     }
   };
 }
 
-export function fetchCourseBestPracticesQuery({
-  courseId,
-  excludeGraded = true,
-  all = true,
-}) {
+export function fetchCourseBestPracticesQuery({ courseId, excludeGraded = true, all = true }) {
   return async (dispatch) => {
     try {
       const data = await getCourseBestPractices({ courseId, excludeGraded, all });
@@ -180,10 +180,12 @@ export function fetchCourseReindexQuery(reindexLink: string) {
       await restartIndexingOnCourse(reindexLink);
       dispatch(updateReindexLoadingStatus({ status: RequestStatus.SUCCESSFUL }));
     } catch (error) {
-      dispatch(updateReindexLoadingStatus({
-        status: RequestStatus.FAILED,
-        errors: getErrorDetails(error),
-      }));
+      dispatch(
+        updateReindexLoadingStatus({
+          status: RequestStatus.FAILED,
+          errors: getErrorDetails(error),
+        })
+      );
     }
   };
 }
@@ -197,16 +199,18 @@ export function fetchCourseSectionQuery(sectionIds: string[]) {
     try {
       const sections = {};
       const results = await Promise.all(sectionIds.map((sectionId) => getCourseItem(sectionId)));
-      results.forEach(section => {
+      results.forEach((section) => {
         sections[section.id] = section;
       });
       dispatch(updateSectionList(sections));
       dispatch(updateFetchSectionLoadingStatus({ status: RequestStatus.SUCCESSFUL }));
     } catch (error) {
-      dispatch(updateFetchSectionLoadingStatus({
-        status: RequestStatus.FAILED,
-        errors: getErrorDetails(error),
-      }));
+      dispatch(
+        updateFetchSectionLoadingStatus({
+          status: RequestStatus.FAILED,
+          errors: getErrorDetails(error),
+        })
+      );
     }
   };
 }
@@ -221,7 +225,7 @@ function setBlockOrderListQuery(
     (arg0: any, arg1: any): Promise<any>;
   },
   restoreCallback: () => void,
-  successCallback: { (): any; (): void; (): void; (): void; },
+  successCallback: { (): any; (): void; (): void; (): void }
 ) {
   return async (dispatch) => {
     dispatch(updateSavingStatus({ status: RequestStatus.PENDING }));
@@ -243,19 +247,13 @@ function setBlockOrderListQuery(
   };
 }
 
-export function setSectionOrderListQuery(
-  courseId: string,
-  sectionListIds: string[],
-  restoreCallback: () => void,
-) {
+export function setSectionOrderListQuery(courseId: string, sectionListIds: string[], restoreCallback: () => void) {
   return async (dispatch) => {
-    dispatch(setBlockOrderListQuery(
-      courseId,
-      sectionListIds,
-      setSectionOrderList,
-      restoreCallback,
-      () => dispatch(reorderSectionList(sectionListIds)),
-    ));
+    dispatch(
+      setBlockOrderListQuery(courseId, sectionListIds, setSectionOrderList, restoreCallback, () =>
+        dispatch(reorderSectionList(sectionListIds))
+      )
+    );
   };
 }
 
@@ -263,22 +261,18 @@ export function setSubsectionOrderListQuery(
   sectionId: string,
   prevSectionId: string,
   subsectionListIds: string[],
-  restoreCallback: () => void,
+  restoreCallback: () => void
 ) {
   return async (dispatch) => {
-    dispatch(setBlockOrderListQuery(
-      sectionId,
-      subsectionListIds,
-      setCourseItemOrderList,
-      restoreCallback,
-      () => {
+    dispatch(
+      setBlockOrderListQuery(sectionId, subsectionListIds, setCourseItemOrderList, restoreCallback, () => {
         const sectionIds = [sectionId];
         if (prevSectionId && prevSectionId !== sectionId) {
           sectionIds.push(prevSectionId);
         }
         dispatch(fetchCourseSectionQuery(sectionIds));
-      },
-    ));
+      })
+    );
   };
 }
 
@@ -287,22 +281,18 @@ export function setUnitOrderListQuery(
   subsectionId: string,
   prevSectionId: string,
   unitListIds: string[],
-  restoreCallback: () => void,
+  restoreCallback: () => void
 ) {
   return async (dispatch) => {
-    dispatch(setBlockOrderListQuery(
-      subsectionId,
-      unitListIds,
-      setCourseItemOrderList,
-      restoreCallback,
-      () => {
+    dispatch(
+      setBlockOrderListQuery(subsectionId, unitListIds, setCourseItemOrderList, restoreCallback, () => {
         const sectionIds = [sectionId];
         if (prevSectionId && prevSectionId !== sectionId) {
           sectionIds.push(prevSectionId);
         }
         dispatch(fetchCourseSectionQuery(sectionIds));
-      },
-    ));
+      })
+    );
   };
 }
 

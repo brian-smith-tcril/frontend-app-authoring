@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   sidebarDescription: {
     id: 'course-authoring.studio-home.verify-email.sidebar.description',
-    defaultMessage: 'Please check your Junk or Spam folders in case our email isn\'t in your INBOX. Still can\'t find the verification email? Request help via the link below.',
+    defaultMessage: "Please check your Junk or Spam folders in case our email isn't in your INBOX. Still can't find the verification email? Request help via the link below.",
   },
 });
 

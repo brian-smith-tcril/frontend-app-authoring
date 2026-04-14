@@ -6,8 +6,8 @@ export const postImportCourseApiUrl = (courseId) => `${getApiBaseUrl()}/import/$
 export const getImportStatusApiUrl = (courseId, fileName) => `${getApiBaseUrl()}/import_status/${courseId}/${fileName}`;
 
 export interface ImportStatusData {
-  importStatus: number,
-  message?: string,
+  importStatus: number;
+  message?: string;
 }
 
 /**
@@ -17,7 +17,7 @@ export async function startCourseImporting(
   courseId: string,
   fileData: File,
   requestConfig: Record<string, any>,
-  updateProgress: (percent: number) => void,
+  updateProgress: (percent: number) => void
 ): Promise<ImportStatusData> {
   const chunkSize = 20 * 1000000; // 20 MB
   const fileSize = fileData.size || 0;
@@ -32,13 +32,11 @@ export async function startCourseImporting(
     };
     const formData = new FormData();
     formData.append('course-data', blob, fileData.name);
-    const { data } = await getAuthenticatedHttpClient()
-      .post(
-        postImportCourseApiUrl(courseId),
-        formData,
-        { headers, ...requestConfig },
-      );
-    const percent = Math.trunc(((1 / chunkLength) * (index + 1)) * 100);
+    const { data } = await getAuthenticatedHttpClient().post(postImportCourseApiUrl(courseId), formData, {
+      headers,
+      ...requestConfig,
+    });
+    const percent = Math.trunc((1 / chunkLength) * (index + 1) * 100);
     updateProgress(percent);
     resp = camelCaseObject(data);
   };
@@ -61,12 +59,8 @@ export async function startCourseImporting(
 /**
  * Get import status.
  */
-export async function getImportStatus(
-  courseId: string,
-  fileName: string,
-): Promise<ImportStatusData> {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getImportStatusApiUrl(courseId, fileName));
+export async function getImportStatus(courseId: string, fileName: string): Promise<ImportStatusData> {
+  const { data } = await getAuthenticatedHttpClient().get(getImportStatusApiUrl(courseId, fileName));
 
   return camelCaseObject(data);
 }

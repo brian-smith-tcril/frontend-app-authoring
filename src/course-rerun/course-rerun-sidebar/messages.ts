@@ -23,7 +23,7 @@ const messages = defineMessages({
   },
   sectionDescription3: {
     id: 'course-authoring.course-rerun.sidebar.section-3.description',
-    defaultMessage: 'You are the only member of the new course\'s staff. No students are enrolled in the course, and there is no student data. There is no content in the discussion topics or wiki.',
+    defaultMessage: "You are the only member of the new course's staff. No students are enrolled in the course, and there is no student data. There is no content in the discussion topics or wiki.",
   },
   sectionLink4: {
     id: 'course-authoring.course-rerun.sidebar.section-4.link',

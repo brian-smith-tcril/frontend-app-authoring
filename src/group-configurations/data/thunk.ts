@@ -98,10 +98,7 @@ export function createExperimentConfigurationQuery(courseId, newConfiguration) {
     showToastOutsideReact(NOTIFICATION_MESSAGES.saving);
 
     try {
-      const configuration = await createExperimentConfiguration(
-        courseId,
-        newConfiguration,
-      );
+      const configuration = await createExperimentConfiguration(courseId, newConfiguration);
       dispatch(updateExperimentConfigurationSuccess({ configuration }));
       dispatch(updateSavingStatuses({ status: RequestStatus.SUCCESSFUL }));
       return true;
@@ -113,19 +110,13 @@ export function createExperimentConfigurationQuery(courseId, newConfiguration) {
   };
 }
 
-export function editExperimentConfigurationQuery(
-  courseId,
-  editedConfiguration,
-) {
+export function editExperimentConfigurationQuery(courseId, editedConfiguration) {
   return async (dispatch) => {
     dispatch(updateSavingStatuses({ status: RequestStatus.PENDING }));
     showToastOutsideReact(NOTIFICATION_MESSAGES.saving);
 
     try {
-      const configuration = await editExperimentConfiguration(
-        courseId,
-        editedConfiguration,
-      );
+      const configuration = await editExperimentConfiguration(courseId, editedConfiguration);
       dispatch(updateExperimentConfigurationSuccess({ configuration }));
       dispatch(updateSavingStatuses({ status: RequestStatus.SUCCESSFUL }));
       return true;

@@ -18,12 +18,7 @@ interface ExpandableCardProps {
  * users to view additional details when the main area exceeds a specified height. The "Show Less"
  * button
  */
-export const ExpandableCard = ({
-  children,
-  maxHeight = 400,
-  showMoreLabel,
-  showLessLabel,
-}: ExpandableCardProps) => {
+export const ExpandableCard = ({ children, maxHeight = 400, showMoreLabel, showLessLabel }: ExpandableCardProps) => {
   const intl = useIntl();
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
@@ -34,7 +29,9 @@ export const ExpandableCard = ({
 
   useEffect(() => {
     const element = contentRef.current;
-    if (!element) { return () => {}; }
+    if (!element) {
+      return () => {};
+    }
     const checkNeedsExpansion = () => {
       setNeedsExpansion(element.scrollHeight > maxHeight);
     };

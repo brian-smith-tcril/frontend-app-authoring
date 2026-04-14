@@ -12,7 +12,7 @@ export const createStore = () => {
 
   const store: redux.Store<EditorState> = redux.createStore<EditorState, any, any, any>(
     reducer as any,
-    composeWithDevToolsLogOnlyInProduction(redux.applyMiddleware(...middleware)),
+    composeWithDevToolsLogOnlyInProduction(redux.applyMiddleware(...middleware))
   );
 
   /**

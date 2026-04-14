@@ -49,7 +49,7 @@ const messages = defineMessages({
   },
   piiSharing: {
     id: 'authoring.discussions.piiSharing',
-    defaultMessage: 'Optionally share a user\'s username and/or email with the LTI provider:',
+    defaultMessage: "Optionally share a user's username and/or email with the LTI provider:",
   },
   piiShareUsername: {
     id: 'authoring.discussions.piiShareUsername',

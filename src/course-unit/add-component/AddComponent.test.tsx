@@ -4,14 +4,7 @@ import userEvent, { UserEvent } from '@testing-library/user-event';
 
 import { mockWaffleFlags } from '@src/data/apiHooks.mock';
 import { RenderResult } from '@testing-library/react';
-import {
-  act,
-  render,
-  screen,
-  waitFor,
-  within,
-  initializeMocks,
-} from '../../testUtils';
+import { act, render, screen, waitFor, within, initializeMocks } from '../../testUtils';
 import { executeThunk } from '../../utils';
 import { fetchCourseSectionVerticalData } from '../data/thunk';
 import { getCourseSectionVerticalApiUrl } from '../data/api';
@@ -38,10 +31,12 @@ jest.mock('../../library-authoring/component-picker', () => ({
           blockType: 'html',
         });
       } else {
-        props.onChangeComponentSelection([{
-          usageKey,
-          blockType: 'html',
-        }]);
+        props.onChangeComponentSelection([
+          {
+            usageKey,
+            blockType: 'html',
+          },
+        ]);
       }
     };
     return (
@@ -59,25 +54,24 @@ jest.mock('../../generic/hooks/context/hooks', () => ({
   }),
 }));
 
-const renderComponent = (props?: AddComponentProps) => render(
-  <IframeProvider>
-    <AddComponent
-      isUnitVerticalType
-      parentLocator={blockId}
-      handleCreateNewCourseXBlock={handleCreateNewCourseXBlockMock}
-      {...props}
-    />
-  </IframeProvider>,
-);
+const renderComponent = (props?: AddComponentProps) =>
+  render(
+    <IframeProvider>
+      <AddComponent
+        isUnitVerticalType
+        parentLocator={blockId}
+        handleCreateNewCourseXBlock={handleCreateNewCourseXBlockMock}
+        {...props}
+      />
+    </IframeProvider>
+  );
 
 describe('<AddComponent />', () => {
   beforeEach(async () => {
     const mocks = initializeMocks();
     axiosMock = mocks.axiosMock;
     store = mocks.reduxStore;
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
   });
 
@@ -89,9 +83,10 @@ describe('<AddComponent />', () => {
     Object.keys(componentTemplates).forEach((component) => {
       const btn = getByRole('button', {
         name: new RegExp(
-          `${componentTemplates[component].type
+          `${
+            componentTemplates[component].type
           } ${messages.buttonText.defaultMessage} ${componentTemplates[component].display_name}`,
-          'i',
+          'i'
         ),
       });
       expect(btn).toBeInTheDocument();
@@ -101,13 +96,11 @@ describe('<AddComponent />', () => {
     });
   });
 
-  it('AddComponent component doesn\'t render when there aren\'t componentTemplates', async () => {
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        component_templates: [],
-      });
+  it("AddComponent component doesn't render when there aren't componentTemplates", async () => {
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      component_templates: [],
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
     const { queryByRole } = renderComponent();
@@ -115,60 +108,64 @@ describe('<AddComponent />', () => {
     expect(queryByRole('heading', { name: messages.title.defaultMessage })).not.toBeInTheDocument();
   });
 
-  it('AddComponent component item doesn\'t render when there aren\'t templates', async () => {
+  it("AddComponent component item doesn't render when there aren't templates", async () => {
     const componentTemplates = courseSectionVerticalMock.component_templates;
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        component_templates: [
-          ...courseSectionVerticalMock.component_templates.map((component) => {
-            if (component.type === COMPONENT_TYPES.discussion) {
-              return {
-                ...component,
-                templates: [],
-              };
-            }
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      component_templates: [
+        ...courseSectionVerticalMock.component_templates.map((component) => {
+          if (component.type === COMPONENT_TYPES.discussion) {
+            return {
+              ...component,
+              templates: [],
+            };
+          }
 
-            return component;
-          }),
-        ],
-      });
+          return component;
+        }),
+      ],
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
     const { queryByRole, getByRole } = renderComponent();
 
     Object.keys(componentTemplates).map((component) => {
       if (componentTemplates[component].type === COMPONENT_TYPES.discussion) {
-        return expect(queryByRole('button', {
-          name: new RegExp(`${messages.buttonText.defaultMessage} ${componentTemplates[component].display_name}`, 'i'),
-        })).not.toBeInTheDocument();
+        return expect(
+          queryByRole('button', {
+            name: new RegExp(
+              `${messages.buttonText.defaultMessage} ${componentTemplates[component].display_name}`,
+              'i'
+            ),
+          })
+        ).not.toBeInTheDocument();
       }
 
-      return expect(getByRole('button', {
-        name: new RegExp(
-          `${componentTemplates[component].type
-          } ${messages.buttonText.defaultMessage} ${componentTemplates[component].display_name}`,
-          'i',
-        ),
-      })).toBeInTheDocument();
+      return expect(
+        getByRole('button', {
+          name: new RegExp(
+            `${
+              componentTemplates[component].type
+            } ${messages.buttonText.defaultMessage} ${componentTemplates[component].display_name}`,
+            'i'
+          ),
+        })
+      ).toBeInTheDocument();
     });
   });
 
-  it('handleCreateNewCourseXblock does\'t call with custom component create button is clicked', async () => {
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        component_templates: [
-          {
-            type: 'custom',
-            templates: [{ display_name: 'Custom' }],
-            display_name: 'Custom',
-            support_legend: {},
-          },
-        ],
-      });
+  it("handleCreateNewCourseXblock does't call with custom component create button is clicked", async () => {
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      component_templates: [
+        {
+          type: 'custom',
+          templates: [{ display_name: 'Custom' }],
+          display_name: 'Custom',
+          support_legend: {},
+        },
+      ],
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     const user = userEvent.setup();
     const { getByRole } = renderComponent();
@@ -223,10 +220,13 @@ describe('<AddComponent />', () => {
 
     await user.click(discussionButton);
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalled();
-    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
-      parentLocator: '123',
-      type: COMPONENT_TYPES.problem,
-    }, expect.any(Function));
+    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith(
+      {
+        parentLocator: '123',
+        type: COMPONENT_TYPES.problem,
+      },
+      expect.any(Function)
+    );
   });
 
   it('calls handleCreateNewCourseXBlock with correct parameters when Problem bank xblock create button is clicked', async () => {
@@ -256,10 +256,13 @@ describe('<AddComponent />', () => {
 
     await user.click(discussionButton);
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalled();
-    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
-      parentLocator: '123',
-      type: COMPONENT_TYPES.video,
-    }, expect.any(Function));
+    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith(
+      {
+        parentLocator: '123',
+        type: COMPONENT_TYPES.video,
+      },
+      expect.any(Function)
+    );
   });
 
   it('creates new "Library" xblock on click', async () => {
@@ -289,10 +292,16 @@ describe('<AddComponent />', () => {
     await user.click(advancedBtn);
     const modalContainer = getByRole('dialog');
 
-    expect(within(modalContainer).getByRole('button', { name: messages.modalContainerCancelBtnText.defaultMessage })).toBeInTheDocument();
-    expect(within(modalContainer).getByRole('button', { name: messages.modalBtnText.defaultMessage })).toBeInTheDocument();
+    expect(
+      within(modalContainer).getByRole('button', { name: messages.modalContainerCancelBtnText.defaultMessage })
+    ).toBeInTheDocument();
+    expect(
+      within(modalContainer).getByRole('button', { name: messages.modalBtnText.defaultMessage })
+    ).toBeInTheDocument();
 
-    await user.click(within(modalContainer).getByRole('button', { name: messages.modalContainerCancelBtnText.defaultMessage }));
+    await user.click(
+      within(modalContainer).getByRole('button', { name: messages.modalContainerCancelBtnText.defaultMessage })
+    );
 
     expect(queryByRole('button', { name: messages.modalContainerCancelBtnText.defaultMessage })).toBeNull();
     expect(queryByRole('button', { name: messages.modalBtnText.defaultMessage })).toBeNull();
@@ -321,13 +330,15 @@ describe('<AddComponent />', () => {
     });
   });
 
-  const createPdfBlock = async (
-    { getByRole, queryAllByRole, user }: {
-      getByRole: RenderResult['getByRole']
-      queryAllByRole: RenderResult['queryAllByRole'],
-      user: UserEvent,
-    },
-  ) => {
+  const createPdfBlock = async ({
+    getByRole,
+    queryAllByRole,
+    user,
+  }: {
+    getByRole: RenderResult['getByRole'];
+    queryAllByRole: RenderResult['queryAllByRole'];
+    user: UserEvent;
+  }) => {
     const advancedBtn = getByRole('button', {
       name: new RegExp(`${messages.buttonText.defaultMessage} Advanced`, 'i'),
     });
@@ -347,10 +358,13 @@ describe('<AddComponent />', () => {
     const { getByRole, queryAllByRole } = renderComponent();
     await createPdfBlock({ getByRole, queryAllByRole, user });
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalled();
-    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
-      parentLocator: '123',
-      type: COMPONENT_TYPES.pdf,
-    }, expect.any(Function));
+    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith(
+      {
+        parentLocator: '123',
+        type: COMPONENT_TYPES.pdf,
+      },
+      expect.any(Function)
+    );
   });
 
   it('adds a PDF block and launches the legacy iframe editor', async () => {
@@ -459,11 +473,14 @@ describe('<AddComponent />', () => {
     await user.click(sendBtn);
 
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalled();
-    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
-      parentLocator: '123',
-      type: COMPONENT_TYPES.html,
-      boilerplate: COMPONENT_TYPES.html,
-    }, expect.any(Function));
+    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith(
+      {
+        parentLocator: '123',
+        type: COMPONENT_TYPES.html,
+        boilerplate: COMPONENT_TYPES.html,
+      },
+      expect.any(Function)
+    );
   });
 
   it('verifies "Open Response" component creation and submission in modal', async () => {
@@ -551,39 +568,39 @@ describe('<AddComponent />', () => {
     await user.click(submitBtn);
 
     expect(mockSendMessageToIframe).toHaveBeenCalledWith(messageTypes.addSelectedComponentsToBank, {
-      selectedComponents: [{
-        blockType: 'html',
-        usageKey,
-      }],
+      selectedComponents: [
+        {
+          blockType: 'html',
+          usageKey,
+        },
+      ],
     });
   });
 
   describe('component support label', () => {
     it('component support label is hidden if component support legend is disabled', async () => {
       const supportLevels = ['fs', 'ps'];
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          component_templates: [
-            ...courseSectionVerticalMock.component_templates.map((component) => {
-              if (component.type === COMPONENT_TYPES.advanced) {
-                return {
-                  ...component,
-                  support_legend: { show_legend: false },
-                  templates: [
-                    ...component.templates.map((template, i) => ({
-                      ...template,
-                      support_level: supportLevels[i] || true,
-                    })),
-                  ],
-                };
-              }
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        component_templates: [
+          ...courseSectionVerticalMock.component_templates.map((component) => {
+            if (component.type === COMPONENT_TYPES.advanced) {
+              return {
+                ...component,
+                support_legend: { show_legend: false },
+                templates: [
+                  ...component.templates.map((template, i) => ({
+                    ...template,
+                    support_level: supportLevels[i] || true,
+                  })),
+                ],
+              };
+            }
 
-              return component;
-            }),
-          ],
-        });
+            return component;
+          }),
+        ],
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
       const user = userEvent.setup();
       const { getByRole } = renderComponent();
@@ -593,10 +610,12 @@ describe('<AddComponent />', () => {
 
       await user.click(advancedButton);
       const modalContainer = getByRole('dialog');
-      const fullySupportLabel = within(modalContainer)
-        .queryByText(messages.modalComponentSupportLabelFullySupported.defaultMessage);
-      const provisionallySupportLabel = within(modalContainer)
-        .queryByText(messages.modalComponentSupportLabelProvisionallySupported.defaultMessage);
+      const fullySupportLabel = within(modalContainer).queryByText(
+        messages.modalComponentSupportLabelFullySupported.defaultMessage
+      );
+      const provisionallySupportLabel = within(modalContainer).queryByText(
+        messages.modalComponentSupportLabelProvisionallySupported.defaultMessage
+      );
 
       expect(fullySupportLabel).not.toBeInTheDocument();
       expect(provisionallySupportLabel).not.toBeInTheDocument();
@@ -604,29 +623,27 @@ describe('<AddComponent />', () => {
 
     it('displays component support label and tooltip in component modal', async () => {
       const supportLevels = ['fs', 'ps'];
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          component_templates: [
-            ...courseSectionVerticalMock.component_templates.map((component) => {
-              if (component.type === COMPONENT_TYPES.advanced) {
-                return {
-                  ...component,
-                  support_legend: { show_legend: true },
-                  templates: [
-                    ...component.templates.map((template, i) => ({
-                      ...template,
-                      support_level: supportLevels[i] || true,
-                    })),
-                  ],
-                };
-              }
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        component_templates: [
+          ...courseSectionVerticalMock.component_templates.map((component) => {
+            if (component.type === COMPONENT_TYPES.advanced) {
+              return {
+                ...component,
+                support_legend: { show_legend: true },
+                templates: [
+                  ...component.templates.map((template, i) => ({
+                    ...template,
+                    support_level: supportLevels[i] || true,
+                  })),
+                ],
+              };
+            }
 
-              return component;
-            }),
-          ],
-        });
+            return component;
+          }),
+        ],
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
       const user = userEvent.setup();
       const { getByRole, getByText } = renderComponent();
@@ -636,10 +653,12 @@ describe('<AddComponent />', () => {
 
       await user.click(advancedButton);
       const modalContainer = getByRole('dialog');
-      const fullySupportLabel = within(modalContainer)
-        .getByText(messages.modalComponentSupportLabelFullySupported.defaultMessage);
-      const provisionallySupportLabel = within(modalContainer)
-        .getByText(messages.modalComponentSupportLabelProvisionallySupported.defaultMessage);
+      const fullySupportLabel = within(modalContainer).getByText(
+        messages.modalComponentSupportLabelFullySupported.defaultMessage
+      );
+      const provisionallySupportLabel = within(modalContainer).getByText(
+        messages.modalComponentSupportLabelProvisionallySupported.defaultMessage
+      );
 
       expect(fullySupportLabel).toBeInTheDocument();
       expect(provisionallySupportLabel).toBeInTheDocument();

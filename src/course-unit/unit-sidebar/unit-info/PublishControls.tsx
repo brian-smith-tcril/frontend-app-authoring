@@ -14,35 +14,21 @@ import messages from './messages';
 import UnitVisibilityInfo from './UnitVisibilityInfo';
 
 interface PublishControlsProps {
-  blockId: string,
-  hideCopyButton?: boolean,
+  blockId: string;
+  hideCopyButton?: boolean;
 }
 
-const PublishControls = ({
-  blockId,
-  hideCopyButton = false,
-}: PublishControlsProps) => {
+const PublishControls = ({ blockId, hideCopyButton = false }: PublishControlsProps) => {
   const unitData = useSelector(getCourseUnitData);
-  const {
-    title,
-    locationId,
-    releaseLabel,
-    visibilityState,
-    visibleToStaffOnly,
-    publishCardClass,
-  } = useCourseUnitData(unitData);
+  const { title, locationId, releaseLabel, visibilityState, visibleToStaffOnly, publishCardClass } =
+    useCourseUnitData(unitData);
   const intl = useIntl();
   const { sendMessageToIframe } = useIframe();
 
   const [isDiscardModalOpen, openDiscardModal, closeDiscardModal] = useToggle(false);
   const [isVisibleModalOpen, openVisibleModal, closeVisibleModal] = useToggle(false);
 
-  const {
-    editedOn,
-    editedBy,
-    publishedBy,
-    publishedOn,
-  } = unitData;
+  const { editedOn, editedBy, publishedBy, publishedOn } = unitData;
 
   const publishMutation = useConfigureUnitWithPageUpdates();
 
@@ -67,7 +53,7 @@ const PublishControls = ({
       },
       {
         onSuccess: () => sendMessageToIframe(messageTypes.refreshXBlock, null),
-      },
+      }
     );
   };
 
@@ -83,10 +69,7 @@ const PublishControls = ({
   return (
     <div className={`course-unit-publish-controls border p-3 ${publishCardClass}`}>
       <div className="text-primary-700 mb-4">
-        <SidebarHeader
-          title={title}
-          visibilityState={visibilityState}
-        />
+        <SidebarHeader title={title} visibilityState={visibilityState} />
       </div>
       <Stack gap={4}>
         <Stack gap={2}>
@@ -99,17 +82,11 @@ const PublishControls = ({
                 {editedBy && (
                   <>
                     <Icon src={Person} />
-                    <span>
-                      {editedBy}
-                    </span>
-                    <span>
-                      -
-                    </span>
+                    <span>{editedBy}</span>
+                    <span>-</span>
                   </>
                 )}
-                <span>
-                  {editedOn}
-                </span>
+                <span>{editedOn}</span>
               </Stack>
             </div>
           )}
@@ -122,25 +99,17 @@ const PublishControls = ({
                 {publishedBy && (
                   <>
                     <Icon src={Person} />
-                    <span>
-                      {publishedBy}
-                    </span>
-                    <span>
-                      -
-                    </span>
+                    <span>{publishedBy}</span>
+                    <span>-</span>
                   </>
                 )}
-                <span>
-                  {publishedOn}
-                </span>
+                <span>{publishedOn}</span>
               </Stack>
             </div>
           )}
         </Stack>
         <Stack>
-          <span className="heading-label">
-            {releaseLabel}
-          </span>
+          <span className="heading-label">{releaseLabel}</span>
           <div className="text-primary-700">
             <ReleaseInfoComponent />
           </div>

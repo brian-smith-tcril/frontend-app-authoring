@@ -10,9 +10,8 @@ import editorMessages from '@src/editors/containers/EditorContainer/messages';
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-const render = () => editorRender(
-  <PdfEditor onClose={() => undefined} returnFunction={() => () => undefined} />,
-  {
+const render = () =>
+  editorRender(<PdfEditor onClose={() => undefined} returnFunction={() => () => undefined} />, {
     initialState: {
       app: {
         blockValue: {
@@ -75,8 +74,7 @@ const render = () => editorRender(
         showRawEditor: false,
       },
     },
-  },
-);
+  });
 
 describe('PdfEditor', () => {
   let axiosMock: MockAdapter;
@@ -85,25 +83,24 @@ describe('PdfEditor', () => {
   });
 
   const setBlock = (state?: Partial<PdfState>) => {
-    axiosMock.onGet(
-      'https://studio.local/xblock/pdf-block-id/handler/load_pdf',
-    ).reply(200, { ...initialPdfState(), url: 'https://example.com/example.pdf', ...state });
+    axiosMock
+      .onGet('https://studio.local/xblock/pdf-block-id/handler/load_pdf')
+      .reply(200, { ...initialPdfState(), url: 'https://example.com/example.pdf', ...state });
   };
 
   it('fetches a block and renders.', async () => {
     // Slightly different loader to show spinner.
-    axiosMock.onGet(
-      'https://studio.local/xblock/pdf-block-id/handler/load_pdf',
-    ).withDelayInMs(200).reply(200, initialPdfState());
+    axiosMock
+      .onGet('https://studio.local/xblock/pdf-block-id/handler/load_pdf')
+      .withDelayInMs(200)
+      .reply(200, initialPdfState());
     const screen = render();
     screen.getByText(messages.blockLoading.defaultMessage);
     // And then should show the block.
     await waitFor(() => screen.getByText(downloadMessages.allowDownloadLabel.defaultMessage));
   });
   it('handles failure gracefully.', async () => {
-    axiosMock.onGet(
-      'https://studio.local/xblock/pdf-block-id/handler/load_pdf',
-    ).reply(500, {});
+    axiosMock.onGet('https://studio.local/xblock/pdf-block-id/handler/load_pdf').reply(500, {});
     const screen = render();
     await waitFor(() => screen.getByText(messages.blockFailed.defaultMessage));
   });

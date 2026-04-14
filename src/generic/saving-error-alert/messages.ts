@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   warningTitle: {
     id: 'course-authoring.generic.saving-error-alert.title',
-    defaultMessage: 'Studio\'s having trouble saving your work',
+    defaultMessage: "Studio's having trouble saving your work",
     description: 'Title for an alert indicating saving error in the studio environment',
   },
   warningDescription: {

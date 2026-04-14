@@ -15,17 +15,7 @@ export const DATEPICKER_TYPES = {
   time: 'time',
 };
 
-const DatepickerControl = ({
-  type,
-  label,
-  value,
-  showUTC,
-  readonly,
-  helpText,
-  isInvalid,
-  controlName,
-  onChange,
-}) => {
+const DatepickerControl = ({ type, label, value, showUTC, readonly, helpText, isInvalid, controlName, onChange }) => {
   const intl = useIntl();
   const formattedDate = convertToDateFromString(value);
   const inputFormat = {
@@ -102,11 +92,7 @@ const DatepickerControl = ({
           })}
         </Form.Text>
       )}
-      {helpText && (
-        <Form.Control.Feedback id={`${controlName}-helptext`}>
-          {helpText}
-        </Form.Control.Feedback>
-      )}
+      {helpText && <Form.Control.Feedback id={`${controlName}-helptext`}>{helpText}</Form.Control.Feedback>}
     </Form.Group>
   );
 };

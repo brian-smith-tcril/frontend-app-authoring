@@ -24,7 +24,7 @@ const messages = defineMessages({
   gradingPolicyComment: {
     id: 'gradingPolicyComment',
     defaultMessage: 'Your current grading policy adds up to {percent}%.',
-    description: 'Description for a section that displays a course\'s grading policy total',
+    description: "Description for a section that displays a course's grading policy total",
   },
   certificateShortDescription: {
     id: 'certificateShortDescription',
@@ -59,7 +59,7 @@ const messages = defineMessages({
   assignmentDeadlinesComment: {
     id: 'assignmentDeadlinesComment',
     defaultMessage: 'The following assignments have deadlines that do not fall between course start and end date:',
-    description: 'Description for a section that displays which assignments are outside of a course\'s start and end date',
+    description: "Description for a section that displays which assignments are outside of a course's start and end date",
   },
   videoDurationShortDescription: {
     id: 'videoDurationShortDescription',

@@ -88,7 +88,7 @@ InstructorsSection.propTypes = {
       name: PropTypes.string,
       organization: PropTypes.string,
       title: PropTypes.string,
-    }),
+    })
   ),
   onChange: PropTypes.func.isRequired,
 };

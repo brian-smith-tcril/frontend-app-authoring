@@ -1,8 +1,4 @@
-import {
-  initializeMocks,
-  render,
-  screen,
-} from '../../../../../../../testUtils';
+import { initializeMocks, render, screen } from '../../../../../../../testUtils';
 
 import { VideoPreviewWidget } from '.';
 
@@ -25,7 +21,7 @@ describe('VideoPreviewWidget', () => {
           transcripts={[]}
           blockTitle="some title"
           thumbnail=""
-        />,
+        />
       );
       expect(screen.queryByText('No transcripts added')).toBeInTheDocument();
     });
@@ -39,7 +35,7 @@ describe('VideoPreviewWidget', () => {
           transcripts={[]}
           blockTitle="some title"
           thumbnail=""
-        />,
+        />
       );
       expect(screen.queryByText('No transcripts added')).toBeInTheDocument();
     });
@@ -52,7 +48,7 @@ describe('VideoPreviewWidget', () => {
           transcripts={[]}
           blockTitle="Test Video"
           thumbnail=""
-        />,
+        />
       );
 
       const hyperlink = screen.getByRole('link');
@@ -64,13 +60,7 @@ describe('VideoPreviewWidget', () => {
 
     test('does not render hyperlink when videoSource is empty', () => {
       render(
-        <VideoPreviewWidget
-          videoSource=""
-          intl={mockIntl}
-          transcripts={[]}
-          blockTitle="Test Video"
-          thumbnail=""
-        />,
+        <VideoPreviewWidget videoSource="" intl={mockIntl} transcripts={[]} blockTitle="Test Video" thumbnail="" />
       );
 
       const hyperlink = screen.queryByRole('link');
@@ -85,7 +75,7 @@ describe('VideoPreviewWidget', () => {
           transcripts={[]}
           blockTitle="YouTube Video"
           thumbnail=""
-        />,
+        />
       );
 
       const hyperlink = screen.getByRole('link');

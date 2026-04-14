@@ -2,12 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RequestStatus } from '../data/constants';
-import {
-  getGroupConfigurationsData,
-  getLoadingStatus,
-  getSavingStatus,
-  getErrorMessage,
-} from './data/selectors';
+import { getGroupConfigurationsData, getLoadingStatus, getSavingStatus, getErrorMessage } from './data/selectors';
 import { updateSavingStatuses } from './data/slice';
 import {
   createContentGroupQuery,
@@ -52,22 +47,18 @@ const useGroupConfigurations = (courseId) => {
 
   const experimentConfigurationActions = {
     handleCreate: (configuration, callbackToClose) => {
-      dispatch(
-        createExperimentConfigurationQuery(courseId, configuration),
-      ).then((result) => {
+      dispatch(createExperimentConfigurationQuery(courseId, configuration)).then((result) => {
         if (result) {
           callbackToClose();
         }
       });
     },
     handleEdit: (configuration, callbackToClose) => {
-      dispatch(editExperimentConfigurationQuery(courseId, configuration)).then(
-        (result) => {
-          if (result) {
-            callbackToClose();
-          }
-        },
-      );
+      dispatch(editExperimentConfigurationQuery(courseId, configuration)).then((result) => {
+        if (result) {
+          callbackToClose();
+        }
+      });
     },
     handleDelete: (configurationId) => {
       dispatch(deleteExperimentConfigurationQuery(courseId, configurationId));

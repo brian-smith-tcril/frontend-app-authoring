@@ -10,23 +10,20 @@ import { getConfig } from '@edx/frontend-platform';
 export const getAuthzApiUrl = (path: string) => `${getConfig().STUDIO_BASE_URL}/api/authz/${path || ''}`;
 
 export const validateUserPermissions = async (
-  query: PermissionValidationQuery,
+  query: PermissionValidationQuery
 ): Promise<PermissionValidationAnswer> => {
   // Convert the validations query object into an array for the API request
   const request: PermissionValidationRequestItem[] = Object.values(query);
 
   const { data }: { data: PermissionValidationResponseItem[] } = await getAuthenticatedHttpClient().post(
     getAuthzApiUrl('v1/permissions/validate/me'),
-    request,
+    request
   );
 
   // Convert the API response back into the expected answer format
   const result: PermissionValidationAnswer = {};
   data.forEach((item: { action: string; scope?: string; allowed: boolean }) => {
-    const key = Object.keys(query).find(
-      (k) => query[k].action === item.action
-        && query[k].scope === item.scope,
-    );
+    const key = Object.keys(query).find((k) => query[k].action === item.action && query[k].scope === item.scope);
     if (key) {
       result[key] = item.allowed;
     }

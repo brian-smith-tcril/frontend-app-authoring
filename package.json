@@ -2,13 +2,19 @@
   "name": "@edx/frontend-app-authoring",
   "version": "0.1.0",
   "description": "Frontend application template",
+  "homepage": "https://github.com/openedx/frontend-app-authoring#readme",
+  "bugs": {
+    "url": "https://github.com/openedx/frontend-app-authoring/issues"
+  },
+  "license": "AGPL-3.0",
+  "author": "edX",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/openedx/frontend-app-authoring.git"
   },
-  "browserslist": [
-    "extends @edx/browserslist-config"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "fedx-scripts webpack",
     "i18n_extract": "fedx-scripts formatjs extract --include=plugins",
@@ -23,15 +29,6 @@
     "test:dev": "TZ=UTC fedx-scripts jest --coverage --watch --passWithNoTests",
     "test:ci": "TZ=UTC fedx-scripts jest --silent --coverage --passWithNoTests",
     "types": "tsc --noEmit"
-  },
-  "author": "edX",
-  "license": "AGPL-3.0",
-  "homepage": "https://github.com/openedx/frontend-app-authoring#readme",
-  "publishConfig": {
-    "access": "public"
-  },
-  "bugs": {
-    "url": "https://github.com/openedx/frontend-app-authoring/issues"
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.0.0",
@@ -82,6 +79,7 @@
     "meilisearch": "^0.41.0",
     "moment": "2.30.1",
     "moment-shortformat": "^2.1.0",
+    "oxfmt": "^0.42.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-datepicker": "^8.10.0",
@@ -124,5 +122,8 @@
     "oxlint-tsgolint": "^0.17.0",
     "react-test-renderer": "^18.3.1",
     "redux-mock-store": "^1.5.4"
-  }
+  },
+  "browserslist": [
+    "extends @edx/browserslist-config"
+  ]
 }

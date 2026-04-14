@@ -8,12 +8,18 @@ import {
   fetchAdvancedSettings,
   loadProblem,
 } from './problem';
-import { checkboxesOLXWithFeedbackAndHintsOLX, advancedProblemOlX, blankProblemOLX } from '../../../containers/ProblemEditor/data/mockData/olxTestData';
+import {
+  checkboxesOLXWithFeedbackAndHintsOLX,
+  advancedProblemOlX,
+  blankProblemOLX,
+} from '../../../containers/ProblemEditor/data/mockData/olxTestData';
 import { ProblemTypeKeys } from '../../constants/problem';
 
 const mockOlx = 'SOmEVALue';
 const mockBuildOlx = jest.fn(() => mockOlx);
-jest.mock('../../../containers/ProblemEditor/data/ReactStateOLXParser', () => jest.fn().mockImplementation(() => ({ buildOLX: mockBuildOlx })));
+jest.mock('../../../containers/ProblemEditor/data/ReactStateOLXParser', () =>
+  jest.fn().mockImplementation(() => ({ buildOLX: mockBuildOlx }))
+);
 
 jest.mock('../problem', () => ({
   actions: {
@@ -92,7 +98,7 @@ describe('problem thunkActions', () => {
           problemType: ProblemTypeKeys.ADVANCED,
           rawOLX: '<problem>\n<p>MockMarkdownContent</p>\n</problem>',
           isMarkdownEditorEnabled: false,
-        }),
+        })
       );
     });
 
@@ -103,7 +109,7 @@ describe('problem thunkActions', () => {
           problemType: ProblemTypeKeys.ADVANCED,
           rawOLX: 'PREVIOUS_OLX',
           isMarkdownEditorEnabled: false,
-        }),
+        })
       );
     });
   });
@@ -120,7 +126,7 @@ describe('problem thunkActions', () => {
           problemType: ProblemTypeKeys.ADVANCED,
           rawOLX: mockOlx,
           isMarkdownEditorEnabled: false,
-        }),
+        })
       );
     });
   });
@@ -131,7 +137,7 @@ describe('problem thunkActions', () => {
     expect(dispatch).toHaveBeenCalledWith(
       actions.problem.updateField({
         isMarkdownEditorEnabled: true,
-      }),
+      })
     );
   });
 
@@ -187,14 +193,20 @@ describe('problem thunkActions', () => {
     test('initializeProblem advanced Problem', () => {
       rawOLX = advancedProblemOlX.rawOLX;
       loadProblem({
-        rawOLX, rawSettings, defaultSettings, isMarkdownEditorEnabled: true,
+        rawOLX,
+        rawSettings,
+        defaultSettings,
+        isMarkdownEditorEnabled: true,
       })(dispatch);
       expect(dispatch).toHaveBeenCalledWith(actions.problem.load(undefined));
     });
     test('initializeProblem blank Problem', () => {
       rawOLX = blankProblemOLX.rawOLX;
       loadProblem({
-        rawOLX, rawSettings, defaultSettings, isMarkdownEditorEnabled: true,
+        rawOLX,
+        rawSettings,
+        defaultSettings,
+        isMarkdownEditorEnabled: true,
       })(dispatch);
       expect(dispatch).toHaveBeenCalledWith(actions.problem.setEnableTypeSelection(undefined));
     });

@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "semi": true,
+  "trailingComma": "es5",
+  "objectWrap": "preserve",
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "insertFinalNewline": true,
+  "ignorePatterns": [
+    "**/node_modules", "**/*-lock.json", "**/dist", "**/coverage",
+    "jest.config.js", "env.config.*", "example.env.config.*",
+    "module.config.js"
+  ],
+  "overrides": [
+    {
+      "files": ["src/**/messages.ts", "src/**/messages.js"],
+      "options": { "printWidth": 320 }
+    }
+  ]
+}

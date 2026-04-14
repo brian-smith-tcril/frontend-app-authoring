@@ -1,6 +1,4 @@
-import {
-  initializeMocks, render, fireEvent, screen, waitFor,
-} from '@src/testUtils';
+import { initializeMocks, render, fireEvent, screen, waitFor } from '@src/testUtils';
 import { userEvent } from '@testing-library/user-event';
 
 import * as apiHooks from '@src/course-outline/data/apiHooks';
@@ -30,9 +28,12 @@ jest.mock('@src/course-outline/CourseOutlineContext', () => ({
 }));
 
 jest.mock('@src/course-outline/data/apiHooks', () => ({
-  useCourseItemData: jest.fn(() => ({
-    data: currentItemMock,
-  } as unknown as UseQueryResult<XBlockBase, Error>)),
+  useCourseItemData: jest.fn(
+    () =>
+      ({
+        data: currentItemMock,
+      }) as unknown as UseQueryResult<XBlockBase, Error>
+  ),
 }));
 
 jest.mock('react-router', () => ({
@@ -63,9 +64,7 @@ describe('<HighlightsModal />', () => {
   });
 
   it('renders modal with highlights and form', async () => {
-    render(
-      <HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />);
 
     expect(await screen.findByText(/Highlights for/)).toBeInTheDocument();
     expect(await screen.findByLabelText(/Highlight 1/)).toBeInTheDocument();
@@ -74,9 +73,7 @@ describe('<HighlightsModal />', () => {
 
   it('calls onClose when cancel button is clicked', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByRole('button', { name: messages.cancelButton.defaultMessage }));
     expect(onCloseMock).toHaveBeenCalled();
@@ -84,9 +81,7 @@ describe('<HighlightsModal />', () => {
 
   it('calls onSubmit with form values on save', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsModal isOpen onClose={onCloseMock} onSubmit={onSubmitMock} />);
 
     fireEvent.change(await screen.findByLabelText(/Highlight 1/), { target: { value: 'New value' } });
 
@@ -127,7 +122,9 @@ describe('<HighlightsForm />', () => {
   it('disables save button when pristine', async () => {
     render(<HighlightsForm {...defaultProps} />);
 
-    const saveBtn = await screen.findByRole('button', { name: messages.saveButton.defaultMessage }) as HTMLButtonElement;
+    const saveBtn = (await screen.findByRole('button', {
+      name: messages.saveButton.defaultMessage,
+    })) as HTMLButtonElement;
     expect(saveBtn.disabled).toBe(true);
   });
 
@@ -142,9 +139,7 @@ describe('<HighlightsForm />', () => {
 
   it('calls onDirtyChange when form changes', async () => {
     const onDirtyChange = jest.fn();
-    render(
-      <HighlightsForm {...defaultProps} onDirtyChange={onDirtyChange} />,
-    );
+    render(<HighlightsForm {...defaultProps} onDirtyChange={onDirtyChange} />);
 
     fireEvent.change(await screen.findByLabelText(/Highlight 1/), { target: { value: 'Modified' } });
 
@@ -154,9 +149,7 @@ describe('<HighlightsForm />', () => {
   it('calls onCancel when cancel button is clicked', async () => {
     const user = userEvent.setup();
     const onCancel = jest.fn();
-    render(
-      <HighlightsForm {...defaultProps} onCancel={onCancel} />,
-    );
+    render(<HighlightsForm {...defaultProps} onCancel={onCancel} />);
 
     await user.click(await screen.findByRole('button', { name: messages.cancelButton.defaultMessage }));
     expect(onCancel).toHaveBeenCalled();
@@ -184,9 +177,7 @@ describe('<HighlightsCard />', () => {
   });
 
   it('renders viewing mode with highlights', async () => {
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     expect(await screen.findByText('Highlight 1')).toBeInTheDocument();
     expect(await screen.findByLabelText(messages.editButton.defaultMessage)).toBeInTheDocument();
@@ -197,18 +188,16 @@ describe('<HighlightsCard />', () => {
       data: { highlights: [], displayName: 'Test' },
     } as unknown as UseQueryResult<XBlockBase, Error>);
 
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
-    expect(await screen.findByRole('button', { name: messages.addHighlightsButton.defaultMessage })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: messages.addHighlightsButton.defaultMessage })
+    ).toBeInTheDocument();
   });
 
   it('transitions to editing mode on edit button click', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByLabelText(messages.editButton.defaultMessage));
 
@@ -222,9 +211,7 @@ describe('<HighlightsCard />', () => {
       data: { highlights: [], displayName: 'Test' },
     } as unknown as UseQueryResult<XBlockBase, Error>);
 
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByRole('button', { name: messages.addHighlightsButton.defaultMessage }));
 
@@ -234,9 +221,7 @@ describe('<HighlightsCard />', () => {
 
   it('returns to viewing mode on cancel', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByLabelText(messages.editButton.defaultMessage));
 
@@ -248,9 +233,7 @@ describe('<HighlightsCard />', () => {
 
   it('submits form and calls onSubmit', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByLabelText(messages.editButton.defaultMessage));
 
@@ -265,9 +248,7 @@ describe('<HighlightsCard />', () => {
 
   it('returns to viewing mode after successful submit', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByLabelText(messages.editButton.defaultMessage));
 
@@ -286,9 +267,7 @@ describe('<HighlightsCard />', () => {
       data: { highlights: ['H1', '', 'H3', '', ''], displayName: 'Test' },
     } as unknown as UseQueryResult<XBlockBase, Error>);
 
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     expect(await screen.findByText('H1')).toBeInTheDocument();
     expect(await screen.findByText('H3')).toBeInTheDocument();
@@ -296,9 +275,7 @@ describe('<HighlightsCard />', () => {
 
   it('shows empty state after clearing all highlights', async () => {
     const user = userEvent.setup();
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     await user.click(await screen.findByLabelText(messages.editButton.defaultMessage));
 
@@ -323,9 +300,7 @@ describe('<HighlightsCard />', () => {
     };
     (routerDom.useBlocker as jest.Mock).mockReturnValue(blockerMock);
 
-    render(
-      <HighlightsCard sectionId="1" onSubmit={onSubmitMock} />,
-    );
+    render(<HighlightsCard sectionId="1" onSubmit={onSubmitMock} />);
 
     expect(blockerMock.state).toBe('blocked');
   });

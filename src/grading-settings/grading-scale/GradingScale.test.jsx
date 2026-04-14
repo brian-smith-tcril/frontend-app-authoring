@@ -112,7 +112,7 @@ describe('<GradingScale />', () => {
           setOverrideInternetConnectionAlert={jest.fn()}
           setEligibleGrade={jest.fn()}
         />
-      </IntlProvider>,
+      </IntlProvider>
     );
     await waitFor(() => {
       const segmentInputs = getAllByTestId('grading-scale-segment-input');
@@ -137,7 +137,7 @@ describe('<GradingScale />', () => {
           setEligibleGrade={jest.fn()}
           defaultGradeDesignations={['A', 'B', 'C', 'D', 'E']}
         />
-      </IntlProvider>,
+      </IntlProvider>
     );
     await waitFor(() => {
       const addNewSegmentBtn = getAllByTestId('grading-scale-btn-add-segment');

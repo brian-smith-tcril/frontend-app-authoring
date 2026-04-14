@@ -31,10 +31,10 @@ ExperimentCardGroup.propTypes = {
         PropTypes.shape({
           label: PropTypes.string,
           url: PropTypes.string,
-        }),
+        })
       ),
       version: PropTypes.number,
-    }),
+    })
   ).isRequired,
 };
 

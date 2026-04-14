@@ -11,7 +11,8 @@ const messages = defineMessages({
   },
   errorDescriptionUnit: {
     id: 'course-authoring.export.modal.error.description.unit',
-    defaultMessage: 'There has been a failure to export to XML at least one component. It is recommended that you go to the edit page and repair the error before attempting another export. Please check that all components on the page are valid and do not display any error messages. The raw error message is: {errorMessage}',
+    defaultMessage:
+      'There has been a failure to export to XML at least one component. It is recommended that you go to the edit page and repair the error before attempting another export. Please check that all components on the page are valid and do not display any error messages. The raw error message is: {errorMessage}',
   },
   errorCancelButtonUnit: {
     id: 'course-authoring.export.modal.error.button.cancel.unit',

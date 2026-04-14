@@ -5,7 +5,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import NestedRows from './NestedRows';
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <IntlProvider locale="en" messages={{}}>{children}</IntlProvider>
+  <IntlProvider locale="en" messages={{}}>
+    {children}
+  </IntlProvider>
 );
 
 const defaultRequiredProps = {
@@ -49,14 +51,10 @@ describe('NestedRows', () => {
     const { container } = render(
       <table>
         <tbody>
-          <NestedRows
-            parentRow={parent as any}
-            parentRowValue="parent"
-            {...defaultRequiredProps}
-          />
+          <NestedRows parentRow={parent as any} parentRowValue="parent" {...defaultRequiredProps} />
         </tbody>
       </table>,
-      { wrapper },
+      { wrapper }
     );
 
     expect(container.querySelector('tr')).toBeNull();
@@ -88,7 +86,7 @@ describe('NestedRows', () => {
           />
         </tbody>
       </table>,
-      { wrapper },
+      { wrapper }
     );
 
     fireEvent.click(screen.getByText('Cancel'));
@@ -118,7 +116,7 @@ describe('NestedRows', () => {
           />
         </tbody>
       </table>,
-      { wrapper },
+      { wrapper }
     );
 
     const childInput = screen.getByDisplayValue('child');

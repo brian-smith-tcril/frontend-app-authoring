@@ -1,8 +1,6 @@
 import { CATEGORIES } from './constants';
 import { ITreeNode, IXBlockInfo, IAncestor } from './interfaces';
-import {
-  getXBlockType, findParentIds, isValidCategory, getBreadcrumbs,
-} from './utils';
+import { getXBlockType, findParentIds, isValidCategory, getBreadcrumbs } from './utils';
 import messages from './messages';
 
 const mockFormatMessage = jest.fn((message) => message.defaultMessage);
@@ -112,7 +110,7 @@ describe('isValidCategory utility', () => {
   it('converts source category to vertical if it has children and is not basic block type', () => {
     const result = isValidCategory(
       { ...sourceParentInfo, category: 'section' },
-      { ...targetParentInfo, category: 'vertical' },
+      { ...targetParentInfo, category: 'vertical' }
     );
     expect(result).toBe(true);
   });
@@ -120,7 +118,7 @@ describe('isValidCategory utility', () => {
   it('converts target category to vertical if it has children and is not basic block type or split_test', () => {
     const result = isValidCategory(
       { ...sourceParentInfo, category: 'vertical' },
-      { ...targetParentInfo, category: 'section' },
+      { ...targetParentInfo, category: 'section' }
     );
     expect(result).toBe(true);
   });
@@ -128,7 +126,7 @@ describe('isValidCategory utility', () => {
   it('returns false when categories are different after conversion', () => {
     const result = isValidCategory(
       { ...sourceParentInfo, category: 'chapter' },
-      { ...targetParentInfo, category: 'section' },
+      { ...targetParentInfo, category: 'section' }
     );
     expect(result).toBe(false);
   });
@@ -147,9 +145,7 @@ describe('getBreadcrumbs utility', () => {
   });
 
   it('returns base category label when category is course', () => {
-    const visitedAncestors: IAncestor[] = [
-      { category: CATEGORIES.KEYS.course, displayName: 'Course Name' },
-    ];
+    const visitedAncestors: IAncestor[] = [{ category: CATEGORIES.KEYS.course, displayName: 'Course Name' }];
 
     const result = getBreadcrumbs(visitedAncestors, mockFormatMessage);
 
@@ -158,9 +154,7 @@ describe('getBreadcrumbs utility', () => {
   });
 
   it('returns empty string if displayName is missing', () => {
-    const visitedAncestors: IAncestor[] = [
-      { category: 'chapter', displayName: '' },
-    ];
+    const visitedAncestors: IAncestor[] = [{ category: 'chapter', displayName: '' }];
 
     const result = getBreadcrumbs(visitedAncestors, mockFormatMessage);
 

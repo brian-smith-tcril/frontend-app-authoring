@@ -11,10 +11,10 @@ const availableGroupPropTypes = {
         PropTypes.shape({
           label: PropTypes.string,
           url: PropTypes.string,
-        }),
+        })
       ),
       version: PropTypes.number,
-    }),
+    })
   ),
   id: PropTypes.number,
   name: PropTypes.string,

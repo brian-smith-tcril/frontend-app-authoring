@@ -2,17 +2,12 @@ import { useContext, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Stack, Container, Alert, Layout, Button,
-  DataTable,
-} from '@openedx/paragon';
+import { Stack, Container, Alert, Layout, Button, DataTable } from '@openedx/paragon';
 
 import Header from '@src/header';
 import { useCourseDetails } from '@src/course-outline/data/apiHooks';
 import SubHeader from '@src/generic/sub-header/SubHeader';
-import {
-  ArrowForward, CheckCircle, Info, WarningFilled,
-} from '@openedx/paragon/icons';
+import { ArrowForward, CheckCircle, Info, WarningFilled } from '@openedx/paragon/icons';
 import Loading from '@src/generic/Loading';
 import { ToastContext } from '@src/generic/toast-context';
 import { Paragraph } from '@src/utils';
@@ -48,14 +43,11 @@ const ImportDetailsContent = () => {
     throw new Error('Error: route is missing migrationId.');
   }
 
-  const {
-    data: courseDetails,
-    isPending: isPendingCourseDetails,
-  } = useCourseDetails(courseId);
-  const {
-    data: migrationStatusData,
-    isPaused: isPendingMigrationStatusData,
-  } = useModulestoreMigrationStatus(migrationTaskId, enableRefeshState ? 1000 : false);
+  const { data: courseDetails, isPending: isPendingCourseDetails } = useCourseDetails(courseId);
+  const { data: migrationStatusData, isPaused: isPendingMigrationStatusData } = useModulestoreMigrationStatus(
+    migrationTaskId,
+    enableRefeshState ? 1000 : false
+  );
   // Get the first migration, because the courses are imported one by one
   const courseImportDetails = migrationStatusData?.parameters?.[0];
 
@@ -63,21 +55,12 @@ const ImportDetailsContent = () => {
     data: migrationBlockInfo,
     isPending: isPendingMigrationBlockInfo,
     refetch: refetchMigrationBlockInfo,
-  } = useMigrationBlocksInfo(
-    libraryId,
-    undefined,
-    undefined,
-    migrationTaskId,
-    migrationStatusData?.state !== 'Failed',
-  );
+  } = useMigrationBlocksInfo(libraryId, undefined, undefined, migrationTaskId, migrationStatusData?.state !== 'Failed');
 
   const isPending = isPendingCourseDetails || isPendingMigrationStatusData || isPendingMigrationBlockInfo;
 
   // Build migration summary using the migration blocks info
-  const {
-    migrationSummary,
-    unsupportedBlockIds,
-  } = useMemo(() => {
+  const { migrationSummary, unsupportedBlockIds } = useMemo(() => {
     const counts: MigrationSummary = {
       totalBlocks: 0,
       sections: 0,
@@ -150,13 +133,11 @@ const ImportDetailsContent = () => {
 
   // Fetch unsupported blocks usage_key information from meilisearch index.
   const { data: unsupportedBlocksData } = useGetContentHits(
-    [
-      `usage_key IN [${unsupportedBlockIds.map(k => `"${k}"`).join(',')}]`,
-    ],
+    [`usage_key IN [${unsupportedBlockIds.map((k) => `"${k}"`).join(',')}]`],
     (unsupportedBlockIds.length || 0) > 0,
     ['usage_key', 'block_type', 'display_name'],
     unsupportedBlockIds.length,
-    true,
+    true
   );
 
   // Build the data for the reasons for failed imports
@@ -165,12 +146,15 @@ const ImportDetailsContent = () => {
       return [];
     }
 
-    const reasons = migrationBlockInfo.reduce((result, block) => ({
-      ...result,
-      [block.sourceKey]: block.unsupportedReason || '',
-    }), {} as Record<string, string>);
+    const reasons = migrationBlockInfo.reduce(
+      (result, block) => ({
+        ...result,
+        [block.sourceKey]: block.unsupportedReason || '',
+      }),
+      {} as Record<string, string>
+    );
 
-    return unsupportedBlocksData.hits.map(block => ({
+    return unsupportedBlocksData.hits.map((block) => ({
       blockName: block.display_name,
       blockType: block.block_type,
       reason: reasons[block.usage_key],
@@ -209,9 +193,11 @@ const ImportDetailsContent = () => {
       navigate(`../import/${courseImportDetails.source}/${newMigrationTask.uuid}`);
       setDisableReimport(false);
     } catch {
-      showToast(intl.formatMessage(messages.importCourseCompleteFailedToastMessage, {
-        courseName: courseDetails.title,
-      }));
+      showToast(
+        intl.formatMessage(messages.importCourseCompleteFailedToastMessage, {
+          courseName: courseDetails.title,
+        })
+      );
       setDisableReimport(false);
     }
   };
@@ -225,7 +211,8 @@ const ImportDetailsContent = () => {
       <Stack gap={3}>
         <Helmet>
           <title>
-            {libraryData?.title || ''} | {intl.formatMessage(messages.importSuccessfulAlertTitle)} | {process.env.SITE_NAME}
+            {libraryData?.title || ''} | {intl.formatMessage(messages.importSuccessfulAlertTitle)} |{' '}
+            {process.env.SITE_NAME}
           </title>
         </Helmet>
         <Alert
@@ -256,7 +243,9 @@ const ImportDetailsContent = () => {
             />
           </p>
         </Alert>
-        <h4><FormattedMessage {...messages.importSummaryTitle} /></h4>
+        <h4>
+          <FormattedMessage {...messages.importSummaryTitle} />
+        </h4>
         <SummaryCard
           totalBlocks={migrationSummary.totalBlocks}
           totalComponents={migrationSummary.components}
@@ -276,7 +265,8 @@ const ImportDetailsContent = () => {
         </p>
       </Stack>
     );
-  } if (migrationStatus === 'Failed') {
+  }
+  if (migrationStatus === 'Failed') {
     return (
       <Stack gap={3}>
         <Helmet>
@@ -312,18 +302,22 @@ const ImportDetailsContent = () => {
             />
           </p>
         </Alert>
-        <h4><FormattedMessage {...messages.importFailedDetailsSectionTitle} /></h4>
+        <h4>
+          <FormattedMessage {...messages.importFailedDetailsSectionTitle} />
+        </h4>
         <p>
           <FormattedMessage {...messages.importFailedDetailsSectionBody} />
         </p>
       </Stack>
     );
-  } if (migrationStatus === 'Partial Succeeded') {
+  }
+  if (migrationStatus === 'Partial Succeeded') {
     return (
       <Stack gap={3}>
         <Helmet>
           <title>
-            {libraryData?.title || ''} | {intl.formatMessage(messages.importPartialAlertTitle)} | {process.env.SITE_NAME}
+            {libraryData?.title || ''} | {intl.formatMessage(messages.importPartialAlertTitle)} |{' '}
+            {process.env.SITE_NAME}
           </title>
         </Helmet>
         <Alert
@@ -354,7 +348,9 @@ const ImportDetailsContent = () => {
             />
           </p>
         </Alert>
-        <h4><FormattedMessage {...messages.importSummaryTitle} /></h4>
+        <h4>
+          <FormattedMessage {...messages.importSummaryTitle} />
+        </h4>
         <SummaryCard
           totalBlocks={migrationSummary.totalBlocks}
           totalComponents={migrationSummary.components}
@@ -369,7 +365,7 @@ const ImportDetailsContent = () => {
             {...messages.importPartialBody}
             values={{
               percentage: Math.floor(
-                (migrationSummary.totalBlocks * 100) / (migrationSummary.totalBlocks + migrationSummary.unsupported),
+                (migrationSummary.totalBlocks * 100) / (migrationSummary.totalBlocks + migrationSummary.unsupported)
               ),
               courseName: courseDetails?.title,
               p: Paragraph,
@@ -387,7 +383,6 @@ const ImportDetailsContent = () => {
               {
                 Header: intl.formatMessage(messages.importPartialReasonTableBlockName),
                 accessor: 'blockName',
-
               },
               {
                 Header: intl.formatMessage(messages.importPartialReasonTableBlockType),
@@ -411,7 +406,9 @@ const ImportDetailsContent = () => {
   return (
     // In Progress
     <Stack gap={3}>
-      <h4><FormattedMessage {...messages.importInProgressTitle} /></h4>
+      <h4>
+        <FormattedMessage {...messages.importInProgressTitle} />
+      </h4>
       <p>
         <FormattedMessage
           {...messages.importInProgressBody}
@@ -420,14 +417,12 @@ const ImportDetailsContent = () => {
           }}
         />
       </p>
-      <h4><FormattedMessage {...messages.importSummaryTitle} /></h4>
+      <h4>
+        <FormattedMessage {...messages.importSummaryTitle} />
+      </h4>
       <SummaryCard isPending />
       <div className="w-100 d-flex justify-content-end">
-        <Button
-          variant="outline-primary"
-          iconAfter={ArrowForward}
-          disabled
-        >
+        <Button variant="outline-primary" iconAfter={ArrowForward} disabled>
           <FormattedMessage {...messages.viewImportedContentButton} />
         </Button>
       </div>
@@ -451,7 +446,9 @@ export const ImportDetailsPage = () => {
   return (
     <div className="d-flex">
       <Helmet>
-        <title>{libraryData?.title || ''} | {process.env.SITE_NAME}</title>
+        <title>
+          {libraryData?.title || ''} | {process.env.SITE_NAME}
+        </title>
       </Helmet>
       <div className="flex-grow-1">
         <Header
@@ -467,10 +464,7 @@ export const ImportDetailsPage = () => {
         />
         <Container className="mt-4 mb-5">
           <div className="px-4 bg-light-200 border-bottom">
-            <SubHeader
-              title={intl.formatMessage(messages.importDetailsTitle)}
-              hideBorder
-            />
+            <SubHeader title={intl.formatMessage(messages.importDetailsTitle)} hideBorder />
           </div>
           <Layout xs={[{ span: 9 }, { span: 3 }]}>
             <Layout.Element>

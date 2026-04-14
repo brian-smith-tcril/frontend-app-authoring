@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, screen, initializeMocks, fireEvent,
-} from '@src/testUtils';
+import { render, screen, initializeMocks, fireEvent } from '@src/testUtils';
 import { useDispatch } from 'react-redux';
 import LanguageSelector from './LanguageSelector';
 import { thunkActions, selectors } from '../../../../../../data/redux';
@@ -32,7 +30,9 @@ jest.mock('../../../../../../data/constants/video', () => ({
 jest.mock('../../../../../../data/redux', () => ({
   thunkActions: {
     video: {
-      updateTranscriptLanguage: jest.fn((args) => ({ updateTranscriptLanguage: args })).mockName('thunkActions.video.updateTranscriptLanguage'),
+      updateTranscriptLanguage: jest
+        .fn((args) => ({ updateTranscriptLanguage: args }))
+        .mockName('thunkActions.video.updateTranscriptLanguage'),
       uploadTranscript: jest.fn().mockName('thunkActions.video.uploadTranscript'),
     },
   },
@@ -48,7 +48,10 @@ describe('LanguageSelector', () => {
     onSelect: jest.fn().mockName('props.OnSelect'),
     index: 1,
     language: lang1Code,
-    openLanguages: [[lang2Code, lang2], [lang3Code, lang3]],
+    openLanguages: [
+      [lang2Code, lang2],
+      [lang3Code, lang3],
+    ],
   };
   beforeEach(() => {
     initializeMocks();
@@ -83,7 +86,10 @@ describe('LanguageSelector', () => {
     const mockDispatch = jest.fn();
     useDispatch.mockReturnValue(mockDispatch);
     const { video } = selectors;
-    jest.spyOn(video, 'openLanguages').mockReturnValue([[lang2Code, lang2], [lang3Code, lang3]]);
+    jest.spyOn(video, 'openLanguages').mockReturnValue([
+      [lang2Code, lang2],
+      [lang3Code, lang3],
+    ]);
     render(<LanguageSelector index={1} language={lang1Code} />);
     fireEvent.click(screen.getByRole('button', { name: 'Languages' }));
     fireEvent.click(screen.getByText(lang2));

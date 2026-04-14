@@ -12,7 +12,9 @@ jest.mock('@src/hooks', () => ({
     const wrappedSetState = (val: any) => {
       const newVal = typeof val === 'function' ? val(state) : val;
       setState(newVal);
-      if (cb) { cb(newVal); }
+      if (cb) {
+        cb(newVal);
+      }
     };
     return [state, wrappedSetState];
   },

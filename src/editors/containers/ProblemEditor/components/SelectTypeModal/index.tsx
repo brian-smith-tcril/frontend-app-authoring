@@ -20,24 +20,23 @@ interface Props {
   openAdvanced?: boolean;
 }
 
-const SelectTypeModal: React.FC<Props> = ({
-  onClose,
-  openAdvanced = false,
-}) => {
+const SelectTypeModal: React.FC<Props> = ({ onClose, openAdvanced = false }) => {
   const [selected, setSelected] = React.useState<ProblemType | AdvancedProblemType>(
-    openAdvanced ? AdvanceProblemKeys.BLANK : ProblemTypeKeys.SINGLESELECT,
+    openAdvanced ? AdvanceProblemKeys.BLANK : ProblemTypeKeys.SINGLESELECT
   );
   hooks.useArrowNav(selected, setSelected);
 
   return (
     <SelectTypeWrapper onClose={onClose} selected={selected}>
       <Row className="justify-content-center">
-        {(!isAdvancedProblemType(selected)) ? (
+        {!isAdvancedProblemType(selected) ? (
           <Stack direction="horizontal" gap={4} className="flex-wrap mb-6">
             <ProblemTypeSelect selected={selected} setSelected={setSelected} />
             <Preview problemType={selected} />
           </Stack>
-        ) : <AdvanceTypeSelect selected={selected} setSelected={setSelected} />}
+        ) : (
+          <AdvanceTypeSelect selected={selected} setSelected={setSelected} />
+        )}
       </Row>
     </SelectTypeWrapper>
   );

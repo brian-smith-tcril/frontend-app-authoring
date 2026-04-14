@@ -2,12 +2,7 @@
 import { camelCase, isEmpty } from 'lodash';
 import { getConfig, camelCaseObject } from '@edx/frontend-platform';
 import { RequestStatus } from '../../../data/constants';
-import {
-  addModels,
-  removeModel,
-  updateModel,
-  updateModels,
-} from '../../../generic/model-store';
+import { addModels, removeModel, updateModel, updateModels } from '../../../generic/model-store';
 import {
   addThumbnail,
   addVideo,
@@ -50,23 +45,18 @@ const updateVideoUploadStatus = async (courseId, edxVideoId, message, status) =>
 export function cancelAllUploads(courseId, uploadData) {
   return async (dispatch) => {
     if (controllers) {
-      controllers.forEach(control => {
+      controllers.forEach((control) => {
         control.abort();
       });
       Object.entries(uploadData).forEach(([key, value]) => {
         if (value.status === RequestStatus.IN_PROGRESS) {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          updateVideoUploadStatus(
-            courseId,
-            key,
-            'Upload failed',
-            'upload_failed',
-          );
+          updateVideoUploadStatus(courseId, key, 'Upload failed', 'upload_failed');
           dispatch(
             updateErrors({
               error: 'add',
               message: `Cancelled upload for ${value.name}.`,
-            }),
+            })
           );
         }
       });
@@ -78,9 +68,7 @@ export function cancelAllUploads(courseId, uploadData) {
 
 export function fetchVideos(courseId) {
   return async (dispatch) => {
-    dispatch(
-      updateLoadingStatus({ courseId, status: RequestStatus.IN_PROGRESS }),
-    );
+    dispatch(updateLoadingStatus({ courseId, status: RequestStatus.IN_PROGRESS }));
     try {
       const { previousUploads, ...data } = await getVideos(courseId);
       dispatch(setPageSettings({ ...data }));
@@ -88,38 +76,26 @@ export function fetchVideos(courseId) {
       // If previous uploads are empty there is no need to add an empty model
       // or loop through and empty list so automatically set loading to successful
       if (isEmpty(previousUploads)) {
-        dispatch(
-          updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }),
-        );
+        dispatch(updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }));
       } else {
         const parsedVideos = updateFileValues(previousUploads);
         const videoIds = parsedVideos.map((video) => video.id);
         dispatch(addModels({ modelType: 'videos', models: parsedVideos }));
         dispatch(setVideoIds({ videoIds }));
-        dispatch(
-          updateLoadingStatus({ courseId, status: RequestStatus.PARTIAL }),
-        );
+        dispatch(updateLoadingStatus({ courseId, status: RequestStatus.PARTIAL }));
         const allUsageLocations = await getAllUsagePaths({
           courseId,
           videoIds,
         });
-        dispatch(
-          updateModels({ modelType: 'videos', models: allUsageLocations }),
-        );
-        dispatch(
-          updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }),
-        );
+        dispatch(updateModels({ modelType: 'videos', models: allUsageLocations }));
+        dispatch(updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }));
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
         dispatch(updateLoadingStatus({ status: RequestStatus.DENIED }));
       } else {
-        dispatch(
-          updateErrors({ error: 'loading', message: 'Failed to load videos' }),
-        );
-        dispatch(
-          updateLoadingStatus({ courseId, status: RequestStatus.FAILED }),
-        );
+        dispatch(updateErrors({ error: 'loading', message: 'Failed to load videos' }));
+        dispatch(updateLoadingStatus({ courseId, status: RequestStatus.FAILED }));
       }
     }
   };
@@ -133,13 +109,9 @@ export function resetErrors({ errorType }) {
 
 export function updateVideoOrder(courseId, videoIds) {
   return async (dispatch) => {
-    dispatch(
-      updateLoadingStatus({ courseId, status: RequestStatus.IN_PROGRESS }),
-    );
+    dispatch(updateLoadingStatus({ courseId, status: RequestStatus.IN_PROGRESS }));
     dispatch(setVideoIds({ videoIds }));
-    dispatch(
-      updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }),
-    );
+    dispatch(updateLoadingStatus({ courseId, status: RequestStatus.SUCCESSFUL }));
   };
 }
 
@@ -149,7 +121,7 @@ export function deleteVideoFile(courseId, id) {
       updateEditStatus({
         editType: 'delete',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
     try {
       await deleteVideo(courseId, id);
@@ -159,18 +131,16 @@ export function deleteVideoFile(courseId, id) {
         updateEditStatus({
           editType: 'delete',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'delete',
           message: `Failed to delete file id ${id}.`,
-        }),
+        })
       );
-      dispatch(
-        updateEditStatus({ editType: 'delete', status: RequestStatus.FAILED }),
-      );
+      dispatch(updateEditStatus({ editType: 'delete', status: RequestStatus.FAILED }));
     }
   };
 }
@@ -180,12 +150,7 @@ export function markVideoUploadsInProgressAsFailed({ uploadingIdsRef, courseId }
     Object.keys(uploadingIdsRef.current.uploadData).forEach((edxVideoId) => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        updateVideoUploadStatus(
-          courseId,
-          edxVideoId || '',
-          'Upload failed',
-          'upload_failed',
-        );
+        updateVideoUploadStatus(courseId, edxVideoId || '', 'Upload failed', 'upload_failed');
       } catch {
         // eslint-disable-next-line no-console
         console.error(`Failed to send "Failed" upload status for ${edxVideoId} onbeforeunload`);
@@ -205,9 +170,7 @@ const addVideoToEdxVal = async (courseId, file, dispatch) => {
     if (createUrlResponse.status < 200 || createUrlResponse.status >= 300) {
       dispatch(failAddVideo({ fileName: file.name }));
     }
-    const [{ uploadUrl, edxVideoId }] = camelCaseObject(
-      createUrlResponse.data,
-    ).files;
+    const [{ uploadUrl, edxVideoId }] = camelCaseObject(createUrlResponse.data).files;
     return { uploadUrl, edxVideoId };
   } catch {
     dispatch(failAddVideo({ fileName: file.name }));
@@ -215,45 +178,21 @@ const addVideoToEdxVal = async (courseId, file, dispatch) => {
   }
 };
 
-const uploadToBucket = async ({
-  courseId,
-  uploadUrl,
-  file,
-  uploadingIdsRef,
-  edxVideoId,
-  dispatch,
-}) => {
+const uploadToBucket = async ({ courseId, uploadUrl, file, uploadingIdsRef, edxVideoId, dispatch }) => {
   const currentController = new AbortController();
   controllers.push(currentController);
   const currentVideoData = uploadingIdsRef.current.uploadData[edxVideoId];
 
   try {
-    const putToServerResponse = await uploadVideo(
-      uploadUrl,
-      file,
-      uploadingIdsRef,
-      edxVideoId,
-      currentController,
-    );
-    if (
-      putToServerResponse.status < 200
-      || putToServerResponse.status >= 300
-    ) {
-      throw new ServerError(
-        'Server responded with an error status',
-        putToServerResponse.status,
-      );
+    const putToServerResponse = await uploadVideo(uploadUrl, file, uploadingIdsRef, edxVideoId, currentController);
+    if (putToServerResponse.status < 200 || putToServerResponse.status >= 300) {
+      throw new ServerError('Server responded with an error status', putToServerResponse.status);
     } else {
       uploadingIdsRef.current.uploadData[edxVideoId] = {
         ...currentVideoData,
         status: RequestStatus.SUCCESSFUL,
       };
-      await updateVideoUploadStatus(
-        courseId,
-        edxVideoId,
-        'Upload completed',
-        'upload_completed',
-      );
+      await updateVideoUploadStatus(courseId, edxVideoId, 'Upload completed', 'upload_completed');
     }
     return false;
   } catch (error) {
@@ -265,30 +204,19 @@ const uploadToBucket = async ({
         updateErrors({
           error: 'add',
           message: `Failed to upload ${file.name}.`,
-        }),
+        })
       );
       uploadingIdsRef.current.uploadData[edxVideoId] = {
         ...currentVideoData,
         status: RequestStatus.FAILED,
       };
     }
-    await updateVideoUploadStatus(
-      courseId,
-      edxVideoId || '',
-      'Upload failed',
-      'upload_failed',
-    );
+    await updateVideoUploadStatus(courseId, edxVideoId || '', 'Upload failed', 'upload_failed');
     return true;
   }
 };
 
-export const newUploadData = ({
-  status,
-  edxVideoId,
-  currentData,
-  key,
-  originalValue,
-}) => {
+export const newUploadData = ({ status, edxVideoId, currentData, key, originalValue }) => {
   const newData = currentData;
   if (edxVideoId && edxVideoId !== key) {
     newData[edxVideoId] = { ...originalValue, status };
@@ -300,70 +228,64 @@ export const newUploadData = ({
   return newData;
 };
 
-export function addVideoFile(
-  courseId,
-  files,
-  videoIds,
-  uploadingIdsRef,
-) {
+export function addVideoFile(courseId, files, videoIds, uploadingIdsRef) {
   return async (dispatch) => {
-    dispatch(
-      updateEditStatus({ editType: 'add', status: RequestStatus.IN_PROGRESS }),
-    );
+    dispatch(updateEditStatus({ editType: 'add', status: RequestStatus.IN_PROGRESS }));
     let hasFailure = false;
-    await Promise.all(files.map(async (file, idx) => {
-      const name = file?.name || `Video ${idx + 1}`;
-      const progress = 0;
+    await Promise.all(
+      files.map(async (file, idx) => {
+        const name = file?.name || `Video ${idx + 1}`;
+        const progress = 0;
 
-      uploadingIdsRef.current.uploadData = newUploadData({
-        status: RequestStatus.PENDING,
-        currentData: uploadingIdsRef.current.uploadData,
-        originalValue: { name, progress },
-        key: `video_${idx}`,
-      });
-
-      const { edxVideoId, uploadUrl } = await addVideoToEdxVal(courseId, file, dispatch);
-
-      if (uploadUrl && edxVideoId) {
         uploadingIdsRef.current.uploadData = newUploadData({
-          status: RequestStatus.IN_PROGRESS,
+          status: RequestStatus.PENDING,
           currentData: uploadingIdsRef.current.uploadData,
           originalValue: { name, progress },
           key: `video_${idx}`,
-          edxVideoId,
         });
-        hasFailure = await uploadToBucket({
-          courseId, uploadUrl, file, uploadingIdsRef, edxVideoId, dispatch,
-        });
-      } else {
-        hasFailure = true;
-        uploadingIdsRef.current.uploadData[idx] = {
-          status: RequestStatus.FAILED,
-          name,
-          progress,
-        };
-      }
-    }));
+
+        const { edxVideoId, uploadUrl } = await addVideoToEdxVal(courseId, file, dispatch);
+
+        if (uploadUrl && edxVideoId) {
+          uploadingIdsRef.current.uploadData = newUploadData({
+            status: RequestStatus.IN_PROGRESS,
+            currentData: uploadingIdsRef.current.uploadData,
+            originalValue: { name, progress },
+            key: `video_${idx}`,
+            edxVideoId,
+          });
+          hasFailure = await uploadToBucket({
+            courseId,
+            uploadUrl,
+            file,
+            uploadingIdsRef,
+            edxVideoId,
+            dispatch,
+          });
+        } else {
+          hasFailure = true;
+          uploadingIdsRef.current.uploadData[idx] = {
+            status: RequestStatus.FAILED,
+            name,
+            progress,
+          };
+        }
+      })
+    );
 
     try {
       const { videos } = await fetchVideoList(courseId);
-      const newVideos = videos.filter(
-        (video) => !videoIds.includes(video.edxVideoId),
-      );
+      const newVideos = videos.filter((video) => !videoIds.includes(video.edxVideoId));
       const newVideoIds = newVideos.map((video) => video.edxVideoId);
       const parsedVideos = updateFileValues(newVideos, true);
       dispatch(addModels({ modelType: 'videos', models: parsedVideos }));
       dispatch(setVideoIds({ videoIds: newVideoIds.concat(videoIds) }));
     } catch (error) {
-      dispatch(
-        updateEditStatus({ editType: 'add', status: RequestStatus.FAILED }),
-      );
+      dispatch(updateEditStatus({ editType: 'add', status: RequestStatus.FAILED }));
       // eslint-disable-next-line
       console.error(`fetchVideoList failed with message: ${error.message}`);
       hasFailure = true;
-      dispatch(
-        updateErrors({ error: 'add', message: 'Failed to load videos' }),
-      );
+      dispatch(updateErrors({ error: 'add', message: 'Failed to load videos' }));
     }
 
     if (hasFailure) {
@@ -385,7 +307,7 @@ export function addVideoThumbnail({ file, videoId, courseId }) {
       updateEditStatus({
         editType: 'thumbnail',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
     dispatch(resetErrors({ errorType: 'thumbnail' }));
     try {
@@ -401,13 +323,13 @@ export function addVideoThumbnail({ file, videoId, courseId }) {
             id: videoId,
             thumbnail,
           },
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'thumbnail',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch (error) {
       if (error.response?.data?.error) {
@@ -418,31 +340,26 @@ export function addVideoThumbnail({ file, videoId, courseId }) {
           updateErrors({
             error: 'thumbnail',
             message: `Failed to add thumbnail for video id ${videoId}.`,
-          }),
+          })
         );
       }
       dispatch(
         updateEditStatus({
           editType: 'thumbnail',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
 }
 
-export function deleteVideoTranscript({
-  language,
-  videoId,
-  transcripts,
-  apiUrl,
-}) {
+export function deleteVideoTranscript({ language, videoId, transcripts, apiUrl }) {
   return async (dispatch) => {
     dispatch(
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -451,9 +368,7 @@ export function deleteVideoTranscript({
         language,
         apiUrl,
       });
-      const updatedTranscripts = transcripts.filter(
-        (transcript) => transcript !== language,
-      );
+      const updatedTranscripts = transcripts.filter((transcript) => transcript !== language);
       const transcriptStatus = updatedTranscripts?.length > 0 ? 'transcribed' : 'notTranscribed';
 
       dispatch(
@@ -464,44 +379,39 @@ export function deleteVideoTranscript({
             transcripts: updatedTranscripts,
             transcriptStatus,
           },
-        }),
+        })
       );
 
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'transcript',
           message: `Failed to delete ${language} transcript.`,
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
 }
 
-export function downloadVideoTranscript({
-  language,
-  videoId,
-  filename,
-  apiUrl,
-}) {
+export function downloadVideoTranscript({ language, videoId, filename, apiUrl }) {
   return async (dispatch) => {
     dispatch(
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -515,39 +425,32 @@ export function downloadVideoTranscript({
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'transcript',
           message: `Failed to download ${filename}.`,
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
 }
 
-export function uploadVideoTranscript({
-  language,
-  newLanguage,
-  videoId,
-  file,
-  apiUrl,
-  transcripts,
-}) {
+export function uploadVideoTranscript({ language, newLanguage, videoId, file, apiUrl, transcripts }) {
   return async (dispatch) => {
     dispatch(
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
     const isReplacement = !isEmpty(language);
 
@@ -561,9 +464,7 @@ export function uploadVideoTranscript({
       });
       let updatedTranscripts = transcripts;
       if (isReplacement) {
-        const removeTranscript = transcripts.filter(
-          (transcript) => transcript !== language,
-        );
+        const removeTranscript = transcripts.filter((transcript) => transcript !== language);
         updatedTranscripts = [...removeTranscript, newLanguage];
       } else {
         updatedTranscripts = [...transcripts, newLanguage];
@@ -579,14 +480,14 @@ export function uploadVideoTranscript({
             transcripts: updatedTranscripts,
             transcriptStatus,
           },
-        }),
+        })
       );
 
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch (error) {
       if (error.response?.data?.error) {
@@ -602,7 +503,7 @@ export function uploadVideoTranscript({
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
@@ -614,7 +515,7 @@ export function getUsagePaths({ video, courseId }) {
       updateEditStatus({
         editType: 'usageMetrics',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -632,26 +533,26 @@ export function getUsagePaths({ video, courseId }) {
             usageLocations,
             activeStatus,
           },
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'usageMetrics',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'usageMetrics',
           message: `Failed to get usage metrics for ${video.displayName}.`,
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'usageMetrics',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
@@ -663,7 +564,7 @@ export function fetchVideoDownload({ selectedRows, courseId }) {
       updateEditStatus({
         editType: 'download',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
     try {
       const errors = await getDownload(selectedRows, courseId);
@@ -671,7 +572,7 @@ export function fetchVideoDownload({ selectedRows, courseId }) {
         updateEditStatus({
           editType: 'download',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
       if (!isEmpty(errors)) {
         errors.forEach((error) => {
@@ -681,7 +582,7 @@ export function fetchVideoDownload({ selectedRows, courseId }) {
           updateEditStatus({
             editType: 'download',
             status: RequestStatus.FAILED,
-          }),
+          })
         );
       }
     } catch {
@@ -689,13 +590,13 @@ export function fetchVideoDownload({ selectedRows, courseId }) {
         updateErrors({
           error: 'download',
           message: 'Failed to download zip file of videos.',
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'download',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
@@ -707,7 +608,7 @@ export function clearAutomatedTranscript({ courseId }) {
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -717,20 +618,20 @@ export function clearAutomatedTranscript({ courseId }) {
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'transcript',
           message: 'Failed to update order transcripts settings.',
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
@@ -742,7 +643,7 @@ export function updateTranscriptCredentials({ courseId, data }) {
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -750,26 +651,26 @@ export function updateTranscriptCredentials({ courseId, data }) {
       dispatch(
         updateTranscriptCredentialsSuccess({
           provider: camelCase(data.provider),
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch {
       dispatch(
         updateErrors({
           error: 'transcript',
           message: `Failed to update ${data.provider} credentials.`,
-        }),
+        })
       );
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };
@@ -781,7 +682,7 @@ export function updateTranscriptPreference({ courseId, data }) {
       updateEditStatus({
         editType: 'transcript',
         status: RequestStatus.IN_PROGRESS,
-      }),
+      })
     );
 
     try {
@@ -791,7 +692,7 @@ export function updateTranscriptPreference({ courseId, data }) {
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.SUCCESSFUL,
-        }),
+        })
       );
     } catch (error) {
       if (error.response?.data?.error) {
@@ -802,14 +703,14 @@ export function updateTranscriptPreference({ courseId, data }) {
           updateErrors({
             error: 'transcript',
             message: `Failed to update ${data.provider} transcripts settings.`,
-          }),
+          })
         );
       }
       dispatch(
         updateEditStatus({
           editType: 'transcript',
           status: RequestStatus.FAILED,
-        }),
+        })
       );
     }
   };

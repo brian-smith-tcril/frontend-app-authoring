@@ -21,9 +21,7 @@ import {
 } from '@src/course-outline/data/apiHooks';
 import { PUBLISH_TYPES } from '@src/course-unit/constants';
 import { COURSE_BLOCK_NAMES } from './constants';
-import {
-  updateSavingStatus,
-} from './data/slice';
+import { updateSavingStatus } from './data/slice';
 import {
   getLoadingStatus,
   getOutlineIndexData,
@@ -88,7 +86,7 @@ const useCourseOutline = ({ courseId }) => {
   const statusBarData = useSelector(getStatusBarData);
   const savingStatus = useSelector(getSavingStatus);
   const courseActions = useSelector(getCourseActions);
-  
+
   const isCustomRelativeDatesActive = useSelector(getCustomRelativeDatesActiveFlag);
   const genericSavingStatus = useSelector(getGenericSavingStatus);
   const errors = useSelector(getErrors);
@@ -151,9 +149,7 @@ const useCourseOutline = ({ courseId }) => {
     openHighlightsModal();
   };
 
-  const {
-    mutate: updateCourseSectionHighlights,
-  } = useUpdateCourseSectionHighlights();
+  const { mutate: updateCourseSectionHighlights } = useUpdateCourseSectionHighlights();
   const handleHighlightsFormSubmit = (highlights) => {
     const dataToSend = Object.values(highlights).filter(Boolean);
     updateCourseSectionHighlights({
@@ -179,15 +175,18 @@ const useCourseOutline = ({ courseId }) => {
       return;
     }
 
-    await unlinkDownstream({
-      downstreamBlockId: currentUnlinkModalData.value.id,
-      sectionId: currentUnlinkModalData.sectionId,
-      subsectionId: currentUnlinkModalData.subsectionId,
-    }, {
-      onSuccess: () => {
-        closeUnlinkModal();
+    await unlinkDownstream(
+      {
+        downstreamBlockId: currentUnlinkModalData.value.id,
+        sectionId: currentUnlinkModalData.sectionId,
+        subsectionId: currentUnlinkModalData.subsectionId,
       },
-    });
+      {
+        onSuccess: () => {
+          closeUnlinkModal();
+        },
+      }
+    );
   }, [currentUnlinkModalData, unlinkDownstream, closeUnlinkModal]);
 
   const { mutate: configureCourseSection } = useConfigureSection();

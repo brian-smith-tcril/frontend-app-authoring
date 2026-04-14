@@ -18,7 +18,7 @@ it('shows fallback icon if thumbnail fails to load', () => {
         status={VIDEO_SUCCESS_STATUSES[0]}
         pageLoadStatus={RequestStatus.SUCCESSFUL}
       />
-    </IntlProvider>,
+    </IntlProvider>
   );
 
   const image = screen.getByRole('img', { name: /video thumbnail/i });

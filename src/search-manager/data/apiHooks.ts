@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  keepPreviousData, skipToken, useInfiniteQuery, useQuery,
-} from '@tanstack/react-query';
+import { keepPreviousData, skipToken, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { type Filter, MeiliSearch } from 'meilisearch';
 
 import {
@@ -22,8 +20,8 @@ import {
  *
  */
 export const useContentSearchConnection = (): {
-  client?: MeiliSearch,
-  indexName?: string,
+  client?: MeiliSearch;
+  indexName?: string;
   hasConnectionError: boolean;
 } => {
   const { data: connectionDetails, isError: hasConnectionError } = useQuery({
@@ -67,22 +65,20 @@ export const buildSearchQueryKey = ({
   publishStatusFilter: PublishStatus[];
   tagsFilter: string[];
   sort: SearchSortOption[];
-}) => (
-  [
-    'content_search',
-    'results',
-    client?.config.apiKey,
-    client?.config.host,
-    indexName,
-    extraFilter,
-    searchKeywords,
-    blockTypesFilter,
-    problemTypesFilter,
-    publishStatusFilter,
-    tagsFilter,
-    sort,
-  ]
-);
+}) => [
+  'content_search',
+  'results',
+  client?.config.apiKey,
+  client?.config.host,
+  indexName,
+  extraFilter,
+  searchKeywords,
+  blockTypesFilter,
+  problemTypesFilter,
+  publishStatusFilter,
+  tagsFilter,
+  sort,
+];
 
 /**
  * Get the results of a search
@@ -168,10 +164,7 @@ export const useContentSearchResults = ({
   });
 
   const pages = query.data?.pages;
-  const hits = React.useMemo(
-    () => pages?.reduce((allHits, page) => [...allHits, ...page.hits], []) ?? [],
-    [pages],
-  );
+  const hits = React.useMemo(() => pages?.reduce((allHits, page) => [...allHits, ...page.hits], []) ?? [], [pages]);
 
   return {
     hits,
@@ -280,10 +273,10 @@ export const useTagFilterOptions = (args: {
       return { tags: undefined, mayBeMissingResults: false };
     }
     // Combine these two queries to filter the list of tags based on the keyword search.
-    const tags = mainQuery.data.tags.filter(
-      ({ tagPath }) => tagKeywordSearchData.data.matches.some(
-        (matchingTag) => matchingTag.tagPath === tagPath || matchingTag.tagPath.startsWith(tagPath + TAG_SEP),
-      ),
+    const tags = mainQuery.data.tags.filter(({ tagPath }) =>
+      tagKeywordSearchData.data.matches.some(
+        (matchingTag) => matchingTag.tagPath === tagPath || matchingTag.tagPath.startsWith(tagPath + TAG_SEP)
+      )
     );
     return {
       tags,
@@ -298,14 +291,7 @@ export const useGetBlockTypes = (extraFilters: Filter, enabled: boolean = true) 
   const { client, indexName } = useContentSearchConnection();
   return useQuery({
     enabled: client !== undefined && indexName !== undefined,
-    queryKey: [
-      'content_search',
-      client?.config.apiKey,
-      client?.config.host,
-      indexName,
-      extraFilters,
-      'block_types',
-    ],
+    queryKey: ['content_search', client?.config.apiKey, client?.config.host, indexName, extraFilters, 'block_types'],
     queryFn: enabled ? () => fetchBlockTypes(client!, indexName!, extraFilters) : skipToken,
     refetchOnMount: 'always',
   });
@@ -316,25 +302,15 @@ export const useGetContentHits = (
   enabled: boolean = true,
   attributesToRetrieve?: string[],
   limit?: number,
-  refetchOnMount?: boolean | 'always',
+  refetchOnMount?: boolean | 'always'
 ) => {
   const { client, indexName } = useContentSearchConnection();
   return useQuery({
     enabled: client !== undefined && indexName !== undefined,
-    queryKey: [
-      'content_search',
-      client?.config.apiKey,
-      client?.config.host,
-      indexName,
-      extraFilters,
-    ],
-    queryFn: enabled ? () => fetchContentHits(
-      client!,
-      indexName!,
-      extraFilters,
-      limit,
-      attributesToRetrieve,
-    ) : skipToken,
+    queryKey: ['content_search', client?.config.apiKey, client?.config.host, indexName, extraFilters],
+    queryFn: enabled
+      ? () => fetchContentHits(client!, indexName!, extraFilters, limit, attributesToRetrieve)
+      : skipToken,
     refetchOnMount,
   });
 };

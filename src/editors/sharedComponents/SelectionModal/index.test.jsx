@@ -85,27 +85,43 @@ const mockUploadErrorAlertFn = jest.fn();
 
 jest.mock('../BaseModal', () => 'BaseModal');
 jest.mock('./SearchSort', () => 'SearchSort');
-jest.mock('./Gallery', () => function mockGallery(componentProps) {
-  mockGalleryFn(componentProps);
-  return (<div>Gallery</div>);
-});
+jest.mock(
+  './Gallery',
+  () =>
+    function mockGallery(componentProps) {
+      mockGalleryFn(componentProps);
+      return <div>Gallery</div>;
+    }
+);
 jest.mock('../FileInput', () => ({
   FileInput: function mockFileInput(componentProps) {
     mockFileInputFn(componentProps);
-    return (<div>FileInput</div>);
+    return <div>FileInput</div>;
   },
 }));
-jest.mock('../ErrorAlerts/ErrorAlert', () => function mockErrorAlert() {
-  return <div>ErrorAlert</div>;
-});
-jest.mock('../ErrorAlerts/FetchErrorAlert', () => function mockFetchErrorAlert(componentProps) {
-  mockFetchErrorAlertFn(componentProps);
-  return (<div>FetchErrorAlert</div>);
-});
-jest.mock('../ErrorAlerts/UploadErrorAlert', () => function mockUploadErrorAlert(componentProps) {
-  mockUploadErrorAlertFn(componentProps);
-  return (<div>UploadErrorAlert</div>);
-});
+jest.mock(
+  '../ErrorAlerts/ErrorAlert',
+  () =>
+    function mockErrorAlert() {
+      return <div>ErrorAlert</div>;
+    }
+);
+jest.mock(
+  '../ErrorAlerts/FetchErrorAlert',
+  () =>
+    function mockFetchErrorAlert(componentProps) {
+      mockFetchErrorAlertFn(componentProps);
+      return <div>FetchErrorAlert</div>;
+    }
+);
+jest.mock(
+  '../ErrorAlerts/UploadErrorAlert',
+  () =>
+    function mockUploadErrorAlert(componentProps) {
+      mockUploadErrorAlertFn(componentProps);
+      return <div>UploadErrorAlert</div>;
+    }
+);
 
 describe('Selection Modal', () => {
   beforeEach(() => {
@@ -115,7 +131,7 @@ describe('Selection Modal', () => {
     render(
       <IntlProvider locale="en">
         <SelectionModal {...props} />
-      </IntlProvider>,
+      </IntlProvider>
     );
     expect(screen.getByText('Gallery')).toBeInTheDocument();
     expect(screen.getByText('FileInput')).toBeInTheDocument();
@@ -126,32 +142,32 @@ describe('Selection Modal', () => {
       expect.objectContaining({
         ...props.galleryProps,
         isLoaded: props.isLoaded,
-      }),
+      })
     );
     expect(mockFetchErrorAlertFn).toHaveBeenCalledWith(
       expect.objectContaining({
         isFetchError: props.isFetchError,
         message: props.modalMessages.fetchError,
-      }),
+      })
     );
     expect(mockUploadErrorAlertFn).toHaveBeenCalledWith(
       expect.objectContaining({
         isUploadError: props.isUploadError,
         message: props.modalMessages.uploadError,
-      }),
+      })
     );
     expect(mockFileInputFn).toHaveBeenCalledWith(
       expect.objectContaining({
         acceptedFiles: '.png',
         fileInput: props.fileInput,
-      }),
+      })
     );
   });
   test('rendering correctly with errors', () => {
     render(
       <IntlProvider locale="en">
         <SelectionModal {...props} isFetchError />
-      </IntlProvider>,
+      </IntlProvider>
     );
     expect(screen.queryByText('Gallery')).not.toBeInTheDocument();
     expect(screen.getByText('FileInput')).toBeInTheDocument();
@@ -162,14 +178,14 @@ describe('Selection Modal', () => {
       expect.objectContaining({
         isFetchError: true,
         message: props.modalMessages.fetchError,
-      }),
+      })
     );
   });
   test('rendering correctly with loading', () => {
     render(
       <IntlProvider locale="en">
         <SelectionModal {...props} isLoaded={false} />
-      </IntlProvider>,
+      </IntlProvider>
     );
     expect(screen.getByText('Gallery')).toBeInTheDocument();
     expect(screen.getByText('FileInput')).toBeInTheDocument();
@@ -180,7 +196,7 @@ describe('Selection Modal', () => {
       expect.objectContaining({
         ...props.galleryProps,
         isLoaded: false,
-      }),
+      })
     );
   });
 });

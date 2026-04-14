@@ -1,7 +1,5 @@
 import { userEvent } from '@testing-library/user-event';
-import {
-  fireEvent, initializeMocks, render, screen,
-} from '@src/testUtils';
+import { fireEvent, initializeMocks, render, screen } from '@src/testUtils';
 
 import { CourseOutlineProvider, OutlineSidebarProvider } from '@src/course-outline';
 import { CourseAuthoringProvider } from '@src/CourseAuthoringContext';
@@ -29,24 +27,16 @@ jest.mock('../outline-sidebar/OutlineSidebarContext', () => ({
   }),
 }));
 
-const renderComponent = (props?: Partial<HeaderActionsProps>) => render(
-  <HeaderActions
-    actions={headerNavigationsActions}
-    courseActions={courseActions}
-    {...props}
-  />,
-  {
+const renderComponent = (props?: Partial<HeaderActionsProps>) =>
+  render(<HeaderActions actions={headerNavigationsActions} courseActions={courseActions} {...props} />, {
     extraWrapper: ({ children }) => (
       <CourseAuthoringProvider courseId="1">
         <CourseOutlineProvider>
-          <OutlineSidebarProvider>
-            {children}
-          </OutlineSidebarProvider>
+          <OutlineSidebarProvider>{children}</OutlineSidebarProvider>
         </CourseOutlineProvider>
       </CourseAuthoringProvider>
     ),
-  },
-);
+  });
 
 describe('<HeaderActions />', () => {
   beforeEach(() => {

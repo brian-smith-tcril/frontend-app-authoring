@@ -12,7 +12,7 @@ import { useEffect, RefObject } from 'react';
  */
 export const useIframeContent = (
   iframeRef: RefObject<HTMLIFrameElement>,
-  setIframeRef: (ref: RefObject<HTMLIFrameElement>) => void,
+  setIframeRef: (ref: RefObject<HTMLIFrameElement>) => void
 ): void => {
   useEffect(() => {
     setIframeRef(iframeRef);

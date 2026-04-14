@@ -23,8 +23,9 @@ async function renderComponent(gatingTypes: AgreementGated[]) {
     <AppProvider>
       <QueryClientProvider client={queryClient}>
         <AlertAgreementGatedFeature gatingTypes={gatingTypes} />
-      </QueryClientProvider>,
-    </AppProvider>,
+      </QueryClientProvider>
+      ,
+    </AppProvider>
   );
 }
 

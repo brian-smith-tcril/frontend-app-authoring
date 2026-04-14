@@ -143,15 +143,11 @@ describe('<ModalDropzone />', () => {
     const expectedErrorMessage = 'Custom error message';
 
     const { getByText, getByTestId } = render(
-      <RootWrapper {...props} maxSize={maxSizeInBytes} invalidFileSizeMore={expectedErrorMessage} />,
+      <RootWrapper {...props} maxSize={maxSizeInBytes} invalidFileSizeMore={expectedErrorMessage} />
     );
     const dropzoneInput = getByTestId('dropzone-container').querySelector('input[type=file]');
 
-    const fileToUpload = new File(
-      [new ArrayBuffer(maxSizeInBytes + 1)],
-      'test-file.png',
-      { type: 'image/png' },
-    );
+    const fileToUpload = new File([new ArrayBuffer(maxSizeInBytes + 1)], 'test-file.png', { type: 'image/png' });
 
     await user.upload(dropzoneInput, fileToUpload);
 

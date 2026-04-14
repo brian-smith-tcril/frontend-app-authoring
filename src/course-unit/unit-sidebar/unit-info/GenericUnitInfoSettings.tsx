@@ -45,45 +45,50 @@ export const GenericUnitInfoSettings = (props: UnitInfoSettingsProps) => {
   const mutateFn = configureHook();
   const [isVisibleModalOpen, openVisibleModal, closeVisibleModal] = useToggle(false);
 
-  const handleUpdate = (
-    isVisible: boolean,
-    groupAccess: Record<string, any> | null,
-    isDiscussionEnabled?: boolean,
-  ) => {
+  const handleUpdate = (isVisible: boolean, groupAccess: Record<string, any> | null, isDiscussionEnabled?: boolean) => {
     // oxlint-disable-next-line @typescript-eslint/await-thenable - this dispatch() IS returning a promise.
-    mutateFn.mutate({
-      unitId: id,
-      type: PUBLISH_TYPES.republish,
-      isVisibleToStaffOnly: isVisible,
-      groupAccess,
-      discussionEnabled: !!isDiscussionEnabled,
-      sectionId,
-      subsectionId,
-    }, {
-      onSuccess: () => props.updateCallback?.(),
-    });
+    mutateFn.mutate(
+      {
+        unitId: id,
+        type: PUBLISH_TYPES.republish,
+        isVisibleToStaffOnly: isVisible,
+        groupAccess,
+        discussionEnabled: !!isDiscussionEnabled,
+        sectionId,
+        subsectionId,
+      },
+      {
+        onSuccess: () => props.updateCallback?.(),
+      }
+    );
   };
 
   const [localState, setLocalState] = useStateWithCallback<{
     isVisible?: boolean;
     isDiscussionEnabled?: boolean;
-  }>({
-    isVisible: visibleToStaffOnly,
-    isDiscussionEnabled: discussionEnabled,
-  }, (val) => {
-    if (val) {
-      handleUpdate(!!val.isVisible, null, val.isDiscussionEnabled);
+  }>(
+    {
+      isVisible: visibleToStaffOnly,
+      isDiscussionEnabled: discussionEnabled,
+    },
+    (val) => {
+      if (val) {
+        handleUpdate(!!val.isVisible, null, val.isDiscussionEnabled);
+      }
     }
-  });
+  );
 
-  const handleSaveGroups = async (data: {
-    selectedPartitionIndex: number;
-    selectedGroups: any[];
-  }, { resetForm }: any) => {
+  const handleSaveGroups = async (
+    data: {
+      selectedPartitionIndex: number;
+      selectedGroups: any[];
+    },
+    { resetForm }: any
+  ) => {
     const groupAccess = {};
     if (userPartitionInfo && data.selectedPartitionIndex >= 0) {
       const partitionId = userPartitionInfo.selectablePartitions[data.selectedPartitionIndex].id;
-      groupAccess[partitionId] = data.selectedGroups.map(g => parseInt(g, 10));
+      groupAccess[partitionId] = data.selectedGroups.map((g) => parseInt(g, 10));
     }
     handleUpdate(visibleToStaffOnly, groupAccess, !!discussionEnabled);
     resetForm({ values: data });
@@ -92,12 +97,12 @@ export const GenericUnitInfoSettings = (props: UnitInfoSettingsProps) => {
   /* istanbul ignore next */
   const getSelectedGroups = () => {
     if (userPartitionInfo && userPartitionInfo.selectedPartitionIndex >= 0) {
-      return userPartitionInfo.selectablePartitions[userPartitionInfo?.selectedPartitionIndex]
-        ?.groups
-        .filter(({ selected }) => selected)
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        .map(({ id }) => `${id}`)
-        || [];
+      return (
+        userPartitionInfo.selectablePartitions[userPartitionInfo?.selectedPartitionIndex]?.groups
+          .filter(({ selected }) => selected)
+          // eslint-disable-next-line @typescript-eslint/no-shadow
+          .map(({ id }) => `${id}`) || []
+      );
     }
     return [];
   };
@@ -107,24 +112,20 @@ export const GenericUnitInfoSettings = (props: UnitInfoSettingsProps) => {
     setLocalState((prev) => ({ ...prev, isVisible: false }));
   };
 
-  const initialValues = useMemo(() => (
-    {
+  const initialValues = useMemo(
+    () => ({
       selectedPartitionIndex: userPartitionInfo?.selectedPartitionIndex,
       selectedGroups: getSelectedGroups(),
-    }
-  ), [userPartitionInfo]);
+    }),
+    [userPartitionInfo]
+  );
 
   return (
     <>
       <SidebarContent>
-        <SidebarSection
-          title={intl.formatMessage(messages.sidebarInfoVisibilityTitle)}
-        >
+        <SidebarSection title={intl.formatMessage(messages.sidebarInfoVisibilityTitle)}>
           <ButtonGroup toggle>
-            <Button
-              variant={localState?.isVisible ? 'outline-primary' : 'primary'}
-              onClick={openVisibleModal}
-            >
+            <Button variant={localState?.isVisible ? 'outline-primary' : 'primary'} onClick={openVisibleModal}>
               <FormattedMessage {...messages.sidebarInfoVisibilityStudentLabel} />
             </Button>
             <Button
@@ -135,16 +136,9 @@ export const GenericUnitInfoSettings = (props: UnitInfoSettingsProps) => {
             </Button>
           </ButtonGroup>
         </SidebarSection>
-        <SidebarSection
-          title={intl.formatMessage(messages.sidebarInfoAccessTitle)}
-        >
-          <Formik
-            initialValues={initialValues}
-            onSubmit={handleSaveGroups}
-          >
-            {({
-              values, setFieldValue, dirty,
-            }) => (
+        <SidebarSection title={intl.formatMessage(messages.sidebarInfoAccessTitle)}>
+          <Formik initialValues={initialValues} onSubmit={handleSaveGroups}>
+            {({ values, setFieldValue, dirty }) => (
               <Form>
                 <AccessEditComponent
                   selectedPartitionIndex={values.selectedPartitionIndex}
@@ -161,15 +155,15 @@ export const GenericUnitInfoSettings = (props: UnitInfoSettingsProps) => {
             )}
           </Formik>
         </SidebarSection>
-        <SidebarSection
-          title={intl.formatMessage(configureMessages.discussionEnabledSectionTitle)}
-        >
+        <SidebarSection title={intl.formatMessage(configureMessages.discussionEnabledSectionTitle)}>
           <DiscussionEditComponent
             discussionEnabled={!!localState?.isDiscussionEnabled}
-            handleDiscussionChange={(e) => setLocalState((prev) => ({
-              ...prev,
-              isDiscussionEnabled: e.target.checked,
-            }))}
+            handleDiscussionChange={(e) =>
+              setLocalState((prev) => ({
+                ...prev,
+                isDiscussionEnabled: e.target.checked,
+              }))
+            }
           />
         </SidebarSection>
       </SidebarContent>

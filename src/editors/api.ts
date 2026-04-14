@@ -6,7 +6,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { useMutation } from '@tanstack/react-query';
 import * as urls from '@src/editors/data/services/cms/urls';
 
-export const useAssetUpload = ({ blockId, isLibrary }: { blockId: string, isLibrary: boolean }) => {
+export const useAssetUpload = ({ blockId, isLibrary }: { blockId: string; isLibrary: boolean }) => {
   const studioEndpointUrl = useSelector((state: EditorState) => selectors.app.studioEndpointUrl(state))!;
   const { learningContextId } = useEditorContext();
   const client = getAuthenticatedHttpClient();
@@ -17,16 +17,16 @@ export const useAssetUpload = ({ blockId, isLibrary }: { blockId: string, isLibr
         data.append('content', file);
         return client.put(
           urls.libraryAssets({
-            studioEndpointUrl, learningContextId, blockId, assetName: file.name,
+            studioEndpointUrl,
+            learningContextId,
+            blockId,
+            assetName: file.name,
           }),
-          data,
+          data
         );
       }
       data.append('file', file);
-      return client.post(
-        urls.courseAssets({ studioEndpointUrl, learningContextId }),
-        data,
-      );
+      return client.post(urls.courseAssets({ studioEndpointUrl, learningContextId }), data);
     },
   });
 };

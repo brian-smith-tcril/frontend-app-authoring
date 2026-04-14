@@ -66,52 +66,56 @@ describe('useTaxonomyTagsData', () => {
       ],
     };
 
-    useQueries.mockReturnValue([{
-      data: mockData,
-      isLoading: false,
-      isError: false,
-      isSuccess: true,
-    }]);
+    useQueries.mockReturnValue([
+      {
+        data: mockData,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+      },
+    ]);
 
     const { result } = renderHook(() => useTaxonomyTagsData(taxonomyId));
 
     // Assert that useQueries was called with the correct arguments
     expect(useQueries).toHaveBeenCalledWith({
       queries: [
-        { queryKey: ['contentTags', 'taxonomyTags', taxonomyId, null, 1, ''], queryFn: expect.any(Function), staleTime: Infinity },
+        {
+          queryKey: ['contentTags', 'taxonomyTags', taxonomyId, null, 1, ''],
+          queryFn: expect.any(Function),
+          staleTime: Infinity,
+        },
       ],
     });
 
     expect(result.current.hasMorePages).toEqual(false);
     // Only includes the first 2 tags because the other 2 would be
     // in the nested dropdown
-    expect(result.current.tagPages).toEqual(
-      {
-        isLoading: false,
-        isError: false,
-        isSuccess: true,
-        data: [
-          {
-            value: 'tag 1',
-            externalId: null,
-            childCount: 16,
-            depth: 0,
-            parentValue: null,
-            id: 635951,
-            subTagsUrl: 'http://localhost:18010/api/content_tagging/v1/taxonomies/4/tags/?parent_tag=tag%201',
-          },
-          {
-            value: 'tag 2',
-            externalId: null,
-            childCount: 1,
-            depth: 0,
-            parentValue: null,
-            id: 636992,
-            subTagsUrl: 'http://localhost:18010/api/content_tagging/v1/taxonomies/4/tags/?parent_tag=tag%202',
-          },
-        ],
-      },
-    );
+    expect(result.current.tagPages).toEqual({
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      data: [
+        {
+          value: 'tag 1',
+          externalId: null,
+          childCount: 16,
+          depth: 0,
+          parentValue: null,
+          id: 635951,
+          subTagsUrl: 'http://localhost:18010/api/content_tagging/v1/taxonomies/4/tags/?parent_tag=tag%201',
+        },
+        {
+          value: 'tag 2',
+          externalId: null,
+          childCount: 1,
+          depth: 0,
+          parentValue: null,
+          id: 636992,
+          subTagsUrl: 'http://localhost:18010/api/content_tagging/v1/taxonomies/4/tags/?parent_tag=tag%202',
+        },
+      ],
+    });
   });
 });
 
@@ -158,10 +162,12 @@ describe('useContentTaxonomyTagsUpdater', () => {
     const contentId = 'testerContent';
     const taxonomyId = 123;
     const mutation = renderHook(() => useContentTaxonomyTagsUpdater(contentId)).result.current;
-    const tagsData = [{
-      taxonomy: taxonomyId,
-      tags: ['tag1', 'tag2'],
-    }];
+    const tagsData = [
+      {
+        taxonomy: taxonomyId,
+        tags: ['tag1', 'tag2'],
+      },
+    ];
     mutation.mutate({ tagsData });
 
     expect(useMutation).toBeCalled();

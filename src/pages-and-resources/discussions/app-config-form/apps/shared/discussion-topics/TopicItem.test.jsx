@@ -87,7 +87,7 @@ describe('TopicItem', () => {
             <TopicItem {...props} />
           </Formik>
         </IntlProvider>
-      </AppProvider>,
+      </AppProvider>
     );
     container = wrapper.container;
   };

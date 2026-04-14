@@ -1,12 +1,7 @@
 import React from 'react';
 import { flexRender } from '@tanstack/react-table';
 
-import type {
-  RowId,
-  TreeRow,
-  TreeColumnDef,
-  CreateRowMutationState,
-} from './types';
+import type { RowId, TreeRow, TreeColumnDef, CreateRowMutationState } from './types';
 import { CreateRow, EditRow } from './CreateRow';
 
 interface NestedRowsProps {
@@ -108,7 +103,7 @@ const NestedRows = ({
           validate={validate}
         />
       )}
-      {childRowsData?.map(row => {
+      {childRowsData?.map((row) => {
         const rowData = row.original || row;
         return (
           <React.Fragment key={String(rowData.id)}>
@@ -129,24 +124,23 @@ const NestedRows = ({
               />
             ) : (
               <tr>
-                {row.getVisibleCells()
-                  .map((cell, index) => {
-                    const content = flexRender(cell.column.columnDef.cell, cell.getContext());
-                    const isFirstColumn = index === 0;
+                {row.getVisibleCells().map((cell, index) => {
+                  const content = flexRender(cell.column.columnDef.cell, cell.getContext());
+                  const isFirstColumn = index === 0;
 
-                    return (
-                      <td
-                        key={cell.id}
-                        className={`p-1 align-top tree-table-overflow-anywhere ${isFirstColumn ? '' : 'tree-table-actions-column'}`}
-                      >
-                        {isFirstColumn ? (
-                          <div className={`tree-table-indent tree-table-indent-${indent}`}>{content}</div>
-                        ) : (
-                          content
-                        )}
-                      </td>
-                    );
-                  })}
+                  return (
+                    <td
+                      key={cell.id}
+                      className={`p-1 align-top tree-table-overflow-anywhere ${isFirstColumn ? '' : 'tree-table-actions-column'}`}
+                    >
+                      {isFirstColumn ? (
+                        <div className={`tree-table-indent tree-table-indent-${indent}`}>{content}</div>
+                      ) : (
+                        content
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             )}
             <NestedRows
@@ -155,12 +149,10 @@ const NestedRows = ({
               parentRowValue={String(row.original.value)}
               isCreating={creatingParentId === row.original.id}
               onSaveNewChildRow={onSaveNewChildRow}
-              onCancelCreation={
-                () => {
-                  setCreatingParentId(null);
-                  onCancelCreation();
-                }
-              }
+              onCancelCreation={() => {
+                setCreatingParentId(null);
+                onCancelCreation();
+              }}
               creatingParentId={creatingParentId}
               setCreatingParentId={setCreatingParentId}
               depth={depth + 1}

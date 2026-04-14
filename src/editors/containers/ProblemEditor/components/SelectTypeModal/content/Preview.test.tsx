@@ -25,13 +25,13 @@ jest.mock('@src/editors/data/constants/problem', () => {
 const renderWithIntl = (component: React.ReactElement) => {
   // Convert message objects to message strings for IntlProvider
   const messageStrings = Object.fromEntries(
-    Object.entries(messages).map(([key, value]) => [key, (value as any).defaultMessage]),
+    Object.entries(messages).map(([key, value]) => [key, (value as any).defaultMessage])
   );
 
   return render(
     <IntlProvider locale="en" messages={messageStrings}>
       {component}
-    </IntlProvider>,
+    </IntlProvider>
   );
 };
 
@@ -48,7 +48,9 @@ describe('Preview', () => {
     expect(screen.getByText('Single select problem')).toBeInTheDocument();
 
     // Check that the description is rendered correctly
-    expect(screen.getByText('Learners must select the correct answer from a list of possible options.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Learners must select the correct answer from a list of possible options.')
+    ).toBeInTheDocument();
 
     // Check that the image has correct src attribute
     const image = screen.getByRole('img');

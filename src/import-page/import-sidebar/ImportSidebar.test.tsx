@@ -14,7 +14,7 @@ describe('<ImportSidebar />', () => {
     render(
       <CourseAuthoringProvider courseId={courseId}>
         <ImportSidebar />
-      </CourseAuthoringProvider>,
+      </CourseAuthoringProvider>
     );
     expect(screen.getByText(messages.title1.defaultMessage)).toBeInTheDocument();
     expect(screen.getByText(messages.importedContentHeading.defaultMessage)).toBeInTheDocument();

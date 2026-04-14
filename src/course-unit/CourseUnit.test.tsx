@@ -1,22 +1,9 @@
 import fetchMock from 'fetch-mock-jest';
 import userEvent from '@testing-library/user-event';
-import {
-  camelCaseObject,
-  getConfig,
-  setConfig,
-} from '@edx/frontend-platform';
+import { camelCaseObject, getConfig, setConfig } from '@edx/frontend-platform';
 import { cloneDeep, set } from 'lodash';
 
-import {
-  act,
-  cleanup,
-  fireEvent,
-  initializeMocks,
-  render,
-  waitFor,
-  within,
-  screen,
-} from '@src/testUtils';
+import { act, cleanup, fireEvent, initializeMocks, render, waitFor, within, screen } from '@src/testUtils';
 import mockResult from '@src/library-authoring/__mocks__/library-search.json';
 import { IFRAME_FEATURE_POLICY, NOTIFICATION_MESSAGES } from '@src/constants';
 import { mockWaffleFlags } from '@src/data/apiHooks.mock';
@@ -95,10 +82,7 @@ mockGetContentLibraryV2List.applyMock();
 mockLibraryBlockMetadata.applyMock();
 mockContentData.applyMock();
 
-const {
-  block_id: id,
-  user_partition_info: userPartitionInfo,
-} = courseVerticalChildrenMock.children[0];
+const { block_id: id, user_partition_info: userPartitionInfo } = courseVerticalChildrenMock.children[0];
 const userPartitionInfoFormatted = camelCaseObject(userPartitionInfo);
 
 const postXBlockBody = {
@@ -153,23 +137,13 @@ describe('<CourseUnit />', () => {
     mockShowToast = mocks.mockShowToast;
     mockCloseToast = mocks.mockCloseToast;
     axiosMock = mocks.axiosMock;
-    axiosMock
-      .onGet(getClipboardUrl())
-      .reply(200, clipboardUnit);
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getClipboardUrl()).reply(200, clipboardUnit);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
     await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, courseVerticalChildrenMock);
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, courseVerticalChildrenMock);
     await executeThunk(fetchCourseVerticalChildrenData(blockId), store.dispatch);
-    axiosMock
-      .onGet(getContentTaxonomyTagsApiUrl(blockId))
-      .reply(200, { taxonomies: [] });
-    axiosMock
-      .onGet(getContentTaxonomyTagsCountApiUrl(blockId))
-      .reply(200, 17);
+    axiosMock.onGet(getContentTaxonomyTagsApiUrl(blockId)).reply(200, { taxonomies: [] });
+    axiosMock.onGet(getContentTaxonomyTagsCountApiUrl(blockId)).reply(200, 17);
   });
 
   it('render CourseUnit component correctly', async () => {
@@ -179,10 +153,18 @@ describe('<CourseUnit />', () => {
 
     const unitHeaderTitle = await screen.findByTestId('unit-header-title');
     expect(await screen.findByText(unitDisplayName)).toBeInTheDocument();
-    expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })).toBeInTheDocument();
-    expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })).toBeInTheDocument();
+    expect(
+      within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })
+    ).toBeInTheDocument();
+    expect(
+      within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })
+    ).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: currentSectionName })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: currentSubSectionName })).toBeInTheDocument();
   });
@@ -231,7 +213,7 @@ describe('<CourseUnit />', () => {
     simulatePostMessageEvent(messageTypes.editXBlock, { id: blockId });
 
     const legacyXBlockEditModalIframe = await screen.findByTitle(
-      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage,
+      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage
     );
     expect(legacyXBlockEditModalIframe).toBeInTheDocument();
   });
@@ -254,7 +236,7 @@ describe('<CourseUnit />', () => {
     simulatePostMessageEvent(messageTypes.closeXBlockEditorModal, { id: blockId });
 
     const legacyXBlockEditModalIframe = screen.queryByTitle(
-      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage,
+      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage
     );
     expect(legacyXBlockEditModalIframe).not.toBeInTheDocument();
   });
@@ -267,32 +249,30 @@ describe('<CourseUnit />', () => {
     simulatePostMessageEvent(messageTypes.saveEditedXBlockData);
 
     const legacyXBlockEditModalIframe = screen.queryByTitle(
-      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage,
+      xblockContainerIframeMessages.legacyEditModalIframeTitle.defaultMessage
     );
     expect(legacyXBlockEditModalIframe).not.toBeInTheDocument();
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          has_changes: true,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        has_changes: true,
+        published_by: userName,
+      },
+    });
 
     const courseUnitSidebar = await screen.findByTestId('course-unit-sidebar');
     expect(
-      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage),
+      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
     ).toBeInTheDocument();
     expect(
-      within(courseUnitSidebar).getByText(legacySidebarMessages.releaseStatusTitle.defaultMessage),
+      within(courseUnitSidebar).getByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(
       within(courseUnitSidebar).queryByRole('button', {
         name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
-      }),
+      })
     ).toBeInTheDocument();
   });
 
@@ -303,28 +283,26 @@ describe('<CourseUnit />', () => {
     expect(xblocksIframe).toBeInTheDocument();
     simulatePostMessageEvent(messageTypes.refreshPositions);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          has_changes: true,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        has_changes: true,
+        published_by: userName,
+      },
+    });
 
     const courseUnitSidebar = await screen.findByTestId('course-unit-sidebar');
     expect(
-      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage),
+      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
     ).toBeInTheDocument();
     expect(
-      within(courseUnitSidebar).getByText(legacySidebarMessages.releaseStatusTitle.defaultMessage),
+      within(courseUnitSidebar).getByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(
       within(courseUnitSidebar).queryByRole('button', {
         name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
-      }),
+      })
     ).toBeInTheDocument();
   });
 
@@ -335,8 +313,10 @@ describe('<CourseUnit />', () => {
     const iframe = await screen.findByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
     expect(iframe).toHaveAttribute(
       'aria-label',
-      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-        .replace('{xblockCount}', courseVerticalChildrenMock.children.length.toString()),
+      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+        '{xblockCount}',
+        courseVerticalChildrenMock.children.length.toString()
+      )
     );
 
     simulatePostMessageEvent(messageTypes.deleteXBlock, {
@@ -367,100 +347,99 @@ describe('<CourseUnit />', () => {
         publish: PUBLISH_TYPES.makePublic,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
     const publishBtn = await screen.findByRole('button', { name: /Publish/ });
     await user.click(publishBtn);
 
     // check if the sidebar status is Published and Live
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage,
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishLastPublished.defaultMessage
-        .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
-        .replace('{publishedBy}', userName),
-    )).toBeInTheDocument();
-    expect(screen.queryByRole('button', {
-      name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
-    })).not.toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishLastPublished.defaultMessage
+          .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
+          .replace('{publishedBy}', userName)
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', {
+        name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+      })
+    ).not.toBeInTheDocument();
     expect(await screen.findByText(unitDisplayName)).toBeInTheDocument();
 
     axiosMock
       .onDelete(getXBlockBaseApiUrl(courseVerticalChildrenMock.children[0].block_id))
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, courseSectionVerticalMock);
-    await executeThunk(deleteUnitItemQuery(
-      courseId,
-      courseVerticalChildrenMock.children[0].block_id,
-      simulatePostMessageEvent,
-    ), store.dispatch);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, courseSectionVerticalMock);
+    await executeThunk(
+      deleteUnitItemQuery(courseId, courseVerticalChildrenMock.children[0].block_id, simulatePostMessageEvent),
+      store.dispatch
+    );
 
     const updatedCourseVerticalChildren = courseVerticalChildrenMock.children.filter(
-      child => child.block_id !== courseVerticalChildrenMock.children[0].block_id,
+      (child) => child.block_id !== courseVerticalChildrenMock.children[0].block_id
     );
 
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, {
-        children: updatedCourseVerticalChildren,
-        isPublished: false,
-        canPasteComponent: true,
-      });
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, {
+      children: updatedCourseVerticalChildren,
+      isPublished: false,
+      canPasteComponent: true,
+    });
     await executeThunk(fetchCourseVerticalChildrenData(blockId), store.dispatch);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
     await user.click(publishBtn);
 
-    expect(await screen.findByTitle(
-      xblockContainerIframeMessages.xblockIframeTitle.defaultMessage,
-    )).toHaveAttribute(
+    expect(await screen.findByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage)).toHaveAttribute(
       'aria-label',
-      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-        .replace('{xblockCount}', updatedCourseVerticalChildren.length.toString()),
+      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+        '{xblockCount}',
+        updatedCourseVerticalChildren.length.toString()
+      )
     );
     // after removing the xblock, the sidebar status changes to Draft (unpublished changes)
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishInfoDraftSaved.defaultMessage
-        .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-        .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.releaseInfoWithSection.defaultMessage
-        .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishInfoDraftSaved.defaultMessage
+          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+          '{sectionName}',
+          courseSectionVerticalMock.xblock_info.release_date_from
+        )
+      )
+    ).toBeInTheDocument();
   });
 
   it('checks if the xblock unlink is called when the corresponding unlink button is clicked', async () => {
     render(<RootWrapper />);
     const usageId = courseVerticalChildrenMock.children[0].block_id;
-    axiosMock
-      .onDelete(getDownstreamApiUrl(usageId))
-      .reply(200);
+    axiosMock.onDelete(getDownstreamApiUrl(usageId)).reply(200);
 
     await waitFor(() => {
       const iframe = screen.getByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
@@ -485,23 +464,19 @@ describe('<CourseUnit />', () => {
   });
 
   it('checks if xblock is a duplicate when the corresponding duplicate button is clicked and if the sidebar status is updated', async () => {
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
 
     render(<RootWrapper />);
 
-    axiosMock
-      .onPost(postXBlockBaseApiUrl())
-      .replyOnce(200, { locator: '1234567890' });
+    axiosMock.onPost(postXBlockBaseApiUrl()).replyOnce(200, { locator: '1234567890' });
 
     axiosMock
       .onPost(getCourseItemApiUrl(blockId), {
@@ -512,20 +487,26 @@ describe('<CourseUnit />', () => {
     const iframe = await screen.findByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
     expect(iframe).toHaveAttribute(
       'aria-label',
-      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-        .replace('{xblockCount}', courseVerticalChildrenMock.children.length.toString()),
+      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+        '{xblockCount}',
+        courseVerticalChildrenMock.children.length.toString()
+      )
     );
 
     // check if the sidebar status is Published and Live
     expect(
-      await screen.findByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage),
+      await screen.findByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)
     ).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishLastPublished.defaultMessage
-        .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
-        .replace('{publishedBy}', userName),
-    )).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })).not.toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishLastPublished.defaultMessage
+          .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
+          .replace('{publishedBy}', userName)
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })
+    ).not.toBeInTheDocument();
     expect(await screen.findByText(unitDisplayName)).toBeInTheDocument();
 
     const updatedCourseVerticalChildren = [
@@ -541,49 +522,53 @@ describe('<CourseUnit />', () => {
         },
       },
     ];
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, {
-        ...courseVerticalChildrenMock,
-        children: updatedCourseVerticalChildren,
-      });
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, {
+      ...courseVerticalChildrenMock,
+      children: updatedCourseVerticalChildren,
+    });
 
     simulatePostMessageEvent(messageTypes.duplicateXBlock, {
       id: courseVerticalChildrenMock.children[0].block_id,
     });
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     const xblockIframe = await screen.findByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
     expect(xblockIframe).toHaveAttribute(
       'aria-label',
-      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-        .replace('{xblockCount}', updatedCourseVerticalChildren.length.toString()),
+      xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+        '{xblockCount}',
+        updatedCourseVerticalChildren.length.toString()
+      )
     );
 
     // after duplicate the xblock, the sidebar status changes to Draft (unpublished changes)
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
     expect(
-      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage),
+      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(await screen.findByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishInfoDraftSaved.defaultMessage
-        .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-        .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.releaseInfoWithSection.defaultMessage
-        .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishInfoDraftSaved.defaultMessage
+          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+          '{sectionName}',
+          courseSectionVerticalMock.xblock_info.release_date_from
+        )
+      )
+    ).toBeInTheDocument();
   });
 
   it('handles CourseUnit header action buttons', async () => {
@@ -591,17 +576,19 @@ describe('<CourseUnit />', () => {
     const { open } = window;
     window.open = jest.fn();
     render(<RootWrapper />);
-    const {
-      draft_preview_link: draftPreviewLink,
-      published_preview_link: publishedPreviewLink,
-    } = courseSectionVerticalMock;
+    const { draft_preview_link: draftPreviewLink, published_preview_link: publishedPreviewLink } =
+      courseSectionVerticalMock;
 
-    const viewLiveButton = await screen.findByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage });
+    const viewLiveButton = await screen.findByRole('button', {
+      name: headerNavigationsMessages.viewLiveButton.defaultMessage,
+    });
     await user.click(viewLiveButton);
     expect(window.open).toHaveBeenCalled();
     expect(window.open).toHaveBeenCalledWith(publishedPreviewLink, '_blank');
 
-    const previewButton = await screen.findByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage });
+    const previewButton = await screen.findByRole('button', {
+      name: headerNavigationsMessages.previewButton.defaultMessage,
+    });
     await user.click(previewButton);
     expect(window.open).toHaveBeenCalled();
     expect(window.open).toHaveBeenCalledWith(draftPreviewLink, '_blank');
@@ -621,36 +608,34 @@ describe('<CourseUnit />', () => {
         },
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          metadata: {
-            display_name: newDisplayName,
-          },
-        },
-      });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        metadata: {
           display_name: newDisplayName,
         },
-        xblock: {
-          ...courseSectionVerticalMock.xblock,
-          display_name: newDisplayName,
-        },
-      });
+      },
+    });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        display_name: newDisplayName,
+      },
+      xblock: {
+        ...courseSectionVerticalMock.xblock,
+        display_name: newDisplayName,
+      },
+    });
 
     const unitHeaderTitle = await screen.findByTestId('unit-header-title');
-    const editTitleButton = within(unitHeaderTitle)
-      .getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage });
-    let titleEditField = within(unitHeaderTitle)
-      .queryByRole('textbox', { name: headerTitleMessages.ariaLabelButtonEdit.defaultMessage });
+    const editTitleButton = within(unitHeaderTitle).getByRole('button', {
+      name: headerTitleMessages.altButtonEdit.defaultMessage,
+    });
+    let titleEditField = within(unitHeaderTitle).queryByRole('textbox', {
+      name: headerTitleMessages.ariaLabelButtonEdit.defaultMessage,
+    });
     expect(titleEditField).not.toBeInTheDocument();
     await user.click(editTitleButton);
 
@@ -668,7 +653,7 @@ describe('<CourseUnit />', () => {
     expect(await screen.findByText(newDisplayName)).toBeInTheDocument();
   });
 
-  it('doesn\'t handle creating xblock and displays an error message', async () => {
+  it("doesn't handle creating xblock and displays an error message", async () => {
     const user = userEvent.setup();
     const { courseKey, locator } = courseCreateXblockMock;
     axiosMock
@@ -696,17 +681,15 @@ describe('<CourseUnit />', () => {
         publish: PUBLISH_TYPES.makePublic,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
     const updatedCourseVerticalChildren = [
       ...courseVerticalChildrenMock.children,
       {
@@ -721,19 +704,15 @@ describe('<CourseUnit />', () => {
       },
     ];
 
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, {
-        ...courseVerticalChildrenMock,
-        children: updatedCourseVerticalChildren,
-      });
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, {
+      ...courseVerticalChildrenMock,
+      children: updatedCourseVerticalChildren,
+    });
 
     const publishBtn = await screen.findByRole('button', { name: /Publish/ });
     await user.click(publishBtn);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     const problemButton = await screen.findByRole('button', {
       name: new RegExp(`problem ${addComponentMessages.buttonText.defaultMessage} Problem`, 'i'),
@@ -742,31 +721,35 @@ describe('<CourseUnit />', () => {
 
     await user.click(problemButton);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     // after creating problem xblock, the sidebar status changes to Draft (unpublished changes)
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
     expect(
-      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage),
+      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(await screen.findByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishInfoDraftSaved.defaultMessage
-        .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-        .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.releaseInfoWithSection.defaultMessage
-        .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishInfoDraftSaved.defaultMessage
+          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+          '{sectionName}',
+          courseSectionVerticalMock.xblock_info.release_date_from
+        )
+      )
+    ).toBeInTheDocument();
   });
 
   it('correct addition of a new course unit after click on the "Add new unit" button', async () => {
@@ -790,24 +773,24 @@ describe('<CourseUnit />', () => {
       .onPost(postXBlockBaseApiUrl(), { parent_locator: blockId, category: 'vertical', display_name: 'Unit' })
       .reply(200, { dummy: 'value' });
     axiosMock.reset();
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...updatedCourseSectionVerticalData,
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...updatedCourseSectionVerticalData,
+    });
 
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
     const addNewUnitBtn = screen.getByRole('button', { name: courseSequenceMessages.newUnitBtnText.defaultMessage });
     units = screen.getAllByTestId('course-unit-btn');
-    const updatedCourseUnits = updatedCourseSectionVerticalData
-      .xblock_info.ancestor_info.ancestors[0].child_info!.children;
+    const updatedCourseUnits =
+      updatedCourseSectionVerticalData.xblock_info.ancestor_info.ancestors[0].child_info!.children;
 
     await user.click(addNewUnitBtn);
     expect(units.length).toEqual(updatedCourseUnits.length);
     expect(mockedUsedNavigate).toHaveBeenCalled();
-    expect(mockedUsedNavigate)
-      .toHaveBeenCalledWith(`/course/${courseId}/container/${blockId}/${updatedAncestorsChild.id}`, { replace: true });
+    expect(mockedUsedNavigate).toHaveBeenCalledWith(
+      `/course/${courseId}/container/${blockId}/${updatedAncestorsChild.id}`,
+      { replace: true }
+    );
   });
 
   it('Show or hide new unit button based on parent sequence childAddable action', async () => {
@@ -818,18 +801,16 @@ describe('<CourseUnit />', () => {
     const updatedCourseSectionVerticalData = cloneDeep(courseSectionVerticalMock);
     // Set childAddable to false for sequence i.e. current units parent.
     set(updatedCourseSectionVerticalData, 'xblock_info.ancestor_info.ancestors[0].actions.childAddable', false);
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...updatedCourseSectionVerticalData,
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...updatedCourseSectionVerticalData,
+    });
     cleanup(); // clear the first render before we create the second.
     render(<RootWrapper />);
     // to wait for loading
     await screen.findByTestId('unit-header-title');
     // The new unit button should not be visible when childAddable is false
     expect(
-      screen.queryByRole('button', { name: courseSequenceMessages.newUnitBtnText.defaultMessage }),
+      screen.queryByRole('button', { name: courseSequenceMessages.newUnitBtnText.defaultMessage })
     ).not.toBeInTheDocument();
   });
 
@@ -871,10 +852,14 @@ describe('<CourseUnit />', () => {
 
     const unitHeaderTitle = screen.getByTestId('unit-header-title');
 
-    const editTitleButton = within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage });
+    const editTitleButton = within(unitHeaderTitle).getByRole('button', {
+      name: headerTitleMessages.altButtonEdit.defaultMessage,
+    });
     await user.click(editTitleButton);
 
-    const titleEditField = within(unitHeaderTitle).getByRole('textbox', { name: headerTitleMessages.ariaLabelButtonEdit.defaultMessage });
+    const titleEditField = within(unitHeaderTitle).getByRole('textbox', {
+      name: headerTitleMessages.ariaLabelButtonEdit.defaultMessage,
+    });
 
     await user.clear(titleEditField);
     await user.type(titleEditField, newDisplayName);
@@ -882,7 +867,7 @@ describe('<CourseUnit />', () => {
 
     await waitFor(async () => {
       const units = screen.getAllByTestId('course-unit-btn');
-      expect(units.some(unit => unit.title === newDisplayName)).toBe(true);
+      expect(units.some((unit) => unit.title === newDisplayName)).toBe(true);
     });
   });
 
@@ -895,7 +880,9 @@ describe('<CourseUnit />', () => {
       .reply(200, courseCreateXblockMock);
     render(<RootWrapper />);
 
-    const publishButton = await screen.findByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage });
+    const publishButton = await screen.findByRole('button', {
+      name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+    });
     await user.click(publishButton);
 
     axiosMock
@@ -903,17 +890,15 @@ describe('<CourseUnit />', () => {
         publish: PUBLISH_TYPES.makePublic,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
 
     await user.click(publishButton);
 
@@ -922,16 +907,18 @@ describe('<CourseUnit />', () => {
       expect(screen.getByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)).toBeInTheDocument();
     });
 
-    expect(screen.getByText(
-      unitInfoMessages.publishLastPublished.defaultMessage
-        .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
-        .replace('{publishedBy}', userName),
-    )).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        unitInfoMessages.publishLastPublished.defaultMessage
+          .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
+          .replace('{publishedBy}', userName)
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })
+    ).not.toBeInTheDocument();
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     const videoButton = screen.getByRole('button', {
       name: new RegExp(`${addComponentMessages.buttonText.defaultMessage} Video`, 'i'),
@@ -941,30 +928,38 @@ describe('<CourseUnit />', () => {
     await user.click(videoButton);
 
     // after creating video xblock, the sidebar status changes to Draft (unpublished changes)
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
     expect(
-      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage),
+      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(await screen.findByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishInfoDraftSaved.defaultMessage
-        .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-        .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.releaseInfoWithSection.defaultMessage
-        .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-    )).toBeInTheDocument();
-    expect(await screen.findByRole('heading', {
-      name: /add video to your course/i,
-      hidden: true,
-    })).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishInfoDraftSaved.defaultMessage
+          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+          '{sectionName}',
+          courseSectionVerticalMock.xblock_info.release_date_from
+        )
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', {
+        name: /add video to your course/i,
+        hidden: true,
+      })
+    ).toBeInTheDocument();
 
     waffleSpy.mockRestore();
   });
@@ -976,42 +971,46 @@ describe('<CourseUnit />', () => {
     const user = userEvent.setup();
     render(<RootWrapper />);
 
-    await user.click(await screen.findByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage }));
+    await user.click(
+      await screen.findByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })
+    );
 
     axiosMock
       .onPost(getXBlockBaseApiUrl(blockId), {
         publish: PUBLISH_TYPES.makePublic,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
 
-    const publishButton = await screen.findByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage });
+    const publishButton = await screen.findByRole('button', {
+      name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+    });
     await user.click(publishButton);
 
     // check if the sidebar status is Published and Live
     expect(
-      await screen.findByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage),
+      await screen.findByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)
     ).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishLastPublished.defaultMessage
-        .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
-        .replace('{publishedBy}', userName),
-    )).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })).not.toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishLastPublished.defaultMessage
+          .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
+          .replace('{publishedBy}', userName)
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage })
+    ).not.toBeInTheDocument();
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     const videoButton = await screen.findByRole('button', {
       name: new RegExp(`${addComponentMessages.buttonText.defaultMessage} Video`, 'i'),
@@ -1027,57 +1026,67 @@ describe('<CourseUnit />', () => {
     });
     */
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     // after creating video xblock, the sidebar status changes to Draft (unpublished changes)
-    expect(await screen.findByText(
-      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+    ).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
     expect(await screen.findByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
     expect(
-      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage),
+      await screen.findByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
     ).toBeInTheDocument();
     expect(await screen.findByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-    expect(await screen.findByText(
-      unitInfoMessages.publishInfoDraftSaved.defaultMessage
-        .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-        .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-    )).toBeInTheDocument();
-    expect(await screen.findByText(
-      legacySidebarMessages.releaseInfoWithSection.defaultMessage
-        .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-    )).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        unitInfoMessages.publishInfoDraftSaved.defaultMessage
+          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+      )
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+          '{sectionName}',
+          courseSectionVerticalMock.xblock_info.release_date_from
+        )
+      )
+    ).toBeInTheDocument();
   });
 
   it('renders course unit details for a draft with unpublished changes', async () => {
     render(<RootWrapper />);
 
     await waitFor(() => {
-      expect(screen.getByText(
-        legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage,
-      )).toBeInTheDocument();
+      expect(
+        screen.getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage)
+      ).toBeInTheDocument();
       expect(screen.getByText(legacySidebarMessages.releaseStatusTitle.defaultMessage)).toBeInTheDocument();
       expect(screen.getByText(unitInfoMessages.visibilityVisibleToTitle.defaultMessage)).toBeInTheDocument();
       expect(screen.getByText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeInTheDocument();
       expect(screen.getByText(legacySidebarMessages.actionButtonPublishTitle.defaultMessage)).toBeInTheDocument();
-      expect(screen.getByText(
-        legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
-      )).toBeInTheDocument();
+      expect(
+        screen.getByText(legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage)
+      ).toBeInTheDocument();
       expect(screen.getByText(courseSectionVerticalMock.xblock_info.release_date)).toBeInTheDocument();
-      expect(screen.getByText(
-        unitInfoMessages.publishInfoDraftSaved.defaultMessage
-          .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
-          .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by),
-      )).toBeInTheDocument();
-      expect(screen.getByText(
-        legacySidebarMessages.releaseInfoWithSection.defaultMessage
-          .replace('{sectionName}', courseSectionVerticalMock.xblock_info.release_date_from),
-      )).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          unitInfoMessages.publishInfoDraftSaved.defaultMessage
+            .replace('{editedOn}', courseSectionVerticalMock.xblock_info.edited_on)
+            .replace('{editedBy}', courseSectionVerticalMock.xblock_info.edited_by)
+        )
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          legacySidebarMessages.releaseInfoWithSection.defaultMessage.replace(
+            '{sectionName}',
+            courseSectionVerticalMock.xblock_info.release_date_from
+          )
+        )
+      ).toBeInTheDocument();
     });
   });
 
@@ -1089,8 +1098,11 @@ describe('<CourseUnit />', () => {
       expect(screen.getByText(legacySidebarMessages.sidebarHeaderUnitLocationTitle.defaultMessage)).toBeInTheDocument();
       expect(screen.getByText(legacySidebarMessages.unitLocationTitle.defaultMessage)).toBeInTheDocument();
       expect(screen.getByText(courseUnitLocationId)).toBeInTheDocument();
-      expect(screen.getByText(legacySidebarMessages.unitLocationDescription.defaultMessage
-        .replace('{id}', courseUnitLocationId))).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          legacySidebarMessages.unitLocationDescription.defaultMessage.replace('{id}', courseUnitLocationId)
+        )
+      ).toBeInTheDocument();
     });
   });
 
@@ -1098,9 +1110,7 @@ describe('<CourseUnit />', () => {
     render(<RootWrapper />);
 
     await waitFor(() => {
-      const unpublishedAlert = screen.getAllByRole('alert').find(
-        (el) => el.classList.contains('alert-content'),
-      );
+      const unpublishedAlert = screen.getAllByRole('alert').find((el) => el.classList.contains('alert-content'));
       expect(unpublishedAlert).toHaveTextContent(messages.alertUnpublishedVersion.defaultMessage);
       expect(unpublishedAlert).toHaveClass('alert-warning');
     });
@@ -1109,22 +1119,18 @@ describe('<CourseUnit />', () => {
   it('should not display an unpublished alert for a course unit with explicit staff lock and unpublished status', async () => {
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          currently_visible_to_students: false,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        currently_visible_to_students: false,
+      },
+    });
 
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     await waitFor(() => {
-      const alert = screen.queryAllByRole('alert').find(
-        (el) => el.classList.contains('alert-content'),
-      );
+      const alert = screen.queryAllByRole('alert').find((el) => el.classList.contains('alert-content'));
       expect(alert).toBeUndefined();
     });
   });
@@ -1134,12 +1140,14 @@ describe('<CourseUnit />', () => {
     render(<RootWrapper />);
     const courseUnitSidebar = await screen.findByTestId('course-unit-sidebar');
 
-    const draftUnpublishedChangesHeading = await within(courseUnitSidebar)
-      .findByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage);
+    const draftUnpublishedChangesHeading = await within(courseUnitSidebar).findByText(
+      legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage
+    );
     expect(draftUnpublishedChangesHeading).toBeInTheDocument();
 
-    const visibilityCheckbox = await within(courseUnitSidebar)
-      .findByLabelText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage);
+    const visibilityCheckbox = await within(courseUnitSidebar).findByLabelText(
+      unitInfoMessages.visibilityCheckboxTitle.defaultMessage
+    );
     expect(visibilityCheckbox).not.toBeChecked();
 
     axiosMock
@@ -1148,40 +1156,47 @@ describe('<CourseUnit />', () => {
         metadata: { visible_to_staff_only: true },
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
-          has_explicit_staff_lock: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
+        has_explicit_staff_lock: true,
+      },
+    });
 
     await user.click(visibilityCheckbox);
 
     await waitFor(async () => {
       expect(visibilityCheckbox).toBeChecked();
     });
-    expect(within(courseUnitSidebar)
-      .getByText(legacySidebarMessages.sidebarTitleVisibleToStaffOnly.defaultMessage)).toBeInTheDocument();
-    expect(within(courseUnitSidebar)
-      .getByText(unitInfoMessages.visibilityStaffOnlyTitle.defaultMessage)).toBeInTheDocument();
+    expect(
+      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitleVisibleToStaffOnly.defaultMessage)
+    ).toBeInTheDocument();
+    expect(
+      within(courseUnitSidebar).getByText(unitInfoMessages.visibilityStaffOnlyTitle.defaultMessage)
+    ).toBeInTheDocument();
 
     await user.click(visibilityCheckbox);
 
     const modalNotification = screen.getByRole('dialog');
-    const makeVisibilityBtn = within(modalNotification).getByRole('button', { name: unitInfoMessages.modalMakeVisibilityActionButtonText.defaultMessage });
-    const cancelBtn = within(modalNotification).getByRole('button', { name: unitInfoMessages.modalMakeVisibilityCancelButtonText.defaultMessage });
-    const headingElement = within(modalNotification).getByRole('heading', { name: unitInfoMessages.modalMakeVisibilityTitle.defaultMessage });
+    const makeVisibilityBtn = within(modalNotification).getByRole('button', {
+      name: unitInfoMessages.modalMakeVisibilityActionButtonText.defaultMessage,
+    });
+    const cancelBtn = within(modalNotification).getByRole('button', {
+      name: unitInfoMessages.modalMakeVisibilityCancelButtonText.defaultMessage,
+    });
+    const headingElement = within(modalNotification).getByRole('heading', {
+      name: unitInfoMessages.modalMakeVisibilityTitle.defaultMessage,
+    });
 
     expect(makeVisibilityBtn).toBeInTheDocument();
     expect(cancelBtn).toBeInTheDocument();
     expect(headingElement).toBeInTheDocument();
     expect(headingElement).toHaveClass('pgn__modal-title');
-    expect(within(modalNotification)
-      .getByText(unitInfoMessages.modalMakeVisibilityDescription.defaultMessage)).toBeInTheDocument();
+    expect(
+      within(modalNotification).getByText(unitInfoMessages.modalMakeVisibilityDescription.defaultMessage)
+    ).toBeInTheDocument();
 
     await user.click(makeVisibilityBtn);
 
@@ -1191,15 +1206,15 @@ describe('<CourseUnit />', () => {
         metadata: { visible_to_staff_only: null },
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
     await user.click(visibilityCheckbox);
 
-    await user.click(await within(await screen.findByRole('dialog')).findByRole('button', {
-      name: unitInfoMessages.modalMakeVisibilityActionButtonText.defaultMessage,
-    }));
+    await user.click(
+      await within(await screen.findByRole('dialog')).findByRole('button', {
+        name: unitInfoMessages.modalMakeVisibilityActionButtonText.defaultMessage,
+      })
+    );
 
     await waitFor(async () => {
       expect(visibilityCheckbox).not.toBeChecked();
@@ -1215,7 +1230,9 @@ describe('<CourseUnit />', () => {
 
     await waitFor(async () => {
       courseUnitSidebar = screen.getByTestId('course-unit-sidebar');
-      publishBtn = within(courseUnitSidebar).queryByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage });
+      publishBtn = within(courseUnitSidebar).queryByRole('button', {
+        name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+      });
       expect(publishBtn).toBeInTheDocument();
 
       await user.click(publishBtn);
@@ -1226,28 +1243,31 @@ describe('<CourseUnit />', () => {
         publish: PUBLISH_TYPES.makePublic,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.live,
-          has_changes: false,
-          published_by: userName,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.live,
+        has_changes: false,
+        published_by: userName,
+      },
+    });
 
-    const publishButton = await screen.findByRole('button', { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage });
+    const publishButton = await screen.findByRole('button', {
+      name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+    });
     await user.click(publishButton);
 
-    expect(within(courseUnitSidebar)
-      .getByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)).toBeInTheDocument();
-    expect(within(courseUnitSidebar).getByText(
-      unitInfoMessages.publishLastPublished.defaultMessage
-        .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
-        .replace('{publishedBy}', userName),
-    )).toBeInTheDocument();
+    expect(
+      within(courseUnitSidebar).getByText(legacySidebarMessages.sidebarTitlePublishedAndLive.defaultMessage)
+    ).toBeInTheDocument();
+    expect(
+      within(courseUnitSidebar).getByText(
+        unitInfoMessages.publishLastPublished.defaultMessage
+          .replace('{publishedOn}', courseSectionVerticalMock.xblock_info.published_on)
+          .replace('{publishedBy}', userName)
+      )
+    ).toBeInTheDocument();
     expect(publishBtn).not.toBeInTheDocument();
   });
 
@@ -1260,24 +1280,33 @@ describe('<CourseUnit />', () => {
     await waitFor(async () => {
       courseUnitSidebar = screen.getByTestId('course-unit-sidebar');
 
-      const draftUnpublishedChangesHeading = within(courseUnitSidebar)
-        .getByText(legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage);
+      const draftUnpublishedChangesHeading = within(courseUnitSidebar).getByText(
+        legacySidebarMessages.sidebarTitleDraftUnpublishedChanges.defaultMessage
+      );
       expect(draftUnpublishedChangesHeading).toBeInTheDocument();
-      discardChangesBtn = await within(courseUnitSidebar).findByRole('button', { name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage });
+      discardChangesBtn = await within(courseUnitSidebar).findByRole('button', {
+        name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
+      });
       expect(discardChangesBtn).toBeInTheDocument();
 
       await user.click(discardChangesBtn);
 
       const modalNotification = screen.getByRole('dialog');
       expect(modalNotification).toBeInTheDocument();
-      expect(within(modalNotification)
-        .getByText(unitInfoMessages.modalDiscardUnitChangesDescription.defaultMessage)).toBeInTheDocument();
-      expect(within(modalNotification)
-        .getByText(unitInfoMessages.modalDiscardUnitChangesCancelButtonText.defaultMessage)).toBeInTheDocument();
-      const headingElement = within(modalNotification).getByRole('heading', { name: unitInfoMessages.modalDiscardUnitChangesTitle.defaultMessage });
+      expect(
+        within(modalNotification).getByText(unitInfoMessages.modalDiscardUnitChangesDescription.defaultMessage)
+      ).toBeInTheDocument();
+      expect(
+        within(modalNotification).getByText(unitInfoMessages.modalDiscardUnitChangesCancelButtonText.defaultMessage)
+      ).toBeInTheDocument();
+      const headingElement = within(modalNotification).getByRole('heading', {
+        name: unitInfoMessages.modalDiscardUnitChangesTitle.defaultMessage,
+      });
       expect(headingElement).toBeInTheDocument();
       expect(headingElement).toHaveClass('pgn__modal-title');
-      const actionBtn = within(modalNotification).getByRole('button', { name: unitInfoMessages.modalDiscardUnitChangesActionButtonText.defaultMessage });
+      const actionBtn = within(modalNotification).getByRole('button', {
+        name: unitInfoMessages.modalDiscardUnitChangesActionButtonText.defaultMessage,
+      });
       expect(actionBtn).toBeInTheDocument();
 
       await user.click(actionBtn);
@@ -1288,51 +1317,63 @@ describe('<CourseUnit />', () => {
         publish: PUBLISH_TYPES.discardChanges,
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          published: true,
-          has_changes: false,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        published: true,
+        has_changes: false,
+      },
+    });
 
-    await user.click(await screen.findByRole('button', {
-      name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
-    }));
-    await user.click(await within(await screen.findByRole('dialog')).findByRole('button', {
-      name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
-    }));
+    await user.click(
+      await screen.findByRole('button', {
+        name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
+      })
+    );
+    await user.click(
+      await within(await screen.findByRole('dialog')).findByRole('button', {
+        name: legacySidebarMessages.actionButtonDiscardChangesTitle.defaultMessage,
+      })
+    );
 
-    expect(await within(courseUnitSidebar)
-      .findByText(legacySidebarMessages.sidebarTitlePublishedNotYetReleased.defaultMessage)).toBeInTheDocument();
+    expect(
+      await within(courseUnitSidebar).findByText(
+        legacySidebarMessages.sidebarTitlePublishedNotYetReleased.defaultMessage
+      )
+    ).toBeInTheDocument();
     expect(discardChangesBtn).not.toBeInTheDocument();
   });
 
   it('should toggle visibility from header configure modal and update course unit state accordingly', async () => {
     const user = userEvent.setup();
     render(<RootWrapper />);
-    expect(await within(await screen.findByTestId('course-unit-sidebar'))
-      .findByLabelText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).not.toBeChecked();
+    expect(
+      await within(await screen.findByTestId('course-unit-sidebar')).findByLabelText(
+        unitInfoMessages.visibilityCheckboxTitle.defaultMessage
+      )
+    ).not.toBeChecked();
 
     const headerConfigureBtn = await screen.findByRole('button', { name: /settings/i });
     expect(headerConfigureBtn).toBeInTheDocument();
 
     await user.click(headerConfigureBtn);
     const configureModal = await screen.findByTestId('configure-modal');
-    const restrictAccessSelect = await within(configureModal)
-      .findByRole('combobox', { name: configureModalMessages.restrictAccessTo.defaultMessage });
-    expect(await within(configureModal)
-      .findByText(configureModalMessages.unitVisibility.defaultMessage)).toBeInTheDocument();
-    expect(await within(configureModal)
-      .findByText(configureModalMessages.restrictAccessTo.defaultMessage)).toBeInTheDocument();
+    const restrictAccessSelect = await within(configureModal).findByRole('combobox', {
+      name: configureModalMessages.restrictAccessTo.defaultMessage,
+    });
+    expect(
+      await within(configureModal).findByText(configureModalMessages.unitVisibility.defaultMessage)
+    ).toBeInTheDocument();
+    expect(
+      await within(configureModal).findByText(configureModalMessages.restrictAccessTo.defaultMessage)
+    ).toBeInTheDocument();
     expect(restrictAccessSelect).toBeInTheDocument();
     expect(restrictAccessSelect).toHaveValue('-1');
 
-    const modalVisibilityCheckbox = await within(configureModal)
-      .findByRole('checkbox', { name: configureModalMessages.hideFromLearners.defaultMessage });
+    const modalVisibilityCheckbox = await within(configureModal).findByRole('checkbox', {
+      name: configureModalMessages.hideFromLearners.defaultMessage,
+    });
     expect(modalVisibilityCheckbox).not.toBeChecked();
 
     await user.click(modalVisibilityCheckbox);
@@ -1353,27 +1394,35 @@ describe('<CourseUnit />', () => {
     axiosMock
       .onGet(getCourseVerticalChildrenApiUrl(courseSectionVerticalMock.xblock_info.id))
       .reply(200, courseVerticalChildrenMock);
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseSectionVerticalMock.xblock_info.id))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
-          has_explicit_staff_lock: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseSectionVerticalMock.xblock_info.id)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
+        has_explicit_staff_lock: true,
+      },
+    });
 
-    const modalSaveBtn = await within(configureModal)
-      .findByRole('button', { name: configureModalMessages.saveButton.defaultMessage });
+    const modalSaveBtn = await within(configureModal).findByRole('button', {
+      name: configureModalMessages.saveButton.defaultMessage,
+    });
     await user.click(modalSaveBtn);
 
-    expect(await within(await screen.findByTestId('course-unit-sidebar'))
-      .findByLabelText(unitInfoMessages.visibilityCheckboxTitle.defaultMessage)).toBeChecked();
-    expect(await within(await screen.findByTestId('course-unit-sidebar'))
-      .findByText(legacySidebarMessages.sidebarTitleVisibleToStaffOnly.defaultMessage)).toBeInTheDocument();
-    expect(await within(await screen.findByTestId('course-unit-sidebar'))
-      .findByText(unitInfoMessages.visibilityStaffOnlyTitle.defaultMessage)).toBeInTheDocument();
+    expect(
+      await within(await screen.findByTestId('course-unit-sidebar')).findByLabelText(
+        unitInfoMessages.visibilityCheckboxTitle.defaultMessage
+      )
+    ).toBeChecked();
+    expect(
+      await within(await screen.findByTestId('course-unit-sidebar')).findByText(
+        legacySidebarMessages.sidebarTitleVisibleToStaffOnly.defaultMessage
+      )
+    ).toBeInTheDocument();
+    expect(
+      await within(await screen.findByTestId('course-unit-sidebar')).findByText(
+        unitInfoMessages.visibilityStaffOnlyTitle.defaultMessage
+      )
+    ).toBeInTheDocument();
   });
 
   it('shows the Tags sidebar when enabled', async () => {
@@ -1382,7 +1431,9 @@ describe('<CourseUnit />', () => {
       ENABLE_TAGGING_TAXONOMY_PAGES: 'true',
     });
     render(<RootWrapper />);
-    await waitFor(() => { expect(screen.getByText('Unit tags')).toBeInTheDocument(); });
+    await waitFor(() => {
+      expect(screen.getByText('Unit tags')).toBeInTheDocument();
+    });
   });
 
   it('hides the Tags sidebar when not enabled', async () => {
@@ -1391,7 +1442,9 @@ describe('<CourseUnit />', () => {
       ENABLE_TAGGING_TAXONOMY_PAGES: 'false',
     });
     render(<RootWrapper />);
-    await waitFor(() => { expect(screen.queryByText('Unit tags')).not.toBeInTheDocument(); });
+    await waitFor(() => {
+      expect(screen.queryByText('Unit tags')).not.toBeInTheDocument();
+    });
   });
 
   describe('Copy paste functionality', () => {
@@ -1399,19 +1452,19 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            enable_copy_paste_units: true,
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          enable_copy_paste_units: true,
+        },
+      });
 
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
-      await user.click(screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage }));
+      await user.click(
+        screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage })
+      );
       await user.click(screen.getByRole('button', { name: courseSequenceMessages.pasteAsNewUnitLink.defaultMessage }));
 
       let units: HTMLElement[] | null = null;
@@ -1428,25 +1481,23 @@ describe('<CourseUnit />', () => {
         expect(units).toHaveLength(courseUnits.length);
       });
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl(), postXBlockBody)
-        .reply(200, { dummy: 'value' });
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...updatedCourseSectionVerticalData,
-        });
+      axiosMock.onPost(postXBlockBaseApiUrl(), postXBlockBody).reply(200, { dummy: 'value' });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...updatedCourseSectionVerticalData,
+      });
 
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
       units = screen.getAllByTestId('course-unit-btn');
-      const updatedCourseUnits = updatedCourseSectionVerticalData
-        .xblock_info.ancestor_info.ancestors[0].child_info!.children;
+      const updatedCourseUnits =
+        updatedCourseSectionVerticalData.xblock_info.ancestor_info.ancestors[0].child_info!.children;
 
       expect(units.length).toEqual(updatedCourseUnits.length);
       expect(mockedUsedNavigate).toHaveBeenCalled();
-      expect(mockedUsedNavigate)
-        .toHaveBeenCalledWith(`/course/${courseId}/container/${blockId}/${updatedAncestorsChild.id}`, { replace: true });
+      expect(mockedUsedNavigate).toHaveBeenCalledWith(
+        `/course/${courseId}/container/${blockId}/${updatedAncestorsChild.id}`,
+        { replace: true }
+      );
     });
 
     it('should increase the number of course XBlocks after copying and pasting a block', async () => {
@@ -1457,25 +1508,27 @@ describe('<CourseUnit />', () => {
         id: courseVerticalChildrenMock.children[0].block_id,
       });
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            enable_copy_paste_units: true,
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          enable_copy_paste_units: true,
+        },
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
-      await user.click(screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage }));
+      await user.click(
+        screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage })
+      );
 
       await waitFor(() => {
         const iframe = screen.getByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
         expect(iframe).toHaveAttribute(
           'aria-label',
-          xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-            .replace('{xblockCount}', courseVerticalChildrenMock.children.length.toString()),
+          xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+            '{xblockCount}',
+            courseVerticalChildrenMock.children.length.toString()
+          )
         );
 
         simulatePostMessageEvent(messageTypes.copyXBlock, {
@@ -1497,12 +1550,10 @@ describe('<CourseUnit />', () => {
         },
       ];
 
-      axiosMock
-        .onGet(getCourseVerticalChildrenApiUrl(blockId))
-        .reply(200, {
-          ...courseVerticalChildrenMock,
-          children: updatedCourseVerticalChildren,
-        });
+      axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, {
+        ...courseVerticalChildrenMock,
+        children: updatedCourseVerticalChildren,
+      });
 
       await executeThunk(fetchCourseVerticalChildrenData(blockId), store.dispatch);
 
@@ -1510,8 +1561,10 @@ describe('<CourseUnit />', () => {
         const iframe = screen.getByTitle(xblockContainerIframeMessages.xblockIframeTitle.defaultMessage);
         expect(iframe).toHaveAttribute(
           'aria-label',
-          xblockContainerIframeMessages.xblockIframeLabel.defaultMessage
-            .replace('{xblockCount}', updatedCourseVerticalChildren.length.toString()),
+          xblockContainerIframeMessages.xblockIframeLabel.defaultMessage.replace(
+            '{xblockCount}',
+            updatedCourseVerticalChildren.length.toString()
+          )
         );
       });
     });
@@ -1520,19 +1573,19 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            enable_copy_paste_units: true,
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          enable_copy_paste_units: true,
+        },
+      });
 
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
-      await user.click(screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage }));
+      await user.click(
+        screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage })
+      );
       await user.click(screen.getByRole('button', { name: courseSequenceMessages.pasteAsNewUnitLink.defaultMessage }));
 
       const updatedCourseSectionVerticalData = cloneDeep(courseSectionVerticalMock);
@@ -1542,24 +1595,23 @@ describe('<CourseUnit />', () => {
         courseUnitMock,
       ]);
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl(), postXBlockBody)
-        .reply(200, clipboardMockResponse);
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, updatedCourseSectionVerticalData);
+      axiosMock.onPost(postXBlockBaseApiUrl(), postXBlockBody).reply(200, clipboardMockResponse);
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, updatedCourseSectionVerticalData);
 
       global.localStorage.setItem('staticFileNotices', JSON.stringify(clipboardMockResponse.staticFileNotices));
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
       await executeThunk(createNewCourseXBlock(camelCaseObject(postXBlockBody), null, blockId), store.dispatch);
       const newFilesAlert = screen.getByTestId('has-new-files-alert');
 
-      expect(within(newFilesAlert)
-        .getByText(pasteNotificationsMessages.hasNewFilesTitle.defaultMessage)).toBeInTheDocument();
-      expect(within(newFilesAlert)
-        .getByText(pasteNotificationsMessages.hasNewFilesDescription.defaultMessage)).toBeInTheDocument();
-      expect(within(newFilesAlert)
-        .getByText(pasteNotificationsMessages.hasNewFilesButtonText.defaultMessage)).toBeInTheDocument();
+      expect(
+        within(newFilesAlert).getByText(pasteNotificationsMessages.hasNewFilesTitle.defaultMessage)
+      ).toBeInTheDocument();
+      expect(
+        within(newFilesAlert).getByText(pasteNotificationsMessages.hasNewFilesDescription.defaultMessage)
+      ).toBeInTheDocument();
+      expect(
+        within(newFilesAlert).getByText(pasteNotificationsMessages.hasNewFilesButtonText.defaultMessage)
+      ).toBeInTheDocument();
       clipboardMockResponse.staticFileNotices.newFiles.forEach((fileName) => {
         expect(within(newFilesAlert).getByText(fileName)).toBeInTheDocument();
       });
@@ -1573,19 +1625,19 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            enable_copy_paste_units: true,
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          enable_copy_paste_units: true,
+        },
+      });
 
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
-      await user.click(screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage }));
+      await user.click(
+        screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage })
+      );
       await user.click(screen.getByRole('button', { name: courseSequenceMessages.pasteAsNewUnitLink.defaultMessage }));
 
       const updatedCourseSectionVerticalData = cloneDeep(courseSectionVerticalMock);
@@ -1595,26 +1647,29 @@ describe('<CourseUnit />', () => {
         courseUnitMock,
       ]);
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl(), postXBlockBody)
-        .reply(200, clipboardMockResponse);
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...updatedCourseSectionVerticalData,
-        });
+      axiosMock.onPost(postXBlockBaseApiUrl(), postXBlockBody).reply(200, clipboardMockResponse);
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...updatedCourseSectionVerticalData,
+      });
 
       global.localStorage.setItem('staticFileNotices', JSON.stringify(clipboardMockResponse.staticFileNotices));
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
       await executeThunk(createNewCourseXBlock(camelCaseObject(postXBlockBody), null, blockId), store.dispatch);
       const conflictingErrorsAlert = screen.getByTestId('has-conflicting-errors-alert');
 
-      expect(within(conflictingErrorsAlert)
-        .getByText(pasteNotificationsMessages.hasConflictingErrorsTitle.defaultMessage)).toBeInTheDocument();
-      expect(within(conflictingErrorsAlert)
-        .getByText(pasteNotificationsMessages.hasConflictingErrorsDescription.defaultMessage)).toBeInTheDocument();
-      expect(within(conflictingErrorsAlert)
-        .getByText(pasteNotificationsMessages.hasConflictingErrorsButtonText.defaultMessage)).toBeInTheDocument();
+      expect(
+        within(conflictingErrorsAlert).getByText(pasteNotificationsMessages.hasConflictingErrorsTitle.defaultMessage)
+      ).toBeInTheDocument();
+      expect(
+        within(conflictingErrorsAlert).getByText(
+          pasteNotificationsMessages.hasConflictingErrorsDescription.defaultMessage
+        )
+      ).toBeInTheDocument();
+      expect(
+        within(conflictingErrorsAlert).getByText(
+          pasteNotificationsMessages.hasConflictingErrorsButtonText.defaultMessage
+        )
+      ).toBeInTheDocument();
       clipboardMockResponse.staticFileNotices.conflictingFiles.forEach((fileName) => {
         expect(within(conflictingErrorsAlert).getByText(fileName)).toBeInTheDocument();
       });
@@ -1628,19 +1683,19 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            enable_copy_paste_units: true,
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          enable_copy_paste_units: true,
+        },
+      });
 
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
-      await user.click(screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage }));
+      await user.click(
+        screen.getByRole('button', { name: legacySidebarMessages.actionButtonCopyUnitTitle.defaultMessage })
+      );
       await user.click(screen.getByRole('button', { name: courseSequenceMessages.pasteAsNewUnitLink.defaultMessage }));
 
       const updatedCourseSectionVerticalData = cloneDeep(courseSectionVerticalMock);
@@ -1650,24 +1705,22 @@ describe('<CourseUnit />', () => {
         courseUnitMock,
       ]);
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl(), postXBlockBody)
-        .reply(200, clipboardMockResponse);
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...updatedCourseSectionVerticalData,
-        });
+      axiosMock.onPost(postXBlockBaseApiUrl(), postXBlockBody).reply(200, clipboardMockResponse);
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...updatedCourseSectionVerticalData,
+      });
 
       global.localStorage.setItem('staticFileNotices', JSON.stringify(clipboardMockResponse.staticFileNotices));
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
       await executeThunk(createNewCourseXBlock(camelCaseObject(postXBlockBody), null, blockId), store.dispatch);
       const errorFilesAlert = screen.getByTestId('has-error-files-alert');
 
-      expect(within(errorFilesAlert)
-        .getByText(pasteNotificationsMessages.hasErrorsTitle.defaultMessage)).toBeInTheDocument();
-      expect(within(errorFilesAlert)
-        .getByText(pasteNotificationsMessages.hasErrorsDescription.defaultMessage)).toBeInTheDocument();
+      expect(
+        within(errorFilesAlert).getByText(pasteNotificationsMessages.hasErrorsTitle.defaultMessage)
+      ).toBeInTheDocument();
+      expect(
+        within(errorFilesAlert).getByText(pasteNotificationsMessages.hasErrorsDescription.defaultMessage)
+      ).toBeInTheDocument();
 
       await user.click(within(errorFilesAlert).getByText(/Dismiss/i));
 
@@ -1677,21 +1730,21 @@ describe('<CourseUnit />', () => {
     it('should hide the "Paste component" block if canPasteComponent is false', async () => {
       render(<RootWrapper />);
 
-      axiosMock
-        .onGet(getCourseVerticalChildrenApiUrl(blockId))
-        .reply(200, {
-          ...courseVerticalChildrenMock,
-          canPasteComponent: false,
-        });
+      axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, {
+        ...courseVerticalChildrenMock,
+        canPasteComponent: false,
+      });
 
       await executeThunk(fetchCourseVerticalChildrenData(blockId), store.dispatch);
 
-      expect(screen.queryByRole('button', {
-        name: messages.pasteButtonText.defaultMessage,
-      })).not.toBeInTheDocument();
-      expect(screen.queryByText(
-        pasteComponentMessages.pasteButtonWhatsInClipboardText.defaultMessage,
-      )).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
+          name: messages.pasteButtonText.defaultMessage,
+        })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(pasteComponentMessages.pasteButtonWhatsInClipboardText.defaultMessage)
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -1727,18 +1780,20 @@ describe('<CourseUnit />', () => {
 
       await screen.findByText(unitDisplayName);
 
-      axiosMock
-        .onGet(getCourseOutlineInfoUrl(courseId))
-        .reply(200, courseOutlineInfoMock);
+      axiosMock.onGet(getCourseOutlineInfoUrl(courseId)).reply(200, courseOutlineInfoMock);
       await executeThunk(getCourseOutlineInfoQuery(courseId), store.dispatch);
 
       window.dispatchEvent(messageEvent);
 
       await screen.findByText(
-        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title),
+        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title)
       );
-      expect(screen.getByRole('button', { name: moveModalMessages.moveModalSubmitButton.defaultMessage })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: moveModalMessages.moveModalCancelButton.defaultMessage })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: moveModalMessages.moveModalSubmitButton.defaultMessage })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: moveModalMessages.moveModalCancelButton.defaultMessage })
+      ).toBeInTheDocument();
     });
 
     it('should navigates to xBlock current unit', async () => {
@@ -1747,15 +1802,13 @@ describe('<CourseUnit />', () => {
 
       await screen.findByText(unitDisplayName);
 
-      axiosMock
-        .onGet(getCourseOutlineInfoUrl(courseId))
-        .reply(200, courseOutlineInfoMock);
+      axiosMock.onGet(getCourseOutlineInfoUrl(courseId)).reply(200, courseOutlineInfoMock);
       await executeThunk(getCourseOutlineInfoQuery(courseId), store.dispatch);
 
       window.dispatchEvent(messageEvent);
 
       await screen.findByText(
-        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title),
+        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title)
       );
 
       const currentSection = courseOutlineInfoMock.child_info.children[1];
@@ -1776,7 +1829,7 @@ describe('<CourseUnit />', () => {
 
       await waitFor(() => {
         const currentComponentLocationText = screen.getByText(
-          moveModalMessages.moveModalOutlineItemCurrentComponentLocationText.defaultMessage,
+          moveModalMessages.moveModalOutlineItemCurrentComponentLocationText.defaultMessage
         );
         expect(currentComponentLocationText).toBeInTheDocument();
       });
@@ -1786,25 +1839,19 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onPatch(postXBlockBaseApiUrl())
-        .reply(200, {});
+      axiosMock.onPatch(postXBlockBaseApiUrl()).reply(200, {});
 
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, courseSectionVerticalMock);
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
 
       await screen.findByText(unitDisplayName);
 
-      axiosMock
-        .onGet(getCourseOutlineInfoUrl(courseId))
-        .reply(200, courseOutlineInfoMock);
+      axiosMock.onGet(getCourseOutlineInfoUrl(courseId)).reply(200, courseOutlineInfoMock);
       await executeThunk(getCourseOutlineInfoQuery(courseId), store.dispatch);
 
       window.dispatchEvent(messageEvent);
 
       await screen.findByText(
-        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title),
+        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', requestData.title)
       );
 
       const currentSection = courseOutlineInfoMock.child_info.children[1];
@@ -1849,29 +1896,33 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onPatch(postXBlockBaseApiUrl())
-        .reply(200, {});
+      axiosMock.onPatch(postXBlockBaseApiUrl()).reply(200, {});
 
-      await executeThunk(patchUnitItemQuery({
-        sourceLocator: requestData.sourceLocator,
-        targetParentLocator: requestData.targetParentLocator,
-        title: requestData.title,
-        currentParentLocator: requestData.currentParentLocator,
-        isMoving: requestData.isMoving,
-        callbackFn: requestData.callbackFn,
-      }), store.dispatch);
+      await executeThunk(
+        patchUnitItemQuery({
+          sourceLocator: requestData.sourceLocator,
+          targetParentLocator: requestData.targetParentLocator,
+          title: requestData.title,
+          currentParentLocator: requestData.currentParentLocator,
+          isMoving: requestData.isMoving,
+          callbackFn: requestData.callbackFn,
+        }),
+        store.dispatch
+      );
 
       simulatePostMessageEvent(messageTypes.rollbackMovedXBlock, { locator: requestData.sourceLocator });
 
       const dismissButton = screen.getByRole('button', {
-        name: /dismiss/i, hidden: true,
+        name: /dismiss/i,
+        hidden: true,
       });
       const undoButton = screen.getByRole('button', {
-        name: messages.undoMoveButton.defaultMessage, hidden: true,
+        name: messages.undoMoveButton.defaultMessage,
+        hidden: true,
       });
       const newLocationButton = screen.getByRole('button', {
-        name: messages.newLocationButton.defaultMessage, hidden: true,
+        name: messages.newLocationButton.defaultMessage,
+        hidden: true,
       });
 
       expect(screen.getByText(messages.alertMoveSuccessTitle.defaultMessage)).toBeInTheDocument();
@@ -1885,9 +1936,9 @@ describe('<CourseUnit />', () => {
       await waitFor(() => {
         expect(screen.getByText(messages.alertMoveCancelTitle.defaultMessage)).toBeInTheDocument();
       });
-      expect(screen.getByText(
-        messages.alertMoveCancelDescription.defaultMessage.replace('{title}', requestData.title),
-      )).toBeInTheDocument();
+      expect(
+        screen.getByText(messages.alertMoveCancelDescription.defaultMessage.replace('{title}', requestData.title))
+      ).toBeInTheDocument();
       expect(dismissButton).toBeInTheDocument();
       expect(undoButton).not.toBeInTheDocument();
       expect(newLocationButton).not.toBeInTheDocument();
@@ -1897,26 +1948,28 @@ describe('<CourseUnit />', () => {
       const user = userEvent.setup();
       render(<RootWrapper />);
 
-      axiosMock
-        .onPatch(postXBlockBaseApiUrl())
-        .reply(200, {});
+      axiosMock.onPatch(postXBlockBaseApiUrl()).reply(200, {});
 
-      await executeThunk(patchUnitItemQuery({
-        sourceLocator: requestData.sourceLocator,
-        targetParentLocator: requestData.targetParentLocator,
-        title: requestData.title,
-        currentParentLocator: requestData.currentParentLocator,
-        isMoving: requestData.isMoving,
-        callbackFn: requestData.callbackFn,
-      }), store.dispatch);
+      await executeThunk(
+        patchUnitItemQuery({
+          sourceLocator: requestData.sourceLocator,
+          targetParentLocator: requestData.targetParentLocator,
+          title: requestData.title,
+          currentParentLocator: requestData.currentParentLocator,
+          isMoving: requestData.isMoving,
+          callbackFn: requestData.callbackFn,
+        }),
+        store.dispatch
+      );
 
       const newLocationButton = screen.getByRole('button', {
-        name: messages.newLocationButton.defaultMessage, hidden: true,
+        name: messages.newLocationButton.defaultMessage,
+        hidden: true,
       });
       await user.click(newLocationButton);
       expect(mockedUsedNavigate).toHaveBeenCalledWith(
         `/course/${courseId}/container/${blockId}/${requestData.currentParentLocator}`,
-        { replace: true },
+        { replace: true }
       );
     });
   });
@@ -1963,9 +2016,11 @@ describe('<CourseUnit />', () => {
       await waitFor(async () => {
         const configureModal = screen.getByTestId('configure-modal');
         expect(configureModal).toBeInTheDocument();
-        await user.click(within(configureModal).getByRole('button', {
-          name: configureModalMessages.cancelButton.defaultMessage,
-        }));
+        await user.click(
+          within(configureModal).getByRole('button', {
+            name: configureModalMessages.cancelButton.defaultMessage,
+          })
+        );
         expect(handleConfigureSubmitMock).not.toHaveBeenCalled();
       });
 
@@ -2061,20 +2116,25 @@ describe('<CourseUnit />', () => {
 
     await waitFor(() => {
       configureModal = getByTestId('configure-modal');
-      restrictAccessSelect = within(configureModal)
-        .getByRole('combobox', { name: configureModalMessages.restrictAccessTo.defaultMessage });
-      expect(within(configureModal)
-        .getByRole('heading', { name: configureModalMessages[headingMessageId].defaultMessage })).toBeInTheDocument();
-      expect(within(configureModal)
-        .queryByText(configureModalMessages.unitVisibility.defaultMessage)).not.toBeInTheDocument();
-      expect(within(configureModal)
-        .getByText(configureModalMessages.restrictAccessTo.defaultMessage)).toBeInTheDocument();
+      restrictAccessSelect = within(configureModal).getByRole('combobox', {
+        name: configureModalMessages.restrictAccessTo.defaultMessage,
+      });
+      expect(
+        within(configureModal).getByRole('heading', { name: configureModalMessages[headingMessageId].defaultMessage })
+      ).toBeInTheDocument();
+      expect(
+        within(configureModal).queryByText(configureModalMessages.unitVisibility.defaultMessage)
+      ).not.toBeInTheDocument();
+      expect(
+        within(configureModal).getByText(configureModalMessages.restrictAccessTo.defaultMessage)
+      ).toBeInTheDocument();
       expect(restrictAccessSelect).toBeInTheDocument();
       expect(restrictAccessSelect).toHaveValue('-1');
     });
 
-    const modalSaveBtn = within(configureModal)
-      .getByRole('button', { name: configureModalMessages.saveButton.defaultMessage });
+    const modalSaveBtn = within(configureModal).getByRole('button', {
+      name: configureModalMessages.saveButton.defaultMessage,
+    });
     await user.click(modalSaveBtn);
   };
 
@@ -2082,19 +2142,17 @@ describe('<CourseUnit />', () => {
     const newUnitId = '12345';
 
     beforeEach(async () => {
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock: {
-            ...courseSectionVerticalMock.xblock,
-            category: 'library_content',
-          },
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            category: 'library_content',
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock: {
+          ...courseSectionVerticalMock.xblock,
+          category: 'library_content',
+        },
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          category: 'library_content',
+        },
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     });
 
@@ -2108,12 +2166,7 @@ describe('<CourseUnit />', () => {
     });
 
     it('should render library content page correctly', async () => {
-      const {
-        findByText,
-        getByRole,
-        queryByRole,
-        findByTestId,
-      } = render(<RootWrapper />);
+      const { findByText, getByRole, queryByRole, findByTestId } = render(<RootWrapper />);
 
       const currentSectionName = courseSectionVerticalMock.xblock_info.ancestor_info.ancestors[1].display_name;
       const currentSubSectionName = courseSectionVerticalMock.xblock_info.ancestor_info.ancestors[1].display_name;
@@ -2121,23 +2174,29 @@ describe('<CourseUnit />', () => {
       const unitHeaderTitle = await findByTestId('unit-header-title');
       await findByText(unitDisplayName);
       await waitFor(() => {
-        expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })).toBeInTheDocument();
-        expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })).toBeInTheDocument();
+        expect(
+          within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })
+        ).toBeInTheDocument();
+        expect(
+          within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })
+        ).toBeInTheDocument();
         expect(getByRole('button', { name: currentSectionName })).toBeInTheDocument();
         expect(getByRole('button', { name: currentSubSectionName })).toBeInTheDocument();
 
         expect(queryByRole('heading', { name: addComponentMessages.title.defaultMessage })).not.toBeInTheDocument();
-        expect(queryByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })).not.toBeInTheDocument();
-        expect(queryByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })).not.toBeInTheDocument();
+        expect(
+          queryByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })
+        ).not.toBeInTheDocument();
+        expect(
+          queryByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })
+        ).not.toBeInTheDocument();
 
         expect(queryByRole('heading', { name: /unit tags/i })).not.toBeInTheDocument();
         expect(queryByRole('heading', { name: /unit location/i })).not.toBeInTheDocument();
       });
     });
 
-    it('should display visibility modal correctly', async () => (
-      checkRenderVisibilityModal('libraryContentAccess')
-    ));
+    it('should display visibility modal correctly', async () => checkRenderVisibilityModal('libraryContentAccess'));
 
     it('opens legacy edit modal on edit button click', checkLegacyEditModalOnEditMessage);
   });
@@ -2146,19 +2205,17 @@ describe('<CourseUnit />', () => {
     const newUnitId = '12345';
 
     beforeEach(async () => {
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock: {
-            ...courseSectionVerticalMock.xblock,
-            category: 'split_test',
-          },
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            category: 'split_test',
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock: {
+          ...courseSectionVerticalMock.xblock,
+          category: 'split_test',
+        },
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          category: 'split_test',
+        },
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     });
 
@@ -2206,33 +2263,57 @@ describe('<CourseUnit />', () => {
 
       const currentSectionName = courseSectionVerticalMock.xblock_info.ancestor_info.ancestors[1].display_name;
       const currentSubSectionName = courseSectionVerticalMock.xblock_info.ancestor_info.ancestors[1].display_name;
-      const helpLinkUrl = 'https://docs.openedx.org/en/latest/educators/references/course_development/parent_child_components.html';
+      const helpLinkUrl =
+        'https://docs.openedx.org/en/latest/educators/references/course_development/parent_child_components.html';
 
       await waitFor(() => {
         const unitHeaderTitle = screen.getByTestId('unit-header-title');
         expect(screen.getByText(unitDisplayName)).toBeInTheDocument();
-        expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })).toBeInTheDocument();
-        expect(within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })).toBeInTheDocument();
+        expect(
+          within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonEdit.defaultMessage })
+        ).toBeInTheDocument();
+        expect(
+          within(unitHeaderTitle).getByRole('button', { name: headerTitleMessages.altButtonSettings.defaultMessage })
+        ).toBeInTheDocument();
         expect(screen.getByRole('button', { name: currentSectionName })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: currentSubSectionName })).toBeInTheDocument();
 
-        expect(screen.queryByRole('heading', { name: addComponentMessages.title.defaultMessage })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })).not.toBeInTheDocument();
+        expect(
+          screen.queryByRole('heading', { name: addComponentMessages.title.defaultMessage })
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByRole('button', { name: headerNavigationsMessages.viewLiveButton.defaultMessage })
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByRole('button', { name: headerNavigationsMessages.previewButton.defaultMessage })
+        ).not.toBeInTheDocument();
 
         expect(screen.queryByRole('heading', { name: /unit tags/i })).not.toBeInTheDocument();
         expect(screen.queryByRole('heading', { name: /unit location/i })).not.toBeInTheDocument();
 
         // Sidebar
         const sidebarContent = [
-          { query: screen.queryByRole, type: 'heading', name: legacySidebarMessages.sidebarSplitTestAddComponentTitle.defaultMessage },
-          { query: screen.queryByText, name: legacySidebarMessages.sidebarSplitTestSelectComponentType.defaultMessage.replaceAll('{bold_tag}', '') },
-          { query: screen.queryByText, name: legacySidebarMessages.sidebarSplitTestComponentAdded.defaultMessage },
-          { query: screen.queryByRole, type: 'heading', name: legacySidebarMessages.sidebarSplitTestEditComponentTitle.defaultMessage },
+          {
+            query: screen.queryByRole,
+            type: 'heading',
+            name: legacySidebarMessages.sidebarSplitTestAddComponentTitle.defaultMessage,
+          },
           {
             query: screen.queryByText,
-            name: legacySidebarMessages.sidebarSplitTestEditComponentInstruction.defaultMessage
-              .replaceAll('{bold_tag}', ''),
+            name: legacySidebarMessages.sidebarSplitTestSelectComponentType.defaultMessage.replaceAll('{bold_tag}', ''),
+          },
+          { query: screen.queryByText, name: legacySidebarMessages.sidebarSplitTestComponentAdded.defaultMessage },
+          {
+            query: screen.queryByRole,
+            type: 'heading',
+            name: legacySidebarMessages.sidebarSplitTestEditComponentTitle.defaultMessage,
+          },
+          {
+            query: screen.queryByText,
+            name: legacySidebarMessages.sidebarSplitTestEditComponentInstruction.defaultMessage.replaceAll(
+              '{bold_tag}',
+              ''
+            ),
           },
           {
             query: screen.queryByRole,
@@ -2269,14 +2350,12 @@ describe('<CourseUnit />', () => {
         });
 
         expect(
-          screen.queryByRole('link', { name: legacySidebarMessages.sidebarSplitTestLearnMoreLinkLabel.defaultMessage }),
+          screen.queryByRole('link', { name: legacySidebarMessages.sidebarSplitTestLearnMoreLinkLabel.defaultMessage })
         ).toHaveAttribute('href', helpLinkUrl);
       });
     });
 
-    it('should display visibility modal correctly', async () => (
-      checkRenderVisibilityModal('splitTestAccess')
-    ));
+    it('should display visibility modal correctly', async () => checkRenderVisibilityModal('splitTestAccess'));
 
     it('opens legacy edit modal on edit button click', checkLegacyEditModalOnEditMessage);
   });
@@ -2296,9 +2375,7 @@ describe('<CourseUnit />', () => {
       })
       .replyOnce(200, { locator: '1234567890' });
 
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, updatedCourseVerticalChildrenMock);
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, updatedCourseVerticalChildrenMock);
 
     render(<RootWrapper />);
     await executeThunk(fetchCourseVerticalChildrenData(blockId), store.dispatch);
@@ -2324,38 +2401,32 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        upstreamInfo: {
           ...courseSectionVerticalMock.xblock_info,
-          upstreamInfo: {
-            ...courseSectionVerticalMock.xblock_info,
-            upstreamRef: 'lct:org:lib:unit:unit-1',
-            upstreamLink: 'some-link',
-          },
+          upstreamRef: 'lct:org:lib:unit:unit-1',
+          upstreamLink: 'some-link',
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     expect(screen.getByText(/this unit can only be edited from the \./i)).toBeInTheDocument();
 
     // Edit button should be enabled even for library imported units
     const unitHeaderTitle = screen.getByTestId('unit-header-title');
-    const editButton = within(unitHeaderTitle).getByRole(
-      'button',
-      { name: 'Edit' },
-    );
+    const editButton = within(unitHeaderTitle).getByRole('button', { name: 'Edit' });
     expect(editButton).toBeInTheDocument();
     expect(editButton).toBeEnabled();
 
     // The "Publish" button should still be enabled
     const courseUnitSidebar = screen.getByTestId('course-unit-sidebar');
-    const publishButton = within(courseUnitSidebar).getByRole(
-      'button',
-      { name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage },
-    );
+    const publishButton = within(courseUnitSidebar).getByRole('button', {
+      name: legacySidebarMessages.actionButtonPublishTitle.defaultMessage,
+    });
     expect(publishButton).toBeInTheDocument();
     expect(publishButton).toBeEnabled();
 
@@ -2371,11 +2442,9 @@ describe('<CourseUnit />', () => {
     const user = userEvent.setup();
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     expect(await screen.findByRole('tab', { name: /details/i })).toBeInTheDocument();
@@ -2396,15 +2465,13 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          currently_visible_to_students: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        currently_visible_to_students: true,
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Live')).toBeInTheDocument();
@@ -2418,11 +2485,9 @@ describe('<CourseUnit />', () => {
     const user = userEvent.setup();
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     // Move to settings
@@ -2438,19 +2503,15 @@ describe('<CourseUnit />', () => {
       })
       .reply(200, { dummy: 'value' });
 
-    axiosMock
-      .onGet(getCourseVerticalChildrenApiUrl(blockId))
-      .reply(200, courseVerticalChildrenMock);
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
-          has_explicit_staff_lock: true,
-        },
-      });
+    axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, courseVerticalChildrenMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: UNIT_VISIBILITY_STATES.staffOnly,
+        has_explicit_staff_lock: true,
+      },
+    });
 
     // Change Visibility to Staff Only
     expect(await screen.findByRole('heading', { name: /visibility/i })).toBeInTheDocument();
@@ -2469,16 +2530,14 @@ describe('<CourseUnit />', () => {
         metadata: { visible_to_staff_only: null, discussion_enabled: true },
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          visibility_state: 'needs_attention',
-          has_explicit_staff_lock: false,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        visibility_state: 'needs_attention',
+        has_explicit_staff_lock: false,
+      },
+    });
 
     // Move to settings and change visibility to all
     const editVisibilityButton = await screen.findByRole('button', { name: /edit visibility/i });
@@ -2493,16 +2552,14 @@ describe('<CourseUnit />', () => {
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          currently_visible_to_students: false,
-          visibility_state: 'staff_only',
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        currently_visible_to_students: false,
+        visibility_state: 'staff_only',
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     // (1) Chip in the header.
@@ -2518,11 +2575,9 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     // Move to settings
@@ -2540,15 +2595,13 @@ describe('<CourseUnit />', () => {
         },
       })
       .reply(200, { dummy: 'value' });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          discussion_enabled: false,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        discussion_enabled: false,
+      },
+    });
 
     // Disable discussions
     const discussionButton = screen.getByRole('checkbox', { name: /enable discussion/i });
@@ -2567,26 +2620,21 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
-    axiosMock
-      .onPost(getXBlockBaseApiUrl(courseSectionVerticalMock.xblock_info.id))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          user_partition_info: {
-            selected_partition_index: 0,
-            selected_groups_label: 'Group A',
-            selectable_partitions: [{
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
+    axiosMock.onPost(getXBlockBaseApiUrl(courseSectionVerticalMock.xblock_info.id)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        user_partition_info: {
+          selected_partition_index: 0,
+          selected_groups_label: 'Group A',
+          selectable_partitions: [
+            {
               id: 10,
               name: 'Content Groups',
               scheme: 'cohort',
@@ -2610,10 +2658,11 @@ describe('<CourseUnit />', () => {
                   selected: false,
                 },
               ],
-            }],
-          },
+            },
+          ],
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
     await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
 
@@ -2646,21 +2695,18 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          user_partition_info: {
-            selected_partition_index: 0,
-            selected_groups_label: 'Group A',
-            selectable_partitions: [{
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        user_partition_info: {
+          selected_partition_index: 0,
+          selected_groups_label: 'Group A',
+          selectable_partitions: [
+            {
               id: 10,
               name: 'Content Groups',
               scheme: 'cohort',
@@ -2684,10 +2730,11 @@ describe('<CourseUnit />', () => {
                   selected: false,
                 },
               ],
-            }],
-          },
+            },
+          ],
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
     await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
     expect(await screen.findByRole('heading', { name: /draft \(unpublished changes\)/i })).toBeInTheDocument();
@@ -2701,21 +2748,18 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          user_partition_info: {
-            selected_partition_index: 0,
-            selected_groups_label: 'Group A, Group B, Group C',
-            selectable_partitions: [{
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        user_partition_info: {
+          selected_partition_index: 0,
+          selected_groups_label: 'Group A, Group B, Group C',
+          selectable_partitions: [
+            {
               id: 10,
               name: 'Content Groups',
               scheme: 'cohort',
@@ -2739,17 +2783,18 @@ describe('<CourseUnit />', () => {
                   selected: true,
                 },
               ],
-            }],
-          },
+            },
+          ],
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
     await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
     expect(await screen.findByRole('heading', { name: /draft \(unpublished changes\)/i })).toBeInTheDocument();
     expect(await screen.findByText(/access restrictions applied/i)).toBeInTheDocument();
-    expect(await screen.findByText(
-      /access to some content in this unit is restricted to specific groups of learners\./i,
-    ));
+    expect(
+      await screen.findByText(/access to some content in this unit is restricted to specific groups of learners\./i)
+    );
   });
 
   it('should render never published state in the unit sidebar', async () => {
@@ -2759,22 +2804,18 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-      });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          published: false,
-          released_to_students: false,
-          currently_visible_to_students: false,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+    });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        published: false,
+        released_to_students: false,
+        currently_visible_to_students: false,
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
     await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
 
@@ -2787,16 +2828,14 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          currently_visible_to_students: false,
-          published: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        currently_visible_to_students: false,
+        published: true,
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Scheduled')).toBeInTheDocument();
@@ -2807,16 +2846,14 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          published: true,
-          has_changes: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        published: true,
+        has_changes: true,
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Unpublished changes')).toBeInTheDocument();
@@ -2827,15 +2864,13 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          discussion_enabled: true,
-        },
-      });
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        discussion_enabled: true,
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Discussions Enabled')).toBeInTheDocument();
@@ -2846,16 +2881,15 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          user_partition_info: {
-            selected_partition_index: 0,
-            selected_groups_label: 'Visibility group 1',
-            selectable_partitions: [{
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        user_partition_info: {
+          selected_partition_index: 0,
+          selected_groups_label: 'Visibility group 1',
+          selectable_partitions: [
+            {
               id: 10,
               name: 'Content Groups',
               scheme: 'cohort',
@@ -2879,10 +2913,11 @@ describe('<CourseUnit />', () => {
                   selected: false,
                 },
               ],
-            }],
-          },
+            },
+          ],
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Access: Visibility group 1')).toBeInTheDocument();
@@ -2893,16 +2928,15 @@ describe('<CourseUnit />', () => {
       ...getConfig(),
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          user_partition_info: {
-            selected_partition_index: 0,
-            selected_groups_label: 'Visibility group 1, Visibility group 2, Visibility group 3',
-            selectable_partitions: [{
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        user_partition_info: {
+          selected_partition_index: 0,
+          selected_groups_label: 'Visibility group 1, Visibility group 2, Visibility group 3',
+          selectable_partitions: [
+            {
               id: 10,
               name: 'Content Groups',
               scheme: 'cohort',
@@ -2926,10 +2960,11 @@ describe('<CourseUnit />', () => {
                   selected: true,
                 },
               ],
-            }],
-          },
+            },
+          ],
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
     render(<RootWrapper />);
     expect(await screen.findByText('Access: 3 Groups')).toBeInTheDocument();
@@ -2987,13 +3022,13 @@ describe('<CourseUnit />', () => {
         newMockResult.results[0].query = query;
         // And fake the required '_formatted' fields; it contains the highlighting <mark>...</mark> around matched words
         // eslint-disable-next-line no-underscore-dangle, no-param-reassign
-        newMockResult.results[0]?.hits.forEach((hit) => { hit._formatted = { ...hit }; });
+        newMockResult.results[0]?.hits.forEach((hit) => {
+          hit._formatted = { ...hit };
+        });
         return newMockResult;
       });
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl())
-        .reply(200, courseCreateXblockMock);
+      axiosMock.onPost(postXBlockBaseApiUrl()).reply(200, courseCreateXblockMock);
 
       user = userEvent.setup();
       render(<RootWrapper />);
@@ -3224,19 +3259,17 @@ describe('<CourseUnit />', () => {
     });
     render(<RootWrapper />);
 
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(courseId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(courseId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        upstreamInfo: {
           ...courseSectionVerticalMock.xblock_info,
-          upstreamInfo: {
-            ...courseSectionVerticalMock.xblock_info,
-            upstreamRef: 'lct:org:lib:unit:unit-1',
-            upstreamLink: 'some-link',
-          },
+          upstreamRef: 'lct:org:lib:unit:unit-1',
+          upstreamLink: 'some-link',
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(courseId), store.dispatch);
 
     expect(screen.getByText(/this unit can only be edited from the \./i)).toBeInTheDocument();
@@ -3259,9 +3292,7 @@ describe('<CourseUnit />', () => {
       ENABLE_UNIT_PAGE_NEW_DESIGN: 'true',
     });
 
-    axiosMock
-      .onGet(getXBlockApiUrl(mockContentData.textXBlock))
-      .reply(200, mockContentData.textXBlockData);
+    axiosMock.onGet(getXBlockApiUrl(mockContentData.textXBlock)).reply(200, mockContentData.textXBlockData);
 
     render(<RootWrapper />);
 
@@ -3301,12 +3332,8 @@ describe('<CourseUnit />', () => {
       const menuToggle = await screen.findByRole('button', { name: 'Item Menu' });
       fireEvent.click(menuToggle);
 
-      axiosMock
-        .onPost(postXBlockBaseApiUrl())
-        .reply(200, { locator: 'new-block-id' });
-      axiosMock
-        .onGet(getCourseVerticalChildrenApiUrl(blockId))
-        .reply(200, courseVerticalChildrenMock);
+      axiosMock.onPost(postXBlockBaseApiUrl()).reply(200, { locator: 'new-block-id' });
+      axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, courseVerticalChildrenMock);
 
       const duplicateBtn = await screen.findByText('Duplicate');
       await user.click(duplicateBtn);
@@ -3330,12 +3357,8 @@ describe('<CourseUnit />', () => {
 
       expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-      axiosMock
-        .onDelete(getXBlockBaseApiUrl(componentId))
-        .reply(200, {});
-      axiosMock
-        .onGet(getCourseVerticalChildrenApiUrl(blockId))
-        .reply(200, courseVerticalChildrenMock);
+      axiosMock.onDelete(getXBlockBaseApiUrl(componentId)).reply(200, {});
+      axiosMock.onGet(getCourseVerticalChildrenApiUrl(blockId)).reply(200, courseVerticalChildrenMock);
 
       const confirmBtn = await screen.findByRole('button', { name: /^delete$/i });
       await user.click(confirmBtn);
@@ -3356,9 +3379,11 @@ describe('<CourseUnit />', () => {
       const moveBtn = await screen.findByText('Move');
       await user.click(moveBtn);
 
-      expect(await screen.findByText(
-        moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', componentData.displayName),
-      )).toBeInTheDocument();
+      expect(
+        await screen.findByText(
+          moveModalMessages.moveModalTitle.defaultMessage.replace('{displayName}', componentData.displayName)
+        )
+      ).toBeInTheDocument();
     });
 
     it('opens unlink modal and unlinks component from sidebar menu', async () => {
@@ -3403,9 +3428,7 @@ describe('<CourseUnit />', () => {
       const viewLibBtn = await screen.findByText('View in Library');
       await user.click(viewLibBtn);
 
-      expect(mockedUsedNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('/library/'),
-      );
+      expect(mockedUsedNavigate).toHaveBeenCalledWith(expect.stringContaining('/library/'));
     });
   });
 
@@ -3462,19 +3485,17 @@ describe('<CourseUnit />', () => {
         actions: { ...unitItemData.actions, unlinkable: true },
         upstreamInfo: { upstreamRef },
       };
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            upstream_info: { upstream_ref: upstreamRef },
-            actions: {
-              ...courseSectionVerticalMock.xblock_info.actions,
-              unlinkable: true,
-            },
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          upstream_info: { upstream_ref: upstreamRef },
+          actions: {
+            ...courseSectionVerticalMock.xblock_info.actions,
+            unlinkable: true,
           },
-        });
+        },
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
       await renderUnitInfoSidebar(unitWithUpstream);
 
@@ -3501,15 +3522,13 @@ describe('<CourseUnit />', () => {
         ...unitItemData,
         upstreamInfo: { upstreamRef },
       };
-      axiosMock
-        .onGet(getCourseSectionVerticalApiUrl(blockId))
-        .reply(200, {
-          ...courseSectionVerticalMock,
-          xblock_info: {
-            ...courseSectionVerticalMock.xblock_info,
-            upstream_info: { upstream_ref: upstreamRef },
-          },
-        });
+      axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+        ...courseSectionVerticalMock,
+        xblock_info: {
+          ...courseSectionVerticalMock.xblock_info,
+          upstream_info: { upstream_ref: upstreamRef },
+        },
+      });
       await executeThunk(fetchCourseSectionVerticalData(blockId, courseId), store.dispatch);
       await renderUnitInfoSidebar(unitWithUpstream);
 
@@ -3519,9 +3538,7 @@ describe('<CourseUnit />', () => {
       const viewLibBtn = await screen.findByText('View in Library');
       await user.click(viewLibBtn);
 
-      expect(mockedUsedNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('/library/'),
-      );
+      expect(mockedUsedNavigate).toHaveBeenCalledWith(expect.stringContaining('/library/'));
     });
 
     it('copies location ID to clipboard when Copy Location ID is clicked from sidebar menu', async () => {

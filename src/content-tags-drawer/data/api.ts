@@ -35,18 +35,23 @@ export const getTaxonomyTagsApiUrl = (taxonomyId: number, options: GetTaxonomyTa
   return url.href;
 };
 
-export const getContentTaxonomyTagsApiUrl = (contentId: string) => new URL(`api/content_tagging/v1/object_tags/${contentId}/`, getApiBaseUrl()).href;
-export const getXBlockContentDataApiURL = (contentId: string) => new URL(`/xblock/outline/${contentId}`, getApiBaseUrl()).href;
-export const getCourseContentDataApiURL = (contentId: string) => new URL(`/api/contentstore/v1/course_settings/${contentId}`, getApiBaseUrl()).href;
-export const getLibraryContentDataApiUrl = (contentId: string) => new URL(`/api/libraries/v2/blocks/${contentId}/`, getApiBaseUrl()).href;
-export const getContentTaxonomyTagsCountApiUrl = (contentId: string) => new URL(`api/content_tagging/v1/object_tag_counts/${contentId}/?count_implicit`, getApiBaseUrl()).href;
+export const getContentTaxonomyTagsApiUrl = (contentId: string) =>
+  new URL(`api/content_tagging/v1/object_tags/${contentId}/`, getApiBaseUrl()).href;
+export const getXBlockContentDataApiURL = (contentId: string) =>
+  new URL(`/xblock/outline/${contentId}`, getApiBaseUrl()).href;
+export const getCourseContentDataApiURL = (contentId: string) =>
+  new URL(`/api/contentstore/v1/course_settings/${contentId}`, getApiBaseUrl()).href;
+export const getLibraryContentDataApiUrl = (contentId: string) =>
+  new URL(`/api/libraries/v2/blocks/${contentId}/`, getApiBaseUrl()).href;
+export const getContentTaxonomyTagsCountApiUrl = (contentId: string) =>
+  new URL(`api/content_tagging/v1/object_tag_counts/${contentId}/?count_implicit`, getApiBaseUrl()).href;
 
 /**
  * Get all tags that belong to taxonomy.
  */
 export async function getTaxonomyTagsData(
   taxonomyId: number,
-  options: GetTaxonomyTagsApiUrlOptions = {},
+  options: GetTaxonomyTagsApiUrlOptions = {}
 ): Promise<TagListData> {
   const url = getTaxonomyTagsApiUrl(taxonomyId, options);
   const { data } = await getAuthenticatedHttpClient().get(url);
@@ -101,7 +106,7 @@ export async function getContentData(contentId: string): Promise<ContentData> {
  */
 export async function updateContentTaxonomyTags(
   contentId: string,
-  tagsData: UpdateTagsData[],
+  tagsData: UpdateTagsData[]
 ): Promise<ContentTaxonomyTagsData> {
   const url = getContentTaxonomyTagsApiUrl(contentId);
   const { data } = await getAuthenticatedHttpClient().put(url, { tagsData });

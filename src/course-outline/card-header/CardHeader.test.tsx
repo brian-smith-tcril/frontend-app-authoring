@@ -1,9 +1,7 @@
 import { setConfig, getConfig } from '@edx/frontend-platform';
 
 import { ITEM_BADGE_STATUS } from '@src/course-outline/constants';
-import {
-  act, fireEvent, initializeMocks, render, screen, waitFor,
-} from '@src/testUtils';
+import { act, fireEvent, initializeMocks, render, screen, waitFor } from '@src/testUtils';
 import { CourseAuthoringProvider } from '@src/CourseAuthoringContext';
 import { courseId } from '@src/schedule-and-details/__mocks__/courseDetails';
 import { userEvent } from '@testing-library/user-event';
@@ -75,28 +73,19 @@ const renderComponent = (props?: object, entry = '/') => {
     />
   );
 
-  return render(
-    <CardHeader
-      {...cardHeaderProps}
-      titleComponent={titleComponent}
-      {...props}
-    />,
-    {
-      path: '/',
-      routerProps: {
-        initialEntries: [entry],
-      },
-      extraWrapper: ({ children }) => (
-        <CourseAuthoringProvider courseId={courseId}>
-          <CourseOutlineProvider>
-            <OutlineSidebarProvider>
-              {children}
-            </OutlineSidebarProvider>
-          </CourseOutlineProvider>
-        </CourseAuthoringProvider>
-      ),
+  return render(<CardHeader {...cardHeaderProps} titleComponent={titleComponent} {...props} />, {
+    path: '/',
+    routerProps: {
+      initialEntries: [entry],
     },
-  );
+    extraWrapper: ({ children }) => (
+      <CourseAuthoringProvider courseId={courseId}>
+        <CourseOutlineProvider>
+          <OutlineSidebarProvider>{children}</OutlineSidebarProvider>
+        </CourseOutlineProvider>
+      </CourseAuthoringProvider>
+    ),
+  });
 };
 
 describe('<CardHeader />', () => {
@@ -258,8 +247,12 @@ describe('<CardHeader />', () => {
     // Ensure menu items related to editing are enabled
     const menuButton = screen.getByTestId('subsection-card-header__menu-button');
     await act(async () => fireEvent.click(menuButton));
-    expect(await screen.findByTestId('subsection-card-header__menu-configure-button')).not.toHaveAttribute('aria-disabled');
-    expect(await screen.findByTestId('subsection-card-header__menu-manage-tags-button')).not.toHaveAttribute('aria-disabled');
+    expect(await screen.findByTestId('subsection-card-header__menu-configure-button')).not.toHaveAttribute(
+      'aria-disabled'
+    );
+    expect(await screen.findByTestId('subsection-card-header__menu-manage-tags-button')).not.toHaveAttribute(
+      'aria-disabled'
+    );
   });
 
   it('check editing is disabled when saving is in progress', async () => {
@@ -405,7 +398,7 @@ describe('<CardHeader />', () => {
     expect(mockClickSync).toHaveBeenCalled();
   });
 
-  [null, undefined].forEach((unlinkable) => (
+  [null, undefined].forEach((unlinkable) =>
     it(`should not render unlink button if unlinkable action is ${unlinkable}`, async () => {
       renderComponent({
         ...cardHeaderProps,
@@ -420,7 +413,7 @@ describe('<CardHeader />', () => {
 
       expect(screen.queryByText(messages.menuUnlink.defaultMessage)).not.toBeInTheDocument();
     })
-  ));
+  );
 
   it('should render unlink button disabled if unlinkable action is False', async () => {
     renderComponent({

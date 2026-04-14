@@ -20,11 +20,7 @@ export const SANDBOX_OPTIONS = [
 ].join(' ');
 
 const ModalIframe = forwardRef<HTMLIFrameElement, ModalIframeProps>(
-  ({
-    title,
-    className = '',
-    ...props
-  }, ref: ForwardedRef<HTMLIFrameElement>) => (
+  ({ title, className = '', ...props }, ref: ForwardedRef<HTMLIFrameElement>) => (
     <iframe
       title={title}
       className={classNames('modal-iframe', className)}
@@ -37,7 +33,7 @@ const ModalIframe = forwardRef<HTMLIFrameElement, ModalIframeProps>(
       sandbox={SANDBOX_OPTIONS}
       {...props}
     />
-  ),
+  )
 );
 
 export default ModalIframe;

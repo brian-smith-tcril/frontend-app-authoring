@@ -1,8 +1,6 @@
 import { EditorComponent } from '@src/editors/EditorComponent';
 import { useFormikContext } from 'formik';
-import React, {
-  PropsWithChildren, useContext, useEffect, useRef,
-} from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import EditorContainer from '@src/editors/containers/EditorContainer';
 import { PdfBlockContext, PdfState } from '@src/editors/containers/PdfEditor/contexts';
 import { isEqual } from 'lodash';
@@ -25,11 +23,7 @@ const EditorWrapper: React.FC<PropsWithChildren> = ({ children }) => {
   if (isPending) {
     return (
       <div className="text-center p-6">
-        <Spinner
-          animation="border"
-          className="m-3"
-          screenReaderText={intl.formatMessage(messages.blockLoading)}
-        />
+        <Spinner animation="border" className="m-3" screenReaderText={intl.formatMessage(messages.blockLoading)} />
       </div>
     );
   }

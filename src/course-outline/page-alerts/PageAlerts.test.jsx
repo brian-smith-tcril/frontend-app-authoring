@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  act,
-  render,
-  fireEvent,
-  screen,
-} from '@testing-library/react';
+import { act, render, fireEvent, screen } from '@testing-library/react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeMockApp, getConfig } from '@edx/frontend-platform';
@@ -50,16 +45,14 @@ const pageAlertsData = {
   savingStatus: '',
 };
 
-const renderComponent = (props) => render(
-  <AppProvider store={store} messages={{}}>
-    <IntlProvider locale="en">
-      <PageAlerts
-        {...pageAlertsData}
-        {...props}
-      />
-    </IntlProvider>
-  </AppProvider>,
-);
+const renderComponent = (props) =>
+  render(
+    <AppProvider store={store} messages={{}}>
+      <IntlProvider locale="en">
+        <PageAlerts {...pageAlertsData} {...props} />
+      </IntlProvider>
+    </AppProvider>
+  );
 
 describe('<PageAlerts />', () => {
   beforeEach(() => {
@@ -169,7 +162,7 @@ describe('<PageAlerts />', () => {
     expect(screen.queryByText('message 2')).toBeInTheDocument();
     expect(screen.queryByText(messages.advancedSettingLinkText.defaultMessage)).toHaveAttribute(
       'href',
-      `${getConfig().STUDIO_BASE_URL}/some-url`,
+      `${getConfig().STUDIO_BASE_URL}/some-url`
     );
   });
 
@@ -184,7 +177,7 @@ describe('<PageAlerts />', () => {
     expect(screen.queryByText(messages.errorFileAlertTitle.defaultMessage)).toBeInTheDocument();
     expect(screen.queryByText(messages.newFileAlertAction.defaultMessage)).toHaveAttribute(
       'href',
-      `${getConfig().STUDIO_BASE_URL}/assets/course-id`,
+      `${getConfig().STUDIO_BASE_URL}/assets/course-id`
     );
   });
 
@@ -198,7 +191,7 @@ describe('<PageAlerts />', () => {
     expect(screen.queryByText(messages.conflictingFileAlertTitle.defaultMessage)).toBeInTheDocument();
     expect(screen.queryByText(messages.newFileAlertAction.defaultMessage)).toHaveAttribute(
       'href',
-      `${getConfig().STUDIO_BASE_URL}/assets/course-id`,
+      `${getConfig().STUDIO_BASE_URL}/assets/course-id`
     );
   });
 
@@ -222,7 +215,10 @@ describe('<PageAlerts />', () => {
       ...pageAlertsData,
       errors: {
         outlineIndexApi: {
-          data: 'some error', status: 403, type: API_ERROR_TYPES.forbidden, dismissable: false,
+          data: 'some error',
+          status: 403,
+          type: API_ERROR_TYPES.forbidden,
+          dismissable: false,
         },
       },
     });
@@ -235,7 +231,10 @@ describe('<PageAlerts />', () => {
       ...pageAlertsData,
       errors: {
         outlineIndexApi: {
-          data: 'some error', status: 500, type: API_ERROR_TYPES.serverError, dismissable: true,
+          data: 'some error',
+          status: 500,
+          type: API_ERROR_TYPES.serverError,
+          dismissable: true,
         },
       },
     });

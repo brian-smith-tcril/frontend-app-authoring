@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
   confirmationDescription: {
     id: 'authoring.course-unit.preview-changes.confirmation-dialog-description',
-    defaultMessage: 'Would you like to permanently ignore this updated version? If so, you won\'t be able to update this until a newer version is published (in the library).',
+    defaultMessage: "Would you like to permanently ignore this updated version? If so, you won't be able to update this until a newer version is published (in the library).",
     description: 'Preview changes confirmation dialog description text when user clicks on ignore changes.',
   },
   confirmationConfirmBtn: {

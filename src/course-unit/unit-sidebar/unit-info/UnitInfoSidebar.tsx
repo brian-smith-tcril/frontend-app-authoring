@@ -6,18 +6,14 @@ import { Tag } from '@openedx/paragon/icons';
 import { ComponentCountSnippet, getItemIcon } from '@src/generic/block-type-utils';
 import { SidebarContent, SidebarSection, SidebarTitle } from '@src/generic/sidebar';
 import { ContentTagsSnippet } from '@src/content-tags-drawer';
-import {
-  Tab, Tabs, useToggle,
-} from '@openedx/paragon';
+import { Tab, Tabs, useToggle } from '@openedx/paragon';
 import { useIframe } from '@src/generic/hooks/context/hooks';
 import { getLibraryId } from '@src/generic/key-utils';
 import { useClipboard } from '@src/generic/clipboard';
 import { ToastContext } from '@src/generic/toast-context';
 import { UnlinkModal, useUnlinkDownstream } from '@src/generic/unlink-modal';
 import { useCourseAuthoringContext } from '@src/CourseAuthoringContext';
-import {
-  useCourseItemData, useDeleteCourseItem,
-} from '@src/course-outline/data/apiHooks';
+import { useCourseItemData, useDeleteCourseItem } from '@src/course-outline/data/apiHooks';
 import { useConfigureUnitWithPageUpdates } from '@src/course-unit/data/apiHooks';
 import DeleteModal from '@src/generic/delete-modal/DeleteModal';
 import { getCourseUnitData, getCourseVerticalChildren } from '@src/course-unit/data/selectors';
@@ -44,30 +40,23 @@ const UnitInfoDetails = () => {
     throw new Error('Error: route is missing blockId.');
   }
 
-  const componentData: Record<string, number> = useMemo(() => (
-    // @ts-ignore
-    courseVerticalChildren.children.reduce<Record<string, number>>(
-      (acc, { blockType }) => {
+  const componentData: Record<string, number> = useMemo(
+    () =>
+      // @ts-ignore
+      courseVerticalChildren.children.reduce<Record<string, number>>((acc, { blockType }) => {
         acc[blockType] = (acc[blockType] ?? 0) + 1;
         return acc;
-      },
-      {},
-    )
-  ), [courseVerticalChildren.children]);
+      }, {}),
+    [courseVerticalChildren.children]
+  );
 
   return (
     <SidebarContent>
       <PublishControls blockId={blockId} hideCopyButton />
-      <SidebarSection
-        title={intl.formatMessage(messages.sidebarSectionSummary)}
-        icon={getItemIcon('unit')}
-      >
+      <SidebarSection title={intl.formatMessage(messages.sidebarSectionSummary)} icon={getItemIcon('unit')}>
         {componentData && <ComponentCountSnippet componentData={componentData} />}
       </SidebarSection>
-      <SidebarSection
-        title={intl.formatMessage(messages.sidebarSectionTaxonomies)}
-        icon={Tag}
-      >
+      <SidebarSection title={intl.formatMessage(messages.sidebarSectionTaxonomies)} icon={Tag}>
         <ContentTagsSnippet contentId={blockId} />
       </SidebarSection>
     </SidebarContent>
@@ -81,12 +70,7 @@ const UnitInfoDetails = () => {
  */
 export const UnitInfoSettings = () => {
   const { sendMessageToIframe } = useIframe();
-  const {
-    id,
-    visibilityState,
-    discussionEnabled,
-    userPartitionInfo,
-  } = useSelector(getCourseUnitData);
+  const { id, visibilityState, discussionEnabled, userPartitionInfo } = useSelector(getCourseUnitData);
 
   const updateCallback = () => {
     sendMessageToIframe(messageTypes.refreshXBlock, null);
@@ -113,10 +97,7 @@ export const UnitInfoSidebar = () => {
   const dispatch = useDispatch();
   const { copyToClipboard } = useClipboard();
   const currentItemData = useSelector(getCourseUnitData);
-  const {
-    currentTabKey,
-    setCurrentTabKey,
-  } = useUnitSidebarContext();
+  const { currentTabKey, setCurrentTabKey } = useUnitSidebarContext();
   const { showToast } = useContext(ToastContext);
   const { courseId } = useCourseAuthoringContext();
 
@@ -134,29 +115,35 @@ export const UnitInfoSidebar = () => {
   actions.duplicable = actions.duplicable && !subsection?.upstreamInfo?.upstreamRef;
 
   const handleDeleteSubmit = async () => {
-    await deleteCourseItem({
-      itemId: currentItemData.id,
-      subsectionId,
-      sectionId,
-    }, {
-      onSuccess: () => {
-        closeDeleteModal();
-        navigate(`/course/${courseId}`);
+    await deleteCourseItem(
+      {
+        itemId: currentItemData.id,
+        subsectionId,
+        sectionId,
       },
-    });
+      {
+        onSuccess: () => {
+          closeDeleteModal();
+          navigate(`/course/${courseId}`);
+        },
+      }
+    );
   };
 
   const handleUnlinkSubmit = async () => {
-    await unlinkDownstream({
-      downstreamBlockId: currentItemData.id,
-      subsectionId,
-      sectionId,
-    }, {
-      onSuccess: () => {
-        closeUnlinkModal();
-        dispatch(fetchCourseSectionVerticalData(currentItemData.id, subsectionId));
+    await unlinkDownstream(
+      {
+        downstreamBlockId: currentItemData.id,
+        subsectionId,
+        sectionId,
       },
-    });
+      {
+        onSuccess: () => {
+          closeUnlinkModal();
+          dispatch(fetchCourseSectionVerticalData(currentItemData.id, subsectionId));
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -208,24 +195,13 @@ export const UnitInfoSidebar = () => {
           onClickCopyLocation: handleCopyLocation,
         }}
       />
-      <Tabs
-        id="unit-info-sidebar-tabs"
-        className="my-2 mx-n3.5"
-        activeKey={currentTabKey}
-        onSelect={setCurrentTabKey}
-      >
-        <Tab
-          eventKey="details"
-          title={intl.formatMessage(messages.sidebarInfoDetailsTab)}
-        >
+      <Tabs id="unit-info-sidebar-tabs" className="my-2 mx-n3.5" activeKey={currentTabKey} onSelect={setCurrentTabKey}>
+        <Tab eventKey="details" title={intl.formatMessage(messages.sidebarInfoDetailsTab)}>
           <div className="mt-4">
             <UnitInfoDetails />
           </div>
         </Tab>
-        <Tab
-          eventKey="settings"
-          title={intl.formatMessage(messages.sidebarInfoSettingsTab)}
-        >
+        <Tab eventKey="settings" title={intl.formatMessage(messages.sidebarInfoSettingsTab)}>
           <div className="mt-4">
             <UnitInfoSettings />
           </div>

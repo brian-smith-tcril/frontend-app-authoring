@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Container,
-  Row,
-  TransitionReplace,
-  Toast,
-  Button,
-  ActionRow,
-} from '@openedx/paragon';
+import { Container, Row, TransitionReplace, Toast, Button, ActionRow } from '@openedx/paragon';
 import { Helmet } from 'react-helmet';
 import { CheckCircle as CheckCircleIcon, CloseFullscreen, OpenInFull } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useLocation } from 'react-router-dom';
 import { CourseAuthoringOutlineSidebarSlot } from '@src/plugin-slots/CourseAuthoringOutlineSidebarSlot';
 
@@ -33,10 +23,7 @@ import { useCourseOutlineContext } from './CourseOutlineContext';
 import LegacyLibContentBlockAlert from '@src/course-libraries/LegacyLibContentBlockAlert';
 import { ContainerType } from '@src/generic/key-utils';
 import { useCourseItemData } from '@src/course-outline/data/apiHooks';
-import {
-  getProctoredExamsFlag,
-  getTimedExamsFlag,
-} from './data/selectors';
+import { getProctoredExamsFlag, getTimedExamsFlag } from './data/selectors';
 import { COURSE_BLOCK_NAMES } from './constants';
 import EnableHighlightsModal from './enable-highlights-modal/EnableHighlightsModal';
 import SectionCard from './section-card/SectionCard';
@@ -47,11 +34,7 @@ import EmptyPlaceholder from './empty-placeholder/EmptyPlaceholder';
 import PublishModal from './publish-modal/PublishModal';
 import PageAlerts from './page-alerts/PageAlerts';
 import DraggableList from './drag-helper/DraggableList';
-import {
-  canMoveSection,
-  possibleUnitMoves,
-  possibleSubsectionMoves,
-} from './drag-helper/utils';
+import { canMoveSection, possibleUnitMoves, possibleSubsectionMoves } from './drag-helper/utils';
 import { useCourseOutline } from './hooks';
 import messages from './messages';
 import headerMessages from './header-navigations/messages';
@@ -64,12 +47,7 @@ import { isOutlineNewDesignEnabled } from './utils';
 const CourseOutline = () => {
   const intl = useIntl();
   const location = useLocation();
-  const {
-    courseId,
-    courseUsageKey,
-    isUnlinkModalOpen,
-    closeUnlinkModal,
-  } = useCourseAuthoringContext();
+  const { courseId, courseUsageKey, isUnlinkModalOpen, closeUnlinkModal } = useCourseAuthoringContext();
   const {
     currentSelection,
     sections,
@@ -141,17 +119,18 @@ const CourseOutline = () => {
     // Wait for the course data to load before exporting tags.
     if (courseId && courseName && location.hash === '#export-tags') {
       setToastMessage(intl.formatMessage(messages.exportTagsCreatingToastMessage));
-      getTagsExportFile(courseId, courseName).then(() => {
-        setToastMessage(intl.formatMessage(messages.exportTagsSuccessToastMessage));
-      }).catch(() => {
-        setToastMessage(intl.formatMessage(messages.exportTagsErrorToastMessage));
-      });
+      getTagsExportFile(courseId, courseName)
+        .then(() => {
+          setToastMessage(intl.formatMessage(messages.exportTagsSuccessToastMessage));
+        })
+        .catch(() => {
+          setToastMessage(intl.formatMessage(messages.exportTagsErrorToastMessage));
+        });
 
       // Delete `#export-tags` from location
       window.location.href = '#';
     }
   }, [location, courseId, courseName]);
-
 
   const { data: currentItemData } = useCourseItemData(currentSelection?.currentId);
 
@@ -230,7 +209,7 @@ const CourseOutline = () => {
             title={courseName}
             subtitle={intl.formatMessage(messages.headingSubtitle)}
             hideBorder
-            headerActions={(
+            headerActions={
               <CourseOutlineHeaderActionsSlot
                 isReIndexShow={isReIndexShow}
                 isSectionsExpanded={isSectionsExpanded}
@@ -241,45 +220,40 @@ const CourseOutline = () => {
                 errors={errors}
                 sections={sections}
               />
-            )}
+            }
           />
-          {showNewActionsBar
-            ? (
-              <StatusBar
-                courseId={courseId}
-                isLoading={isLoading}
-                statusBarData={statusBarData}
-              />
-            ) : (
-              <LegacyStatusBar
-                courseId={courseId}
-                isLoading={isLoading}
-                statusBarData={statusBarData}
-                openEnableHighlightsModal={openEnableHighlightsModal}
-                handleVideoSharingOptionChange={handleVideoSharingOptionChange}
-              />
-            )}
+          {showNewActionsBar ? (
+            <StatusBar courseId={courseId} isLoading={isLoading} statusBarData={statusBarData} />
+          ) : (
+            <LegacyStatusBar
+              courseId={courseId}
+              isLoading={isLoading}
+              statusBarData={statusBarData}
+              openEnableHighlightsModal={openEnableHighlightsModal}
+              handleVideoSharingOptionChange={handleVideoSharingOptionChange}
+            />
+          )}
           <hr className="mt-4 mb-0 w-100 text-light-400" />
           <div className="d-flex align-items-baseline">
             <div className="flex-fill">
               <article>
                 <div>
                   {showNewActionsBar && (
-                  <ActionRow className="mt-3">
-                    {Boolean(sections.length) && (
-                    <Button
-                      variant="outline-primary"
-                      id="expand-collapse-all-button"
-                      data-testid="expand-collapse-all-button"
-                      iconBefore={isSectionsExpanded ? CloseFullscreen : OpenInFull}
-                      onClick={headerNavigationsActions.handleExpandAll}
-                    >
-                      {isSectionsExpanded
-                        ? intl.formatMessage(headerMessages.collapseAllButton)
-                        : intl.formatMessage(headerMessages.expandAllButton)}
-                    </Button>
-                    )}
-                  </ActionRow>
+                    <ActionRow className="mt-3">
+                      {Boolean(sections.length) && (
+                        <Button
+                          variant="outline-primary"
+                          id="expand-collapse-all-button"
+                          data-testid="expand-collapse-all-button"
+                          iconBefore={isSectionsExpanded ? CloseFullscreen : OpenInFull}
+                          onClick={headerNavigationsActions.handleExpandAll}
+                        >
+                          {isSectionsExpanded
+                            ? intl.formatMessage(headerMessages.collapseAllButton)
+                            : intl.formatMessage(headerMessages.expandAllButton)}
+                        </Button>
+                      )}
+                    </ActionRow>
                   )}
                   <section>
                     {!errors?.outlineIndexApi && (
@@ -294,11 +268,7 @@ const CourseOutline = () => {
                               handleSubsectionDragAndDrop={handleSubsectionDragAndDrop}
                               handleUnitDragAndDrop={handleUnitDragAndDrop}
                             >
-                              <SortableContext
-                                id="root"
-                                items={sections}
-                                strategy={verticalListSortingStrategy}
-                              >
+                              <SortableContext id="root" items={sections} strategy={verticalListSortingStrategy}>
                                 {sections.map((section, sectionIndex) => (
                                   <SectionCard
                                     key={section.id}
@@ -329,7 +299,7 @@ const CourseOutline = () => {
                                             [...sections],
                                             sectionIndex,
                                             section,
-                                            section.childInfo.children,
+                                            section.childInfo.children
                                           )}
                                           isSectionsExpanded={isSectionsExpanded}
                                           isSelfPaced={statusBarData.isSelfPaced}
@@ -360,7 +330,7 @@ const CourseOutline = () => {
                                                   subsectionIndex,
                                                   section,
                                                   subsection,
-                                                  subsection.childInfo.children,
+                                                  subsection.childInfo.children
                                                 )}
                                                 onOpenConfigureModal={openConfigureModal}
                                                 onOpenDeleteModal={openDeleteModal}
@@ -402,11 +372,7 @@ const CourseOutline = () => {
                 </div>
               </article>
             </div>
-            <CourseAuthoringOutlineSidebarSlot
-              courseId={courseId}
-              courseName={courseName}
-              sections={sections}
-            />
+            <CourseAuthoringOutlineSidebarSlot courseId={courseId} courseName={courseName} sections={sections} />
           </div>
           <EnableHighlightsModal
             isOpen={isEnableHighlightsModalOpen}
@@ -456,11 +422,7 @@ const CourseOutline = () => {
         />
       </div>
       {toastMessage && (
-        <Toast
-          show
-          onClose={/* istanbul ignore next */ () => setToastMessage(null)}
-          data-testid="taxonomy-toast"
-        >
+        <Toast show onClose={/* istanbul ignore next */ () => setToastMessage(null)} data-testid="taxonomy-toast">
           {toastMessage}
         </Toast>
       )}

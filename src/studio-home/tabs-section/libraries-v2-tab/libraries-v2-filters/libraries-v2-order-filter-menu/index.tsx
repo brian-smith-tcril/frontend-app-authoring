@@ -34,7 +34,7 @@ const LibrariesV2OrderFilterMenu: React.FC<{
         value: 'sortLibrariesV2Oldest',
       },
     ],
-    [intl],
+    [intl]
   );
 
   const handleLibraryV2OrderSelected = (libraryV2Order: string) => {

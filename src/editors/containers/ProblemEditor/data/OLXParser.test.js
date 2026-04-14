@@ -68,7 +68,9 @@ describe('OLXParser', () => {
     describe('when question parser finds script tags', () => {
       it('should throw error and contain message regarding opening advanced editor', () => {
         const olxparser = new OLXParser(scriptProblemOlX.rawOLX);
-        expect(() => olxparser.parseQuestions('numericalresponse')).toThrow(new Error('Script Tag, reverting to Advanced Editor'));
+        expect(() => olxparser.parseQuestions('numericalresponse')).toThrow(
+          new Error('Script Tag, reverting to Advanced Editor')
+        );
       });
     });
     describe('when multi select problem finds partial_credit attribute', () => {
@@ -218,7 +220,7 @@ describe('OLXParser', () => {
       const { answers } = multipleChoiceWithoutAnswersOlxParser.parseMultipleChoiceAnswers(
         'multiplechoiceresponse',
         'choicegroup',
-        'choice',
+        'choice'
       );
       it('should return a default answer', () => {
         expect(answers).toEqual(multipleChoiceWithoutAnswers.data.answers);
@@ -229,7 +231,7 @@ describe('OLXParser', () => {
       const { answers } = multipleChoiceSingleAnswerOlxParser.parseMultipleChoiceAnswers(
         'multiplechoiceresponse',
         'choicegroup',
-        'choice',
+        'choice'
       );
       it('should return a single answer', () => {
         expect(answers).toEqual(multipleChoiceSingleAnswer.data.answers);
@@ -261,7 +263,11 @@ describe('OLXParser', () => {
       });
     });
     describe('given multiple choice olx with feedback and hints', () => {
-      const { answers } = multipleChoiceOlxParser.parseMultipleChoiceAnswers('multiplechoiceresponse', 'choicegroup', 'choice');
+      const { answers } = multipleChoiceOlxParser.parseMultipleChoiceAnswers(
+        'multiplechoiceresponse',
+        'choicegroup',
+        'choice'
+      );
       it('should equal an array of objects with length three', () => {
         expect(answers).toEqual(multipleChoiceWithFeedbackAndHintsOLX.data.answers);
         expect(answers).toHaveLength(3);

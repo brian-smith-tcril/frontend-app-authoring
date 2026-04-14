@@ -8,8 +8,7 @@ const messages = defineMessages({
   },
   courseFileHint: {
     id: 'authoring.sharedComponents.uploadWidget.courseFileHint',
-    defaultMessage: 'This is the file your learners will see embedded in your course. Files are immediately '
-      + 'uploaded to course assets (Files).',
+    defaultMessage: 'This is the file your learners will see embedded in your course. Files are immediately ' + 'uploaded to course assets (Files).',
     description: 'Hint for file upload when in a course.',
   },
   libraryFileHint: {
@@ -75,8 +74,7 @@ const messages = defineMessages({
   blockCreationWarning: {
     id: 'authoring.sharedComponents.uploadWidget.blockCreationWarning',
     defaultMessage: 'To add a file, save and reopen this block.',
-    description: 'Notification that the user needs to save the block so we have somewhere to put '
-      + 'the file before beginning.',
+    description: 'Notification that the user needs to save the block so we have somewhere to put ' + 'the file before beginning.',
   },
 });
 

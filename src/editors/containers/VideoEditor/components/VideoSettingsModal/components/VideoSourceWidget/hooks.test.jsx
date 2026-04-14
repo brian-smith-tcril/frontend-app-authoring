@@ -6,7 +6,7 @@ import * as hooks from './hooks';
 
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
-  useRef: jest.fn(val => ({ current: val })),
+  useRef: jest.fn((val) => ({ current: val })),
   useEffect: jest.fn(),
   useCallback: (cb, prereqs) => ({ cb, prereqs }),
 }));
@@ -61,7 +61,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             videoSource: e.target.value,
-          }),
+          })
         );
       });
       it('dispatches checkTranscriptsForImport request with new YouTube videoSource', () => {
@@ -102,7 +102,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             videoId: e.target.value,
-          }),
+          })
         );
       });
       it('dispatches updateField action with empty string', () => {
@@ -110,7 +110,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             videoId: e.target.value,
-          }),
+          })
         );
       });
       it('dispatches updateField action with previousVideoId', () => {
@@ -118,7 +118,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             videoId: e.target.value,
-          }),
+          })
         );
       });
     });
@@ -136,7 +136,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             fallbackVideos: [...fallbackVideos, ''],
-          }),
+          })
         );
       });
     });
@@ -147,7 +147,7 @@ describe('VideoEditorHandout hooks', () => {
         expect(dispatch).toHaveBeenCalledWith(
           actions.video.updateField({
             fallbackVideos: updatedFallbackVideos,
-          }),
+          })
         );
       });
     });

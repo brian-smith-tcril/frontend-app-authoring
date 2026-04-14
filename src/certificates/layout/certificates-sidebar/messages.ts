@@ -8,7 +8,7 @@ const messages = defineMessages({
   },
   workingWithCertificatesFirstParagraph: {
     id: 'course-authoring.certificates.sidebar.working-with-certificates.first-paragraph',
-    defaultMessage: 'Specify a course title to use on the certificate if the course\'s official title is too long to be displayed well.',
+    defaultMessage: "Specify a course title to use on the certificate if the course's official title is too long to be displayed well.",
     description: 'Instructions for specifying a course title for the certificate',
   },
   workingWithCertificatesSecondParagraph: {

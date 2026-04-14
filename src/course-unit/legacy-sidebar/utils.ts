@@ -1,9 +1,4 @@
-import {
-  AccessTimeFilled,
-  CheckCircle as CheckCircleIcon,
-  Description,
-  Lock,
-} from '@openedx/paragon/icons';
+import { AccessTimeFilled, CheckCircle as CheckCircleIcon, Description, Lock } from '@openedx/paragon/icons';
 
 import type { IntlShape } from 'react-intl';
 
@@ -29,7 +24,7 @@ export const getPublishInfo = (
   editedBy: string,
   editedOn: string,
   publishedBy: string,
-  publishedOn: any,
+  publishedOn: any
 ): string => {
   let publishInfoText;
   if (hasChanges && editedOn && editedBy) {

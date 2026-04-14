@@ -40,7 +40,7 @@ describe('CourseUnitHeaderActionsSlot', () => {
         verticalBlocks={[]}
         category="library"
         headerNavigationsActions={headerNavProps.headerNavigationsActions}
-      />,
+      />
     );
     expect(component.toJSON().props.pluginProps.isUnitVerticalType).toEqual(false);
 
@@ -50,7 +50,7 @@ describe('CourseUnitHeaderActionsSlot', () => {
         verticalBlocks={[]}
         category={COURSE_BLOCK_NAMES.vertical.id}
         headerNavigationsActions={headerNavProps.headerNavigationsActions}
-      />,
+      />
     );
     expect(component.toJSON().props.pluginProps.isUnitVerticalType).toEqual(true);
   });

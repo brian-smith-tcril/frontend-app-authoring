@@ -1,11 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  ActionRow,
-  Button,
-  Container,
-  Layout,
-} from '@openedx/paragon';
+import { ActionRow, Button, Container, Layout } from '@openedx/paragon';
 import { Add as AddIcon, ErrorOutline as ErrorIcon } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
@@ -21,11 +16,7 @@ import UpdateForm from './update-form/UpdateForm';
 import { REQUEST_TYPES } from './constants';
 import messages from './messages';
 import { useCourseUpdates } from './hooks';
-import {
-  getErrors,
-  getLoadingStatuses,
-  getSavingStatuses,
-} from './data/selectors';
+import { getErrors, getLoadingStatuses, getSavingStatuses } from './data/selectors';
 import { matchesAnyStatus } from './utils';
 import getPageHeadTitle from '../generic/utils';
 import AlertMessage from '../generic/alert-message';
@@ -71,9 +62,7 @@ const CourseUpdates = () => {
   return (
     <>
       <Helmet>
-        <title>
-          {getPageHeadTitle(courseDetails?.name || '', intl.formatMessage(messages.headingTitle))}
-        </title>
+        <title>{getPageHeadTitle(courseDetails?.name || '', intl.formatMessage(messages.headingTitle))}</title>
       </Helmet>
       <Container size="xl" className="px-4 pt-4">
         <section className="setting-items mb-4">
@@ -125,13 +114,7 @@ const CourseUpdates = () => {
               icon={ErrorIcon}
             />
           )}
-          <Layout
-            lg={[{ span: 12 }]}
-            md={[{ span: 12 }]}
-            sm={[{ span: 12 }]}
-            xs={[{ span: 12 }]}
-            xl={[{ span: 12 }]}
-          >
+          <Layout lg={[{ span: 12 }]} md={[{ span: 12 }]} sm={[{ span: 12 }]} xs={[{ span: 12 }]} xl={[{ span: 12 }]}>
             <Layout.Element className="mt-3">
               <article>
                 <div>
@@ -139,7 +122,7 @@ const CourseUpdates = () => {
                     title={intl.formatMessage(messages.headingTitle)}
                     subtitle={intl.formatMessage(messages.headingSubtitle)}
                     instruction={intl.formatMessage(messages.sectionInfo)}
-                    headerActions={(
+                    headerActions={
                       <Button
                         variant="primary"
                         iconBefore={AddIcon}
@@ -149,7 +132,7 @@ const CourseUpdates = () => {
                       >
                         {intl.formatMessage(messages.newUpdateButton)}
                       </Button>
-                    )}
+                    }
                   />
                   <section className="updates-section">
                     {isMainFormOpen && (
@@ -163,7 +146,7 @@ const CourseUpdates = () => {
                     <div className="updates-container">
                       {courseUpdates.length > 0 && (
                         <div className="p-4.5">
-                          {courseUpdates.map((courseUpdate, index) => (
+                          {courseUpdates.map((courseUpdate, index) =>
                             isInnerFormOpen(courseUpdate.id) ? (
                               <UpdateForm
                                 key={courseUpdate.id}
@@ -184,15 +167,13 @@ const CourseUpdates = () => {
                                 isDisabledButtons={isUpdateFormOpen}
                               />
                             )
-                          ))}
+                          )}
                         </div>
                       )}
                       {!courseUpdates.length && (
                         <ActionRow>
                           <ActionRow.Spacer />
-                          <span className="small mr-2">
-                            {intl.formatMessage(messages.noCourseUpdates)}
-                          </span>
+                          <span className="small mr-2">{intl.formatMessage(messages.noCourseUpdates)}</span>
                           <Button
                             variant="primary"
                             iconBefore={AddIcon}

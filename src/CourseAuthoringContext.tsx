@@ -1,7 +1,5 @@
 import { getConfig } from '@edx/frontend-platform';
-import {
-  createContext, useContext, useMemo,
-} from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -47,22 +45,15 @@ type CourseAuthoringProviderProps = {
   courseId: string;
 };
 
-export const CourseAuthoringProvider = ({
-  children,
-  courseId,
-}: CourseAuthoringProviderProps) => {
+export const CourseAuthoringProvider = ({ children, courseId }: CourseAuthoringProviderProps) => {
   const navigate = useNavigate();
   const waffleFlags = useWaffleFlags();
   const { data: courseDetails, status: courseDetailStatus } = useCourseDetails(courseId);
   const canChangeProviders = getAuthenticatedUser().administrator || new Date(courseDetails?.start ?? 0) > new Date();
   const { courseStructure } = useSelector(getOutlineIndexData);
   const { id: courseUsageKey } = courseStructure || {};
-  const [
-    isUnlinkModalOpen,
-    currentUnlinkModalData,
-    openUnlinkModal,
-    closeUnlinkModal,
-  ] = useToggleWithValue<ModalState>();
+  const [isUnlinkModalOpen, currentUnlinkModalData, openUnlinkModal, closeUnlinkModal] =
+    useToggleWithValue<ModalState>();
 
   const getUnitUrl = (locator: string) => {
     if (getConfig().ENABLE_UNIT_PAGE === 'true' && waffleFlags.useNewUnitPage) {
@@ -85,44 +76,45 @@ export const CourseAuthoringProvider = ({
     }
   };
 
-  const context = useMemo<CourseAuthoringContextData>(() => ({
-    courseId,
-    courseUsageKey,
-    courseDetails,
-    courseDetailStatus,
-    canChangeProviders,
-    getUnitUrl,
-    openUnitPage,
-    isUnlinkModalOpen,
-    openUnlinkModal,
-    closeUnlinkModal,
-    currentUnlinkModalData,
-  }), [
-    courseId,
-    courseUsageKey,
-    courseDetails,
-    courseDetailStatus,
-    canChangeProviders,
-    getUnitUrl,
-    openUnitPage,
-    isUnlinkModalOpen,
-    openUnlinkModal,
-    closeUnlinkModal,
-    currentUnlinkModalData,
-  ]);
-
-  return (
-    <CourseAuthoringContext.Provider value={context}>
-      {children}
-    </CourseAuthoringContext.Provider>
+  const context = useMemo<CourseAuthoringContextData>(
+    () => ({
+      courseId,
+      courseUsageKey,
+      courseDetails,
+      courseDetailStatus,
+      canChangeProviders,
+      getUnitUrl,
+      openUnitPage,
+      isUnlinkModalOpen,
+      openUnlinkModal,
+      closeUnlinkModal,
+      currentUnlinkModalData,
+    }),
+    [
+      courseId,
+      courseUsageKey,
+      courseDetails,
+      courseDetailStatus,
+      canChangeProviders,
+      getUnitUrl,
+      openUnitPage,
+      isUnlinkModalOpen,
+      openUnlinkModal,
+      closeUnlinkModal,
+      currentUnlinkModalData,
+    ]
   );
+
+  return <CourseAuthoringContext.Provider value={context}>{children}</CourseAuthoringContext.Provider>;
 };
 
 export function useCourseAuthoringContext(): CourseAuthoringContextData {
   const ctx = useContext(CourseAuthoringContext);
   if (ctx === undefined) {
     /* istanbul ignore next */
-    throw new Error('useCourseAuthoringContext() was used in a component without a <CourseAuthoringProvider> ancestor.');
+    throw new Error(
+      'useCourseAuthoringContext() was used in a component without a <CourseAuthoringProvider> ancestor.'
+    );
   }
   return ctx;
 }

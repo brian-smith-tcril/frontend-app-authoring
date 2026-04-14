@@ -12,7 +12,7 @@ describe('VideoSelectorContainer', () => {
     const { container } = render(
       <CourseAuthoringProvider courseId="course-v1:edX+Test+2024">
         <VideoSelectorContainer />
-      </CourseAuthoringProvider>,
+      </CourseAuthoringProvider>
     );
     expect(container.querySelector('.selector-page')).toBeInTheDocument();
   });

@@ -1,6 +1,4 @@
-import {
-  Icon, Toast,
-} from '@openedx/paragon';
+import { Icon, Toast } from '@openedx/paragon';
 import { Settings as IconSettings } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
@@ -15,13 +13,7 @@ export interface ProcessingNotificationProps {
   delay?: number;
 }
 
-const ProcessingNotification = ({
-  isShow,
-  title,
-  action,
-  close,
-  delay = 5000,
-}: ProcessingNotificationProps) => (
+const ProcessingNotification = ({ isShow, title, action, close, delay = 5000 }: ProcessingNotificationProps) => (
   // @ts-ignore - Toast has a poor definition of children
   <Toast
     className={classNames({ 'processing-notification-hide-close-button': !close })}
@@ -31,7 +23,7 @@ const ProcessingNotification = ({
     onClose={close || (() => {})}
     delay={delay}
   >
-    { /* @ts-ignore - Toast has a poor definition of children */ }
+    {/* @ts-ignore - Toast has a poor definition of children */}
     <span className="d-flex align-items-center">
       <Icon className="processing-notification-icon mb-0 mr-2" src={IconSettings} />
       <span className="font-weight-bold h4 mb-0 text-white">{title}</span>

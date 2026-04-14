@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  initializeMocks,
-  render,
-  screen,
-} from '@src/testUtils';
+import { fireEvent, initializeMocks, render, screen } from '@src/testUtils';
 import { COURSE_CREATOR_STATES } from '@src/constants';
 import { type DeprecatedReduxState } from '@src/store';
 import studioHomeMock from '@src/studio-home/__mocks__/studioHomeMock';
@@ -50,7 +45,7 @@ const renderComponent = (overrideProps = {}, studioHomeState: Partial<StudioHome
         onClickNewCourse={onClickNewCourse}
         isShowProcessing={isShowProcessing}
         {...overrideProps}
-      />,
+      />
     ),
     store,
   };

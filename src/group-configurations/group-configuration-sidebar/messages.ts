@@ -13,7 +13,8 @@ const messages = defineMessages({
   },
   aboutDescription_2: {
     id: 'course-authoring.group-configurations.sidebar.about.description-2',
-    defaultMessage: 'Each content group that you create can be associated with one or more cohorts. In addition to making course content available to all learners, you can restrict access to some content to learners in specific content groups. Only learners in the cohorts that are associated with the specified content groups see the additional content.',
+    defaultMessage:
+      'Each content group that you create can be associated with one or more cohorts. In addition to making course content available to all learners, you can restrict access to some content to learners in specific content groups. Only learners in the cohorts that are associated with the specified content groups see the additional content.',
     description: 'Second description for the content groups section in the sidebar.',
   },
   aboutDescription_3: {
@@ -33,7 +34,8 @@ const messages = defineMessages({
   },
   about_2_description_1: {
     id: 'course-authoring.group-configurations.sidebar.about-2.description-1',
-    defaultMessage: 'Use experiment group configurations if you are conducting content experiments, also known as A/B testing, in your course. Experiment group configurations define how many groups of learners are in a content experiment. When you create a content experiment for a course, you select the group configuration to use.',
+    defaultMessage:
+      'Use experiment group configurations if you are conducting content experiments, also known as A/B testing, in your course. Experiment group configurations define how many groups of learners are in a content experiment. When you create a content experiment for a course, you select the group configuration to use.',
     description: 'First description for the experiment group configurations section in the sidebar.',
   },
   about_2_description_2: {

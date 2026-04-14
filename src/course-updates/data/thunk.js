@@ -1,14 +1,7 @@
 import { NOTIFICATION_MESSAGES } from '../../constants';
 import { RequestStatus } from '../../data/constants';
 import { showToastOutsideReact, closeToastOutsideReact } from '../../generic/toast-context';
-import {
-  getCourseUpdates,
-  getCourseHandouts,
-  createUpdate,
-  editUpdate,
-  deleteUpdate,
-  editHandouts,
-} from './api';
+import { getCourseUpdates, getCourseHandouts, createUpdate, editUpdate, deleteUpdate, editHandouts } from './api';
 import {
   fetchCourseUpdatesSuccess,
   createCourseUpdate,
@@ -26,21 +19,27 @@ export function fetchCourseUpdatesQuery(courseId) {
       dispatch(updateLoadingStatuses({ fetchCourseUpdatesQuery: RequestStatus.IN_PROGRESS }));
       const courseUpdates = await getCourseUpdates(courseId);
       dispatch(fetchCourseUpdatesSuccess(courseUpdates));
-      dispatch(updateLoadingStatuses({
-        status: { fetchCourseUpdatesQuery: RequestStatus.SUCCESSFUL },
-        error: { loadingUpdates: false },
-      }));
+      dispatch(
+        updateLoadingStatuses({
+          status: { fetchCourseUpdatesQuery: RequestStatus.SUCCESSFUL },
+          error: { loadingUpdates: false },
+        })
+      );
     } catch (error) {
       if (error.response && error.response.status === 403) {
-        dispatch(updateLoadingStatuses({
-          status: { fetchCourseUpdatesQuery: RequestStatus.DENIED },
-          error: { loadingUpdates: true },
-        }));
+        dispatch(
+          updateLoadingStatuses({
+            status: { fetchCourseUpdatesQuery: RequestStatus.DENIED },
+            error: { loadingUpdates: true },
+          })
+        );
       } else {
-        dispatch(updateLoadingStatuses({
-          status: { fetchCourseUpdatesQuery: RequestStatus.FAILED },
-          error: { loadingUpdates: true },
-        }));
+        dispatch(
+          updateLoadingStatuses({
+            status: { fetchCourseUpdatesQuery: RequestStatus.FAILED },
+            error: { loadingUpdates: true },
+          })
+        );
       }
     }
   };
@@ -54,16 +53,20 @@ export function createCourseUpdateQuery(courseId, data) {
       const courseUpdate = await createUpdate(courseId, data);
       dispatch(createCourseUpdate(courseUpdate));
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
-        error: { creatingUpdate: false },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
+          error: { creatingUpdate: false },
+        })
+      );
     } catch {
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.FAILED },
-        error: { creatingUpdate: true },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.FAILED },
+          error: { creatingUpdate: true },
+        })
+      );
     }
   };
 }
@@ -76,16 +79,20 @@ export function editCourseUpdateQuery(courseId, data) {
       const courseUpdate = await editUpdate(courseId, data);
       dispatch(editCourseUpdate(courseUpdate));
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
-        error: { savingUpdates: false },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
+          error: { savingUpdates: false },
+        })
+      );
     } catch {
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.FAILED },
-        error: { savingUpdates: true },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.FAILED },
+          error: { savingUpdates: true },
+        })
+      );
     }
   };
 }
@@ -98,16 +105,20 @@ export function deleteCourseUpdateQuery(courseId, updateId) {
       const courseUpdates = await deleteUpdate(courseId, updateId);
       dispatch(deleteCourseUpdate(courseUpdates));
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
-        error: { deletingUpdates: false },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
+          error: { deletingUpdates: false },
+        })
+      );
     } catch {
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.FAILED },
-        error: { deletingUpdates: true },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.FAILED },
+          error: { deletingUpdates: true },
+        })
+      );
     }
   };
 }
@@ -118,21 +129,27 @@ export function fetchCourseHandoutsQuery(courseId) {
       dispatch(updateLoadingStatuses({ fetchCourseHandoutsQuery: RequestStatus.IN_PROGRESS }));
       const courseHandouts = await getCourseHandouts(courseId);
       dispatch(fetchCourseHandoutsSuccess(courseHandouts));
-      dispatch(updateLoadingStatuses({
-        status: { fetchCourseHandoutsQuery: RequestStatus.SUCCESSFUL },
-        error: { loadingHandouts: false },
-      }));
+      dispatch(
+        updateLoadingStatuses({
+          status: { fetchCourseHandoutsQuery: RequestStatus.SUCCESSFUL },
+          error: { loadingHandouts: false },
+        })
+      );
     } catch (error) {
       if (error.response && error.response.status === 403) {
-        dispatch(updateLoadingStatuses({
-          status: { fetchCourseHandoutsQuery: RequestStatus.DENIED },
-          error: { loadingHandouts: true },
-        }));
+        dispatch(
+          updateLoadingStatuses({
+            status: { fetchCourseHandoutsQuery: RequestStatus.DENIED },
+            error: { loadingHandouts: true },
+          })
+        );
       } else {
-        dispatch(updateLoadingStatuses({
-          status: { fetchCourseHandoutsQuery: RequestStatus.FAILED },
-          error: { loadingHandouts: true },
-        }));
+        dispatch(
+          updateLoadingStatuses({
+            status: { fetchCourseHandoutsQuery: RequestStatus.FAILED },
+            error: { loadingHandouts: true },
+          })
+        );
       }
     }
   };
@@ -146,16 +163,20 @@ export function editCourseHandoutsQuery(courseId, data) {
       const courseHandouts = await editHandouts(courseId, data);
       dispatch(editCourseHandouts(courseHandouts));
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
-        error: { savingHandouts: false },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.SUCCESSFUL },
+          error: { savingHandouts: false },
+        })
+      );
     } catch {
       closeToastOutsideReact();
-      dispatch(updateSavingStatuses({
-        status: { createCourseUpdateQuery: RequestStatus.FAILED },
-        error: { savingHandouts: true },
-      }));
+      dispatch(
+        updateSavingStatuses({
+          status: { createCourseUpdateQuery: RequestStatus.FAILED },
+          error: { savingHandouts: true },
+        })
+      );
     }
   };
 }

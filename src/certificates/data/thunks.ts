@@ -3,13 +3,7 @@ import { RequestStatus } from '../../data/constants';
 import { showToastOutsideReact, closeToastOutsideReact } from '../../generic/toast-context';
 import { handleResponseErrors } from '../../generic/saving-error-alert';
 import { NOTIFICATION_MESSAGES } from '../../constants';
-import {
-  getCertificates,
-  createCertificate,
-  updateCertificate,
-  deleteCertificate,
-  updateActiveStatus,
-} from './api';
+import { getCertificates, createCertificate, updateCertificate, deleteCertificate, updateActiveStatus } from './api';
 import {
   fetchCertificatesSuccess,
   updateLoadingStatus,
@@ -96,9 +90,7 @@ export function deleteCourseCertificate(courseId, certificateId) {
 export function updateCertificateActiveStatus(courseId, path, activationStatus) {
   return async (dispatch) => {
     dispatch(updateSavingStatus({ status: RequestStatus.PENDING }));
-    showToastOutsideReact(
-      activationStatus ? ACTIVATION_MESSAGES.activating : ACTIVATION_MESSAGES.deactivating,
-    );
+    showToastOutsideReact(activationStatus ? ACTIVATION_MESSAGES.activating : ACTIVATION_MESSAGES.deactivating);
 
     try {
       await updateActiveStatus(path, activationStatus);

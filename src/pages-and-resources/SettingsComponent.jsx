@@ -16,13 +16,16 @@ const SettingsComponent = ({ url }) => {
   const navigate = useNavigate();
 
   const LazyLoadedComponent = React.useMemo(
-    () => React.lazy(() =>
-      import(`@openedx-plugins/course-app-${appId}/Settings`).catch((err) => { // eslint-disable-line
-        // If we couldn't load this plugin, log the details to the console.
-        console.trace(err); // eslint-disable-line no-console
-        return { default: PluginLoadFailedError };
-      })),
-    [appId],
+    () =>
+      React.lazy(() =>
+        import(`@openedx-plugins/course-app-${appId}/Settings`).catch((err) => {
+          // eslint-disable-line
+          // If we couldn't load this plugin, log the details to the console.
+          console.trace(err); // eslint-disable-line no-console
+          return { default: PluginLoadFailedError };
+        })
+      ),
+    [appId]
   );
 
   return (

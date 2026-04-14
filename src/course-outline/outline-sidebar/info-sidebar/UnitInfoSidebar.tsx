@@ -2,12 +2,8 @@ import { useContext, useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Stack, Tab, Tabs,
-} from '@openedx/paragon';
-import {
-  OpenInFull,
-} from '@openedx/paragon/icons';
+import { Button, Stack, Tab, Tabs } from '@openedx/paragon';
+import { OpenInFull } from '@openedx/paragon/icons';
 
 import { getItemIcon } from '@src/generic/block-type-utils';
 
@@ -68,25 +64,16 @@ export const UnitSidebar = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState<'preview' | 'info' | 'settings'>('info');
   const { selectedContainerState, clearSelection, setSelectedContainerState } = useOutlineSidebarContext();
-  const {
-    currentId: unitId = /* istanbul ignore next */ '',
-    index,
-  } = selectedContainerState ?? {};
+  const { currentId: unitId = /* istanbul ignore next */ '', index } = selectedContainerState ?? {};
   const { data: unitData, isPending } = useCourseItemData(unitId);
   const { data: section } = useCourseItemData<XBlock>(selectedContainerState?.sectionId);
   const { data: subsection } = useCourseItemData<XBlock>(selectedContainerState?.subsectionId);
   const { getUnitUrl, courseId, openUnlinkModal } = useCourseAuthoringContext();
-  const {
-    openPublishModal,
-    handleDuplicateUnitSubmit,
-    sections,
-    updateUnitOrderByIndex,
-    openDeleteModal,
-  } = useCourseOutlineContext();
+  const { openPublishModal, handleDuplicateUnitSubmit, sections, updateUnitOrderByIndex, openDeleteModal } =
+    useCourseOutlineContext();
   const sectionIndex = sections.findIndex((s) => s.id === selectedContainerState?.sectionId);
-  const subsectionIndex = section?.childInfo?.children?.findIndex(
-    (s) => s.id === selectedContainerState?.subsectionId,
-  ) ?? -1;
+  const subsectionIndex =
+    section?.childInfo?.children?.findIndex((s) => s.id === selectedContainerState?.subsectionId) ?? -1;
   const { copyToClipboard } = useClipboard();
   const { showToast } = useContext(ToastContext);
 
@@ -109,16 +96,17 @@ export const UnitSidebar = () => {
   actions.duplicable = actions.duplicable && !subsection?.upstreamInfo?.upstreamRef;
 
   // Build move calculator only when all ancestor context is available
-  const getPossibleMoves = (section && subsection && subsectionIndex !== -1)
-    ? possibleUnitMoves(
-      [...sections],
-      sectionIndex ?? -1,
-      subsectionIndex,
-      section,
-      subsection,
-      subsection.childInfo.children,
-    )
-    : undefined;
+  const getPossibleMoves =
+    section && subsection && subsectionIndex !== -1
+      ? possibleUnitMoves(
+          [...sections],
+          sectionIndex ?? -1,
+          subsectionIndex,
+          section,
+          subsection,
+          subsection.childInfo.children
+        )
+      : undefined;
 
   const canMoveUnit = (oldIndex: number, step: number) => {
     if (getPossibleMoves) {
@@ -140,22 +128,26 @@ export const UnitSidebar = () => {
         // Cross-subsection move: unit goes to end of previous or start of next subsection
         const isCrossSubsection = newSubsectionId !== subsection.id;
         /* istanbul ignore next */
-        const newSectionIndex = newSectionId !== section.id
-          ? sections.findIndex((s) => s.id === newSectionId)
-          : sectionIndex;
+        const newSectionIndex =
+          newSectionId !== section.id ? sections.findIndex((s) => s.id === newSectionId) : sectionIndex;
         /* istanbul ignore next */
         const newIndex = isCrossSubsection
-          ? (step === -1
-            ? sections[newSectionIndex].childInfo.children.find((s) => s.id === newSubsectionId)?.childInfo.children.length ?? 0
-            : 0)
+          ? step === -1
+            ? (sections[newSectionIndex].childInfo.children.find((s) => s.id === newSubsectionId)?.childInfo.children
+                .length ?? 0)
+            : 0
           : index + step;
         /* istanbul ignore next */
-        setSelectedContainerState(selectedContainerState ? {
-          ...selectedContainerState,
-          sectionId: newSectionId,
-          subsectionId: newSubsectionId,
-          index: newIndex,
-        } : undefined);
+        setSelectedContainerState(
+          selectedContainerState
+            ? {
+                ...selectedContainerState,
+                sectionId: newSectionId,
+                subsectionId: newSubsectionId,
+                index: newIndex,
+              }
+            : undefined
+        );
       }
     }
   };
@@ -197,11 +189,12 @@ export const UnitSidebar = () => {
           onClickDuplicate: unitData?.actions?.duplicable ? handleDuplicateUnitSubmit : undefined,
           onClickMoveUp: () => handleMove(-1),
           onClickMoveDown: () => handleMove(1),
-          onClickUnlink: () => openUnlinkModal({
-            value: unitData,
-            sectionId: selectedContainerState?.sectionId,
-            subsectionId: selectedContainerState?.subsectionId,
-          }),
+          onClickUnlink: () =>
+            openUnlinkModal({
+              value: unitData,
+              sectionId: selectedContainerState?.sectionId,
+              subsectionId: selectedContainerState?.subsectionId,
+            }),
           onClickDelete: openDeleteModal,
           onClickViewLibrary: () => {
             const upstreamRef = unitData?.upstreamInfo?.upstreamRef;
@@ -224,9 +217,7 @@ export const UnitSidebar = () => {
         >
           {intl.formatMessage(messages.openUnitPage)}
         </Button>
-        {unitData?.hasChanges && (
-          <PublishButon onClick={handlePublish} />
-        )}
+        {unitData?.hasChanges && <PublishButon onClick={handlePublish} />}
       </Stack>
       <Tabs
         variant="tabs"

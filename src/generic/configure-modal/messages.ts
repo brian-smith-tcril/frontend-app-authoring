@@ -145,7 +145,7 @@ const messages = defineMessages({
   },
   hideContentAfterDueDescription: {
     id: 'course-authoring.course-outline.configure-modal.visibility-tab.hide-content-after-due-description',
-    defaultMessage: 'After the subsection\'s due date has passed, learners can no longer access its content. The subsection is not included in grade calculations.',
+    defaultMessage: "After the subsection's due date has passed, learners can no longer access its content. The subsection is not included in grade calculations.",
   },
   hideContentAfterEnd: {
     id: 'course-authoring.course-outline.configure-modal.visibility-tab.hide-content-after-end',
@@ -153,7 +153,7 @@ const messages = defineMessages({
   },
   hideContentAfterEndDescription: {
     id: 'course-authoring.course-outline.configure-modal.visibility-tab.hide-content-after-end-description',
-    defaultMessage: 'After the course\'s end date has passed, learners can no longer access its content. The subsection is not included in grade calculations.',
+    defaultMessage: "After the course's end date has passed, learners can no longer access its content. The subsection is not included in grade calculations.",
   },
   hideEntireSubsection: {
     id: 'course-authoring.course-outline.configure-modal.visibility-tab.hide-entire-subsection',
@@ -245,7 +245,7 @@ const messages = defineMessages({
   },
   practiceExamDescription: {
     id: 'course-authoring.course-outline.configure-modal.advanced-tab.practice-exam-description',
-    defaultMessage: 'Use a practice proctored exam to introduce learners to the proctoring tools and processes. Results of a practice exam do not affect a learner\'s grade.',
+    defaultMessage: "Use a practice proctored exam to introduce learners to the proctoring tools and processes. Results of a practice exam do not affect a learner's grade.",
   },
   timedExamsDisabledTooltip: {
     id: 'course-authoring.course-outline.configure-modal.advanced-tab.timed-exams-disabled-tooltip',
@@ -314,7 +314,7 @@ const messages = defineMessages({
   },
   proctoredExamLockedAndisProctoredExamAlert: {
     id: 'course-authoring.course-outline.configure-modal.advanced-tab.proctoredExamLockedAndisProctoredExamAlert',
-    defaultMessage: 'This proctored exam has been released to learners. You may not convert it to another type of special exam. You may revert this subsection back to being a basic exam by selecting \'None\', or a timed exam, but you will NOT be able to configure it as a proctored exam in the future.',
+    defaultMessage: "This proctored exam has been released to learners. You may not convert it to another type of special exam. You may revert this subsection back to being a basic exam by selecting 'None', or a timed exam, but you will NOT be able to configure it as a proctored exam in the future.",
   },
   reviewRulesLabel: {
     id: 'course-authoring.course-outline.configure-modal.advanced-tab.reviewRulesLabel',

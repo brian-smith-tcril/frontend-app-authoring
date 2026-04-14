@@ -37,7 +37,7 @@ describe('store aggregator module', () => {
     describe('middleware', () => {
       it('exports thunk and logger middleware, composed and applied with dev tools', () => {
         expect(createStore().middleware).toEqual(
-          composeWithDevToolsLogOnlyInProduction(applyMiddleware(thunkMiddleware, createLogger())),
+          composeWithDevToolsLogOnlyInProduction(applyMiddleware(thunkMiddleware, createLogger()))
         );
       });
     });

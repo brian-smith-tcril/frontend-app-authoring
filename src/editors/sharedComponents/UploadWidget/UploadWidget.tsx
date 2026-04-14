@@ -1,8 +1,6 @@
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { FileInput, useFileInput } from '@src/files-and-videos/generic';
-import {
-  ActionRow, Dropdown, Icon, IconButton, Button, Stack, Form, Col, Card,
-} from '@openedx/paragon';
+import { ActionRow, Dropdown, Icon, IconButton, Button, Stack, Form, Col, Card } from '@openedx/paragon';
 import { MoreHoriz } from '@openedx/paragon/icons';
 import React, { useState } from 'react';
 import { useField } from 'formik';
@@ -12,13 +10,13 @@ import { useAssetUpload } from '@src/editors/api';
 import defaultMessages from './messages';
 
 export interface UploadWidgetProps {
-  id: string,
-  label: string,
-  supportedFileFormats?: string | string[] | Record<string, string[]>,
-  urlFieldName: string,
-  messages?: typeof defaultMessages
-  blockId: string,
-  isLibrary: boolean,
+  id: string;
+  label: string;
+  supportedFileFormats?: string | string[] | Record<string, string[]>;
+  urlFieldName: string;
+  messages?: typeof defaultMessages;
+  blockId: string;
+  isLibrary: boolean;
 }
 
 type LibraryAsset = { path: string };
@@ -50,21 +48,25 @@ const UploadWidget = ({
       urlFieldControl.setError(intl.formatMessage(messages.fileTooLarge));
       return;
     }
-    mutation.mutateAsync(file).then((result: AssetResponse) => {
-      if (isLibrary) {
-        // This will be a path like /static/something.pdf. Some post-processing in the LMS's views converts
-        // the URL to the appropriate one after rendering the fragment.
-        //
-        // It is not clear how this would work in the case of a React-based student view.
-        void urlFieldControl.setValue(`/${ (result.data as LibraryAsset).path}`); // eslint-disable-line no-void
-      } else {
-        void urlFieldControl.setValue((result.data as CourseAsset).asset.external_url); // eslint-disable-line no-void
-      }
-    }).catch(() => {
-      urlFieldControl.setError(intl.formatMessage(messages.uploadError));
-    }).finally(() => {
-      mutation.reset();
-    });
+    mutation
+      .mutateAsync(file)
+      .then((result: AssetResponse) => {
+        if (isLibrary) {
+          // This will be a path like /static/something.pdf. Some post-processing in the LMS's views converts
+          // the URL to the appropriate one after rendering the fragment.
+          //
+          // It is not clear how this would work in the case of a React-based student view.
+          void urlFieldControl.setValue(`/${(result.data as LibraryAsset).path}`); // eslint-disable-line no-void
+        } else {
+          void urlFieldControl.setValue((result.data as CourseAsset).asset.external_url); // eslint-disable-line no-void
+        }
+      })
+      .catch(() => {
+        urlFieldControl.setError(intl.formatMessage(messages.uploadError));
+      })
+      .finally(() => {
+        mutation.reset();
+      });
   };
   const fileInput = useFileInput({ onAddFile, setSelectedRows, setAddOpen });
 
@@ -89,13 +91,7 @@ const UploadWidget = ({
   if (!blockId) {
     return (
       <Card className="bg-light-200">
-        <Card.Section
-          title={(
-            <div className="text-gray-500">
-              {intl.formatMessage(messages.urlFieldLabel)}
-            </div>
-          )}
-        >
+        <Card.Section title={<div className="text-gray-500">{intl.formatMessage(messages.urlFieldLabel)}</div>}>
           <div className="d-flex justify-content-around text-gray-700 pb-4 x-small">
             {intl.formatMessage(messages.blockCreationWarning)}
           </div>
@@ -110,45 +106,41 @@ const UploadWidget = ({
     <Form.Group as={Col} controlId={id}>
       {manualMode && <TextField label={intl.formatMessage(messages.urlFieldLabel)} id={id} name="url" />}
       {!manualMode && (
-      <>
-        <Form.Label htmlFor={id}>{label}</Form.Label>
-        <Form.Control.Feedback><FormattedMessage {...fileHint} /></Form.Control.Feedback>
-        <FileInput supportedFileFormats={supportedFileFormats} fileInput={fileInput} id={id} />
-        <Stack gap={3}>
-          <ActionRow className="border border-gray-300 rounded px-3 py-2">
-            {mutation.isPending ? <FormattedMessage {...messages.uploading} /> : deriveFileName(urlField.value)}
-            <ActionRow.Spacer />
-            <Dropdown>
-              <Dropdown.Toggle
-                id={`dropdown-toggle-with-iconbutton-${urlFieldName}-widget`}
-                as={IconButton}
-                src={MoreHoriz}
-                iconAs={Icon}
-                variant="primary"
-                alt={intl.formatMessage(messages.actionsDropdown)}
-              />
-              <Dropdown.Menu className="asset_download Action Menu">
-                <Dropdown.Item
-                  key="asset-actions-replace"
-                  onClick={fileInput.click}
-                >
-                  <FormattedMessage {...messages.replaceFile} />
-                </Dropdown.Item>
-                <Dropdown.Item key="asset-actions-download" target="_blank" href={urlField.value}>
-                  <FormattedMessage {...messages.downloadFile} />
-                </Dropdown.Item>
-                <Dropdown.Item
-                  key="asset-actions-manual"
-                  onClick={() => setManualMode(true)}
-                >
-                  <FormattedMessage {...messages.manualUrl} />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </ActionRow>
-          {urlFieldMeta.error && <Form.Control.Feedback type="invalid">{urlFieldMeta.error}</Form.Control.Feedback>}
-        </Stack>
-      </>
+        <>
+          <Form.Label htmlFor={id}>{label}</Form.Label>
+          <Form.Control.Feedback>
+            <FormattedMessage {...fileHint} />
+          </Form.Control.Feedback>
+          <FileInput supportedFileFormats={supportedFileFormats} fileInput={fileInput} id={id} />
+          <Stack gap={3}>
+            <ActionRow className="border border-gray-300 rounded px-3 py-2">
+              {mutation.isPending ? <FormattedMessage {...messages.uploading} /> : deriveFileName(urlField.value)}
+              <ActionRow.Spacer />
+              <Dropdown>
+                <Dropdown.Toggle
+                  id={`dropdown-toggle-with-iconbutton-${urlFieldName}-widget`}
+                  as={IconButton}
+                  src={MoreHoriz}
+                  iconAs={Icon}
+                  variant="primary"
+                  alt={intl.formatMessage(messages.actionsDropdown)}
+                />
+                <Dropdown.Menu className="asset_download Action Menu">
+                  <Dropdown.Item key="asset-actions-replace" onClick={fileInput.click}>
+                    <FormattedMessage {...messages.replaceFile} />
+                  </Dropdown.Item>
+                  <Dropdown.Item key="asset-actions-download" target="_blank" href={urlField.value}>
+                    <FormattedMessage {...messages.downloadFile} />
+                  </Dropdown.Item>
+                  <Dropdown.Item key="asset-actions-manual" onClick={() => setManualMode(true)}>
+                    <FormattedMessage {...messages.manualUrl} />
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </ActionRow>
+            {urlFieldMeta.error && <Form.Control.Feedback type="invalid">{urlFieldMeta.error}</Form.Control.Feedback>}
+          </Stack>
+        </>
       )}
       {manualMode && (
         <ActionRow>

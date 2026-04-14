@@ -1,24 +1,9 @@
-import {
-  ReactNode, useCallback, useEffect, useRef, useState,
-} from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Dropdown,
-  Form,
-  Hyperlink,
-  Icon,
-  IconButton,
-  IconButtonWithTooltip,
-  Stack,
-  useToggle,
-} from '@openedx/paragon';
-import {
-  MoreVert as MoveVertIcon,
-  EditOutline as EditIcon,
-  Sync as SyncIcon,
-} from '@openedx/paragon/icons';
+import { Dropdown, Form, Hyperlink, Icon, IconButton, IconButtonWithTooltip, Stack, useToggle } from '@openedx/paragon';
+import { MoreVert as MoveVertIcon, EditOutline as EditIcon, Sync as SyncIcon } from '@openedx/paragon/icons';
 
 import { useContentTagsCount } from '@src/generic/data/apiHooks';
 import { ContentTagsDrawerSheet } from '@src/content-tags-drawer';
@@ -37,7 +22,7 @@ import { useOutlineSidebarContext } from '../outline-sidebar/OutlineSidebarConte
 interface CardHeaderProps {
   title: string;
   status: string;
-  cardId: string,
+  cardId: string;
   hasChanges: boolean;
   onClickPublish: () => void;
   onClickConfigure: () => void;
@@ -52,8 +37,8 @@ interface CardHeaderProps {
   onClickManageTags?: () => void;
   titleComponent: ReactNode;
   namePrefix: string;
-  proctoringExamConfigurationLink?: string,
-  actions: XBlockActions,
+  proctoringExamConfigurationLink?: string;
+  actions: XBlockActions;
   enableCopyPasteUnits?: boolean;
   isVertical?: boolean;
   isSequential?: boolean;
@@ -65,10 +50,10 @@ interface CardHeaderProps {
   parentInfo?: {
     graded: boolean;
     isTimeLimited?: boolean;
-  },
+  };
   // An optional component that is rendered before the dropdown. This is used by the Subsection
   // and Unit card components to render their plugin slots.
-  extraActionsComponent?: ReactNode,
+  extraActionsComponent?: ReactNode;
   onClickSync?: () => void;
   readyToSync?: boolean;
 }
@@ -126,12 +111,11 @@ const CardHeader = ({
   const [isFormOpen, openForm, closeForm] = useToggle(false);
 
   // Use studio url as base if proctoringExamConfigurationLink is a relative link
-  const fullProctoringExamConfigurationLink = () => (
-    proctoringExamConfigurationLink && new URL(proctoringExamConfigurationLink, getConfig().STUDIO_BASE_URL).href
-  );
+  const fullProctoringExamConfigurationLink = () =>
+    proctoringExamConfigurationLink && new URL(proctoringExamConfigurationLink, getConfig().STUDIO_BASE_URL).href;
 
-  const isDisabledPublish = (status === ITEM_BADGE_STATUS.live
-    || status === ITEM_BADGE_STATUS.publishedNotLive) && !hasChanges;
+  const isDisabledPublish =
+    (status === ITEM_BADGE_STATUS.live || status === ITEM_BADGE_STATUS.publishedNotLive) && !hasChanges;
 
   const { data: contentTagCount } = useContentTagsCount(cardId);
 
@@ -151,16 +135,12 @@ const CardHeader = ({
     }
   }, []);
 
-  const showDiscussionsEnabledBadge = (
-    isVertical
-      && !parentInfo?.isTimeLimited
-      && discussionEnabled
-      && discussionsSettings?.providerType === 'openedx'
-      && (
-        discussionsSettings?.enableGradedUnits
-          || (!discussionsSettings?.enableGradedUnits && !parentInfo?.graded)
-      )
-  );
+  const showDiscussionsEnabledBadge =
+    isVertical &&
+    !parentInfo?.isTimeLimited &&
+    discussionEnabled &&
+    discussionsSettings?.providerType === 'openedx' &&
+    (discussionsSettings?.enableGradedUnits || (!discussionsSettings?.enableGradedUnits && !parentInfo?.graded));
 
   useEscapeClick({
     onEscape: /* istanbul ignore next */ () => {
@@ -173,14 +153,17 @@ const CardHeader = ({
   const editMutation = useUpdateCourseBlockName(courseId);
   const handleEditSubmit = useCallback(() => {
     if (title !== titleValue) {
-      editMutation.mutate({
-        itemId: cardId,
-        displayName: titleValue,
-        subsectionId: currentSelection?.subsectionId,
-        sectionId: currentSelection?.sectionId,
-      }, {
-        onSettled: () => closeForm(),
-      });
+      editMutation.mutate(
+        {
+          itemId: cardId,
+          displayName: titleValue,
+          subsectionId: currentSelection?.subsectionId,
+          sectionId: currentSelection?.sectionId,
+        },
+        {
+          onSettled: () => closeForm(),
+        }
+      );
     } else {
       closeForm();
     }
@@ -188,11 +171,9 @@ const CardHeader = ({
 
   return (
     <>
-      {
-        /* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
+      {/* This is a special case; we can skip accessibility here (tabbing and select with keyboard) since the
         `SortableItem` component handles that for the whole `{Container}Card`.
-        This `onClick` allows the user to select the Card by clicking on white areas of this component. */
-      }
+        This `onClick` allows the user to select the Card by clicking on white areas of this component. */}
       <div // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         className="item-card-header"
         data-testid={`${namePrefix}-card-header`}
@@ -209,16 +190,18 @@ const CardHeader = ({
               onChange={(e) => setTitleValue(e.target.value)}
               aria-label={intl.formatMessage(messages.editFieldAriaLabel)}
               onBlur={handleEditSubmit}
-              onKeyDown={/* istanbul ignore next */ (e) => {
-                if (e.key === 'Enter') {
-                  handleEditSubmit();
-                } else if (e.key === ' ') {
-                  // Avoid passing propagation to the `SortableItem` in the card,
-                  // which executes a `preventDefault`. If propagation is not prevented,
-                  // spaces cannot be added to names.
-                  e.stopPropagation();
+              onKeyDown={
+                /* istanbul ignore next */ (e) => {
+                  if (e.key === 'Enter') {
+                    handleEditSubmit();
+                  } else if (e.key === ' ') {
+                    // Avoid passing propagation to the `SortableItem` in the card,
+                    // which executes a `preventDefault`. If propagation is not prevented,
+                    // spaces cannot be added to names.
+                    e.stopPropagation();
+                  }
                 }
-              }}
+              }
               disabled={editMutation.isPending}
             />
           </Form.Group>
@@ -240,7 +223,7 @@ const CardHeader = ({
           {(isVertical || isSequential) && (
             <CardStatus status={status} showDiscussionsEnabledBadge={showDiscussionsEnabledBadge || false} />
           )}
-          { getConfig().ENABLE_TAGGING_TAXONOMY_PAGES === 'true' && !!contentTagCount && (
+          {getConfig().ENABLE_TAGGING_TAXONOMY_PAGES === 'true' && !!contentTagCount && (
             <TagCount count={contentTagCount} onClick={openManageTagsDrawer} />
           )}
           {extraActionsComponent}
@@ -300,9 +283,7 @@ const CardHeader = ({
               )}
 
               {isVertical && enableCopyPasteUnits && (
-                <Dropdown.Item onClick={onClickCopy}>
-                  {intl.formatMessage(messages.menuCopy)}
-                </Dropdown.Item>
+                <Dropdown.Item onClick={onClickCopy}>{intl.formatMessage(messages.menuCopy)}</Dropdown.Item>
               )}
               {actions.duplicable && (
                 <Dropdown.Item
@@ -313,42 +294,39 @@ const CardHeader = ({
                 </Dropdown.Item>
               )}
               {actions.draggable && (
-              <>
-                <Dropdown.Item
-                  data-testid={`${namePrefix}-card-header__menu-move-up-button`}
-                  onClick={onClickMoveUp}
-                  disabled={!actions.allowMoveUp}
-                >
-                  {intl.formatMessage(messages.menuMoveUp)}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  data-testid={`${namePrefix}-card-header__menu-move-down-button`}
-                  onClick={onClickMoveDown}
-                  disabled={!actions.allowMoveDown}
-                >
-                  {intl.formatMessage(messages.menuMoveDown)}
-                </Dropdown.Item>
-              </>
+                <>
+                  <Dropdown.Item
+                    data-testid={`${namePrefix}-card-header__menu-move-up-button`}
+                    onClick={onClickMoveUp}
+                    disabled={!actions.allowMoveUp}
+                  >
+                    {intl.formatMessage(messages.menuMoveUp)}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    data-testid={`${namePrefix}-card-header__menu-move-down-button`}
+                    onClick={onClickMoveDown}
+                    disabled={!actions.allowMoveDown}
+                  >
+                    {intl.formatMessage(messages.menuMoveDown)}
+                  </Dropdown.Item>
+                </>
               )}
               {((actions.unlinkable ?? null) !== null || actions.deletable) && <Dropdown.Divider />}
               {(actions.unlinkable ?? null) !== null && (
-              <Dropdown.Item
-                data-testid={`${namePrefix}-card-header__menu-unlink-button`}
-                onClick={onClickUnlink}
-                disabled={!actions.unlinkable}
-                className="allow-hover-on-disabled"
-                title={!actions.unlinkable ? intl.formatMessage(messages.menuUnlinkDisabledTooltip) : undefined}
-              >
-                {intl.formatMessage(messages.menuUnlink)}
-              </Dropdown.Item>
+                <Dropdown.Item
+                  data-testid={`${namePrefix}-card-header__menu-unlink-button`}
+                  onClick={onClickUnlink}
+                  disabled={!actions.unlinkable}
+                  className="allow-hover-on-disabled"
+                  title={!actions.unlinkable ? intl.formatMessage(messages.menuUnlinkDisabledTooltip) : undefined}
+                >
+                  {intl.formatMessage(messages.menuUnlink)}
+                </Dropdown.Item>
               )}
               {actions.deletable && (
-              <Dropdown.Item
-                data-testid={`${namePrefix}-card-header__menu-delete-button`}
-                onClick={onClickDelete}
-              >
-                {intl.formatMessage(messages.menuDelete)}
-              </Dropdown.Item>
+                <Dropdown.Item data-testid={`${namePrefix}-card-header__menu-delete-button`} onClick={onClickDelete}>
+                  {intl.formatMessage(messages.menuDelete)}
+                </Dropdown.Item>
               )}
             </Dropdown.Menu>
           </Dropdown>

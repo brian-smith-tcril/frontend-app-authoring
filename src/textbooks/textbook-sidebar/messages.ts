@@ -11,12 +11,12 @@ const descriptions = {
   },
   section_2_title: {
     id: 'course-authoring.textbooks.sidebar.section-2.title',
-    defaultMessage: 'What if my book isn\'t divided into chapters?',
+    defaultMessage: "What if my book isn't divided into chapters?",
     description: 'Title for section 2 in the textbooks sidebar',
   },
   section_2_descriptions: {
     id: 'course-authoring.textbooks.sidebar.section-2.descriptions',
-    defaultMessage: 'If your textbook doesn\'t have individual chapters, you can upload the entire text as a single chapter and enter a name of your choice in the Chapter Name field.',
+    defaultMessage: "If your textbook doesn't have individual chapters, you can upload the entire text as a single chapter and enter a name of your choice in the Chapter Name field.",
     description: 'Description for section 2 in the textbooks sidebar',
   },
   sectionLink: {

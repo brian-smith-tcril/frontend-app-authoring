@@ -14,15 +14,10 @@ interface Props {
 export const ReleaseSection = ({ itemId, onChange }: Props) => {
   const intl = useIntl();
   const { data: itemData } = useCourseItemData(itemId);
-  const [localState, setLocalState] = useStateWithCallback(
-    itemData?.start,
-    (val) => onChange(val),
-  );
+  const [localState, setLocalState] = useStateWithCallback(itemData?.start, (val) => onChange(val));
 
   return (
-    <SidebarSection
-      title={intl.formatMessage(messages.subsectionReleaseTitle)}
-    >
+    <SidebarSection title={intl.formatMessage(messages.subsectionReleaseTitle)}>
       <Stack className="mt-3" direction="horizontal" gap={3}>
         <DatepickerControl
           type={DATEPICKER_TYPES.date}
@@ -40,6 +35,5 @@ export const ReleaseSection = ({ itemId, onChange }: Props) => {
         />
       </Stack>
     </SidebarSection>
-
   );
 };

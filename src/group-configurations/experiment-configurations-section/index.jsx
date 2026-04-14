@@ -10,17 +10,9 @@ import ExperimentCard from './ExperimentCard';
 import { initialExperimentConfiguration } from './constants';
 import messages from './messages';
 
-const ExperimentConfigurationsSection = ({
-  courseId,
-  availableGroups,
-  experimentConfigurationActions,
-}) => {
+const ExperimentConfigurationsSection = ({ courseId, availableGroups, experimentConfigurationActions }) => {
   const { formatMessage } = useIntl();
-  const [
-    isNewConfigurationVisible,
-    openNewConfiguration,
-    hideNewConfiguration,
-  ] = useToggle(false);
+  const [isNewConfigurationVisible, openNewConfiguration, hideNewConfiguration] = useToggle(false);
 
   const handleCreateConfiguration = (configuration) => {
     experimentConfigurationActions.handleCreate(configuration, hideNewConfiguration);
@@ -30,9 +22,7 @@ const ExperimentConfigurationsSection = ({
 
   return (
     <div className="mt-2.5">
-      <h2 className="lead text-black mb-3 configuration-section-name">
-        {formatMessage(messages.title)}
-      </h2>
+      <h2 className="lead text-black mb-3 configuration-section-name">{formatMessage(messages.title)}</h2>
       {availableGroups.length ? (
         <>
           {availableGroups.map((configuration) => (
@@ -57,12 +47,7 @@ const ExperimentConfigurationsSection = ({
           )}
         </>
       ) : (
-        !isNewConfigurationVisible && (
-          <EmptyPlaceholder
-            onCreateNewGroup={openNewConfiguration}
-            isExperiment
-          />
-        )
+        !isNewConfigurationVisible && <EmptyPlaceholder onCreateNewGroup={openNewConfiguration} isExperiment />
       )}
       {isNewConfigurationVisible && (
         <ExperimentForm
@@ -92,10 +77,10 @@ ExperimentConfigurationsSection.propTypes = {
             PropTypes.shape({
               label: PropTypes.string,
               url: PropTypes.string,
-            }),
+            })
           ),
           version: PropTypes.number,
-        }).isRequired,
+        }).isRequired
       ),
       id: PropTypes.number,
       name: PropTypes.string,
@@ -105,7 +90,7 @@ ExperimentConfigurationsSection.propTypes = {
       readOnly: PropTypes.bool,
       scheme: PropTypes.string,
       version: PropTypes.number,
-    }).isRequired,
+    }).isRequired
   ),
   experimentConfigurationActions: PropTypes.shape({
     handleCreate: PropTypes.func,

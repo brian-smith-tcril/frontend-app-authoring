@@ -1,4 +1,4 @@
-import { fireEvent,initializeMocks, render, screen } from '@src/testUtils';
+import { fireEvent, initializeMocks, render, screen } from '@src/testUtils';
 import { getCourseSettingsApiUrl } from '@src/data/api';
 import type { SelectionState } from '@src/data/types';
 import { OutlineSidebarProvider } from '@src/course-outline/outline-sidebar/OutlineSidebarContext';
@@ -102,7 +102,7 @@ describe('InfoSidebar component', () => {
   it('shows the settings link for the course', async () => {
     const user = userEvent.setup();
     renderComponent();
-    await user.click((await screen.findByRole('tab', { name: 'Settings' })));
+    await user.click(await screen.findByRole('tab', { name: 'Settings' }));
     const links = await screen.findAllByRole('link');
     expect(links).toHaveLength(5);
     expect(links[0]).toHaveTextContent('Schedule & details');
@@ -117,9 +117,7 @@ describe('InfoSidebar component', () => {
     const courseSettingsData = {
       mfeProctoredExamSettingsUrl: 'https://example.com/proctored-exam-settings',
     };
-    axiosMock
-      .onGet(getCourseSettingsApiUrl(courseId))
-      .reply(200, courseSettingsData);
+    axiosMock.onGet(getCourseSettingsApiUrl(courseId)).reply(200, courseSettingsData);
     renderComponent();
     await user.click(await screen.findByRole('tab', { name: 'Settings' }));
     expect(await screen.findByRole('link', { name: 'Proctored exam settings' })).toBeInTheDocument();
@@ -137,9 +135,7 @@ describe('InfoSidebar component', () => {
       category: 'chapter',
       hasChanges: true,
     };
-    axiosMock
-      .onGet(getXBlockApiUrl(selectedContainerState.currentId))
-      .reply(200, data);
+    axiosMock.onGet(getXBlockApiUrl(selectedContainerState.currentId)).reply(200, data);
     renderComponent();
     expect(await screen.findByText('section name')).toBeInTheDocument();
     expect(await screen.findByText('Section Content Summary')).toBeInTheDocument();
@@ -165,9 +161,7 @@ describe('InfoSidebar component', () => {
       category: 'sequential',
       hasChanges: true,
     };
-    axiosMock
-      .onGet(getXBlockApiUrl(selectedContainerState.currentId))
-      .reply(200, data);
+    axiosMock.onGet(getXBlockApiUrl(selectedContainerState.currentId)).reply(200, data);
     renderComponent();
     expect(await screen.findByText('subsection name')).toBeInTheDocument();
     expect(await screen.findByText('Subsection Content Summary')).toBeInTheDocument();
@@ -193,9 +187,7 @@ describe('InfoSidebar component', () => {
       category: 'vertical',
       hasChanges: true,
     };
-    axiosMock
-      .onGet(getXBlockApiUrl(selectedContainerState.currentId))
-      .reply(200, data);
+    axiosMock.onGet(getXBlockApiUrl(selectedContainerState.currentId)).reply(200, data);
     renderComponent();
     expect(await screen.findByText('unit name')).toBeInTheDocument();
     expect(await screen.findByText('Unit Content Summary')).toBeInTheDocument();
@@ -278,11 +270,13 @@ describe('InfoSidebar component', () => {
       const unlinkBtn = await screen.findByText('Unlink from Library');
       await user.click(unlinkBtn);
 
-      expect(openUnlinkModal).toHaveBeenCalledWith(expect.objectContaining({
-        value: unitWithUpstream,
-        sectionId: selectedContainerState?.sectionId,
-        subsectionId: selectedContainerState?.subsectionId,
-      }));
+      expect(openUnlinkModal).toHaveBeenCalledWith(
+        expect.objectContaining({
+          value: unitWithUpstream,
+          sectionId: selectedContainerState?.sectionId,
+          subsectionId: selectedContainerState?.subsectionId,
+        })
+      );
     });
 
     it('navigates to library when View in Library is clicked in unit menu', async () => {
@@ -299,9 +293,7 @@ describe('InfoSidebar component', () => {
       const viewLibBtn = await screen.findByText('View in Library');
       await user.click(viewLibBtn);
 
-      expect(mockedNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('/library/'),
-      );
+      expect(mockedNavigate).toHaveBeenCalledWith(expect.stringContaining('/library/'));
     });
 
     it('copies location ID to clipboard when Copy Location is clicked', async () => {
@@ -340,21 +332,25 @@ describe('InfoSidebar component', () => {
       });
 
       const renderDraggableUnitMenu = async () => {
-        mockSections = [{
-          id: chId,
-          childInfo: {
-            children: [{
-              id: seqId,
-              childInfo: {
-                children: [
-                  makeMovableUnit('block-v1:UNIX+UX1+2025_T3+type@vertical+block@unit0'),
-                  makeMovableUnit(unitId),
-                  makeMovableUnit('block-v1:UNIX+UX1+2025_T3+type@vertical+block@unit2'),
-                ],
-              },
-            }],
+        mockSections = [
+          {
+            id: chId,
+            childInfo: {
+              children: [
+                {
+                  id: seqId,
+                  childInfo: {
+                    children: [
+                      makeMovableUnit('block-v1:UNIX+UX1+2025_T3+type@vertical+block@unit0'),
+                      makeMovableUnit(unitId),
+                      makeMovableUnit('block-v1:UNIX+UX1+2025_T3+type@vertical+block@unit2'),
+                    ],
+                  },
+                },
+              ],
+            },
           },
-        }];
+        ];
         selectedContainerState = {
           currentId: unitId,
           subsectionId: seqId,
@@ -381,7 +377,7 @@ describe('InfoSidebar component', () => {
 
         expect(updateUnitOrderByIndex).toHaveBeenCalled();
         expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 0, subsectionId: seqId, sectionId: chId }),
+          expect.objectContaining({ index: 0, subsectionId: seqId, sectionId: chId })
         );
       });
 
@@ -397,7 +393,7 @@ describe('InfoSidebar component', () => {
 
         expect(updateUnitOrderByIndex).toHaveBeenCalled();
         expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 2, subsectionId: seqId, sectionId: chId }),
+          expect.objectContaining({ index: 2, subsectionId: seqId, sectionId: chId })
         );
       });
     });
@@ -492,10 +488,12 @@ describe('InfoSidebar component', () => {
       const unlinkBtn = await screen.findByText('Unlink from Library');
       await user.click(unlinkBtn);
 
-      expect(openUnlinkModal).toHaveBeenCalledWith(expect.objectContaining({
-        value: subsectionWithUpstream,
-        sectionId: selectedContainerState?.sectionId,
-      }));
+      expect(openUnlinkModal).toHaveBeenCalledWith(
+        expect.objectContaining({
+          value: subsectionWithUpstream,
+          sectionId: selectedContainerState?.sectionId,
+        })
+      );
     });
 
     it('navigates to library when View in Library is clicked in subsection menu', async () => {
@@ -512,9 +510,7 @@ describe('InfoSidebar component', () => {
       const viewLibBtn = await screen.findByText('View in Library');
       await user.click(viewLibBtn);
 
-      expect(mockedNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('/library/'),
-      );
+      expect(mockedNavigate).toHaveBeenCalledWith(expect.stringContaining('/library/'));
     });
 
     describe('handleMove', () => {
@@ -533,18 +529,20 @@ describe('InfoSidebar component', () => {
       });
 
       const renderDraggableSubsectionMenu = async () => {
-        mockSections = [{
-          id: chId,
-          actions: { childAddable: true },
-          upstreamInfo: null,
-          childInfo: {
-            children: [
-              makeMovableSubsection('block-v1:UNIX+UX1+2025_T3+type@sequential+block@sub0'),
-              makeMovableSubsection(subsectionId),
-              makeMovableSubsection('block-v1:UNIX+UX1+2025_T3+type@sequential+block@sub2'),
-            ],
+        mockSections = [
+          {
+            id: chId,
+            actions: { childAddable: true },
+            upstreamInfo: null,
+            childInfo: {
+              children: [
+                makeMovableSubsection('block-v1:UNIX+UX1+2025_T3+type@sequential+block@sub0'),
+                makeMovableSubsection(subsectionId),
+                makeMovableSubsection('block-v1:UNIX+UX1+2025_T3+type@sequential+block@sub2'),
+              ],
+            },
           },
-        }];
+        ];
         selectedContainerState = {
           currentId: subsectionId,
           subsectionId,
@@ -570,7 +568,7 @@ describe('InfoSidebar component', () => {
 
         expect(updateSubsectionOrderByIndex).toHaveBeenCalled();
         expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 0, sectionId: chId }),
+          expect.objectContaining({ index: 0, sectionId: chId })
         );
       });
 
@@ -586,7 +584,7 @@ describe('InfoSidebar component', () => {
 
         expect(updateSubsectionOrderByIndex).toHaveBeenCalled();
         expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 2, sectionId: chId }),
+          expect.objectContaining({ index: 2, sectionId: chId })
         );
       });
     });
@@ -658,10 +656,12 @@ describe('InfoSidebar component', () => {
       const unlinkBtn = await screen.findByText('Unlink from Library');
       await user.click(unlinkBtn);
 
-      expect(openUnlinkModal).toHaveBeenCalledWith(expect.objectContaining({
-        value: sectionWithUpstream,
-        sectionId,
-      }));
+      expect(openUnlinkModal).toHaveBeenCalledWith(
+        expect.objectContaining({
+          value: sectionWithUpstream,
+          sectionId,
+        })
+      );
     });
 
     it('navigates to library when View in Library is clicked in section menu', async () => {
@@ -678,9 +678,7 @@ describe('InfoSidebar component', () => {
       const viewLibBtn = await screen.findByText('View in Library');
       await user.click(viewLibBtn);
 
-      expect(mockedNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('/library/'),
-      );
+      expect(mockedNavigate).toHaveBeenCalledWith(expect.stringContaining('/library/'));
     });
 
     describe('handleMove', () => {
@@ -697,11 +695,7 @@ describe('InfoSidebar component', () => {
       });
 
       const renderDraggableSectionMenu = async () => {
-        mockSections = [
-          makeMovableSection('sec0'),
-          makeMovableSection(sectionId),
-          makeMovableSection('sec2'),
-        ];
+        mockSections = [makeMovableSection('sec0'), makeMovableSection(sectionId), makeMovableSection('sec2')];
         selectedContainerState = {
           currentId: sectionId,
           sectionId,
@@ -738,9 +732,7 @@ describe('InfoSidebar component', () => {
         await user.click(moveUpBtn);
 
         expect(updateSectionOrderByIndex).toHaveBeenCalledWith(1, 0);
-        expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 0 }),
-        );
+        expect(mockSetSelectedContainerState).toHaveBeenCalledWith(expect.objectContaining({ index: 0 }));
       });
 
       it('calls updateSectionOrderByIndex and setSelectedContainerState when Move Down is clicked', async () => {
@@ -754,9 +746,7 @@ describe('InfoSidebar component', () => {
         await user.click(moveDownBtn);
 
         expect(updateSectionOrderByIndex).toHaveBeenCalledWith(1, 2);
-        expect(mockSetSelectedContainerState).toHaveBeenCalledWith(
-          expect.objectContaining({ index: 2 }),
-        );
+        expect(mockSetSelectedContainerState).toHaveBeenCalledWith(expect.objectContaining({ index: 2 }));
       });
     });
   });

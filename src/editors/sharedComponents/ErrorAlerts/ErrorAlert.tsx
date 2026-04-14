@@ -8,18 +8,15 @@ import messages from './messages';
 
 export const hooks = {
   state: {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     isDismissed: (val) => React.useState(val),
   },
   dismissalHooks: ({ dismissError, isError }) => {
     const [isDismissed, setIsDismissed] = hooks.state.isDismissed(false);
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(
-      () => {
-        setIsDismissed(isDismissed && !isError);
-      },
-      [isError],
-    );
+    React.useEffect(() => {
+      setIsDismissed(isDismissed && !isError);
+    }, [isError]);
     return {
       isDismissed,
       dismissAlert: () => {
@@ -33,9 +30,9 @@ export const hooks = {
 };
 
 declare interface ErrorAlertProps {
-  dismissError?: () => void,
-  hideHeading?: boolean,
-  isError: boolean,
+  dismissError?: () => void;
+  hideHeading?: boolean;
+  isError: boolean;
 }
 
 const ErrorAlert: React.FC<PropsWithChildren<ErrorAlertProps>> = ({
@@ -49,18 +46,12 @@ const ErrorAlert: React.FC<PropsWithChildren<ErrorAlertProps>> = ({
     return null;
   }
   return (
-    <Alert
-      variant="danger"
-      icon={Error}
-      dismissible
-      onClose={dismissAlert}
-    >
-      {!hideHeading
-        && (
-          <Alert.Heading>
-            <FormattedMessage {...messages.errorTitle} />
-          </Alert.Heading>
-        )}
+    <Alert variant="danger" icon={Error} dismissible onClose={dismissAlert}>
+      {!hideHeading && (
+        <Alert.Heading>
+          <FormattedMessage {...messages.errorTitle} />
+        </Alert.Heading>
+      )}
       {children}
     </Alert>
   );

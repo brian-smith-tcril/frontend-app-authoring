@@ -13,7 +13,7 @@ describe('<SidebarContent>', () => {
         <SidebarSection title="Section 2">
           <div>Content 2</div>
         </SidebarSection>
-      </SidebarContent>,
+      </SidebarContent>
     );
 
     expect(screen.getByText('Section 1')).toBeInTheDocument();

@@ -1,23 +1,10 @@
-import {
-  Bubble,
-  Icon,
-  IconButton,
-  IconButtonWithTooltip,
-  Dropdown,
-} from '@openedx/paragon';
-import {
-  AddCircle,
-  MoreVert,
-} from '@openedx/paragon/icons';
+import { Bubble, Icon, IconButton, IconButtonWithTooltip, Dropdown } from '@openedx/paragon';
+import { AddCircle, MoreVert } from '@openedx/paragon/icons';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import type { Row } from '@tanstack/react-table';
 
 import messages from './messages';
-import type {
-  RowId,
-  TreeColumnDef,
-  TreeRowData,
-} from '../tree-table/types';
+import type { RowId, TreeColumnDef, TreeRowData } from '../tree-table/types';
 import OptionalExpandLink from './OptionalExpandLink';
 
 const EDITABLE_COLUMNS = ['value'];
@@ -30,9 +17,7 @@ interface TagListRowData extends TreeRowData {
   isEditing?: boolean;
 }
 
-const asTagListRowData = (row: Row<TreeRowData>): TagListRowData => (
-  row.original as unknown as TagListRowData
-);
+const asTagListRowData = (row: Row<TreeRowData>): TagListRowData => row.original as unknown as TagListRowData;
 
 interface GetColumnsArgs {
   setIsCreatingTopTag: (isCreating: boolean) => void;
@@ -51,13 +36,7 @@ interface GetColumnsArgs {
 
 const UsageCountDisplay = ({ row }: { row: Row<TreeRowData> }) => {
   const count = asTagListRowData(row).usageCount ?? 0;
-  return (
-    count > 0 && (
-      <Bubble expandable>
-        {count}
-      </Bubble>
-    )
-  );
+  return count > 0 && <Bubble expandable>{count}</Bubble>;
 };
 
 interface ActionsHeaderProps {
@@ -137,16 +116,10 @@ const ActionsMenu = ({
         size="sm"
       />
       <Dropdown.Menu>
-        <Dropdown.Item
-          onClick={startSubtagDraft}
-          disabled={reachedMaxDepth(row) || disableAddSubtag}
-        >
+        <Dropdown.Item onClick={startSubtagDraft} disabled={reachedMaxDepth(row) || disableAddSubtag}>
           {intl.formatMessage(messages.addSubtag)}
         </Dropdown.Item>
-        <Dropdown.Item
-          onClick={editTag}
-          disabled={disableEditTag}
-        >
+        <Dropdown.Item onClick={editTag} disabled={disableEditTag}>
           {intl.formatMessage(messages.renameTag)}
         </Dropdown.Item>
       </Dropdown.Menu>
@@ -173,9 +146,7 @@ function getColumns({
       id: 'valueColumn',
       header: () => <FormattedMessage {...messages.tagListColumnValueHeader} />,
       cell: ({ row }) => {
-        const {
-          value,
-        } = asTagListRowData(row);
+        const { value } = asTagListRowData(row);
 
         return (
           <span className="d-flex align-items-center gap-2">

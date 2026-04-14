@@ -20,18 +20,20 @@ const handleConfigureSubmit = jest.fn();
 let store;
 let axiosMock;
 
-const renderComponent = (props?: any) => render(
-  <IframeProvider>
-    <HeaderTitle
-      unitTitle={unitTitle}
-      isTitleEditFormOpen={isTitleEditFormOpen}
-      handleTitleEdit={handleTitleEdit}
-      handleTitleEditSubmit={handleTitleEditSubmit}
-      handleConfigureSubmit={handleConfigureSubmit}
-      {...props}
-    />,
-  </IframeProvider>,
-);
+const renderComponent = (props?: any) =>
+  render(
+    <IframeProvider>
+      <HeaderTitle
+        unitTitle={unitTitle}
+        isTitleEditFormOpen={isTitleEditFormOpen}
+        handleTitleEdit={handleTitleEdit}
+        handleTitleEditSubmit={handleTitleEditSubmit}
+        handleConfigureSubmit={handleConfigureSubmit}
+        {...props}
+      />
+      ,
+    </IframeProvider>
+  );
 
 describe('<HeaderTitle />', () => {
   beforeEach(async () => {
@@ -39,9 +41,7 @@ describe('<HeaderTitle />', () => {
 
     store = mocks.reduxStore;
     axiosMock = mocks.axiosMock;
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, courseSectionVerticalMock);
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, courseSectionVerticalMock);
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
   });
 
@@ -67,18 +67,16 @@ describe('<HeaderTitle />', () => {
   it('Units sourced from upstream show a enabled edit button', async () => {
     // Override mock unit with one sourced from an upstream library
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock
-      .onGet(getCourseSectionVerticalApiUrl(blockId))
-      .reply(200, {
-        ...courseSectionVerticalMock,
-        xblock_info: {
-          ...courseSectionVerticalMock.xblock_info,
-          upstreamInfo: {
-            // ...courseSectionVerticalMock.xblock_info.upstream_info, // seems to be missing in the mock
-            upstreamRef: 'lct:org:lib:unit:unit-1',
-          },
+    axiosMock.onGet(getCourseSectionVerticalApiUrl(blockId)).reply(200, {
+      ...courseSectionVerticalMock,
+      xblock_info: {
+        ...courseSectionVerticalMock.xblock_info,
+        upstreamInfo: {
+          // ...courseSectionVerticalMock.xblock_info.upstream_info, // seems to be missing in the mock
+          upstreamRef: 'lct:org:lib:unit:unit-1',
         },
-      });
+      },
+    });
     await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
 
     renderComponent();

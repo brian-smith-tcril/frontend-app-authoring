@@ -47,7 +47,8 @@ const messages = defineMessages({
   },
   unrequestedCollapsibleDescription: {
     id: 'course-authoring.studio-home.collapsible.unrequested.description',
-    defaultMessage: '{studioName} is a hosted solution for our xConsortium partners and selected guests. Courses for which you are a team member appear above for you to edit, while course creator privileges are granted by {platformName}. Our team will evaluate your request and provide you feedback within 24 hours during the work week.',
+    defaultMessage:
+      '{studioName} is a hosted solution for our xConsortium partners and selected guests. Courses for which you are a team member appear above for you to edit, while course creator privileges are granted by {platformName}. Our team will evaluate your request and provide you feedback within 24 hours during the work week.',
   },
   unrequestedCollapsibleDefaultButton: {
     id: 'course-authoring.studio-home.collapsible.unrequested.button.default',

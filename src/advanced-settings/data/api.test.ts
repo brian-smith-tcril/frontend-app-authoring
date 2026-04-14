@@ -1,9 +1,5 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import {
-  getCourseAdvancedSettings,
-  updateCourseAdvancedSettings,
-  getProctoringExamErrors,
-} from './api';
+import { getCourseAdvancedSettings, updateCourseAdvancedSettings, getProctoringExamErrors } from './api';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -85,7 +81,7 @@ describe('courseSettings API', () => {
 
       const result = await getCourseAdvancedSettings('course-v1:Test+T101+2024');
       expect(mockHttpClient.get).toHaveBeenCalledWith(
-        `${process.env.STUDIO_BASE_URL}/api/contentstore/v0/advanced_settings/course-v1:Test+T101+2024?fetch_all=0`,
+        `${process.env.STUDIO_BASE_URL}/api/contentstore/v0/advanced_settings/course-v1:Test+T101+2024?fetch_all=0`
       );
       expect(result).toEqual(expected);
     });
@@ -157,7 +153,7 @@ describe('courseSettings API', () => {
       const result = await updateCourseAdvancedSettings('course-v1:Test+T101+2024', {});
       expect(mockHttpClient.patch).toHaveBeenCalledWith(
         `${process.env.STUDIO_BASE_URL}/api/contentstore/v0/advanced_settings/course-v1:Test+T101+2024`,
-        {},
+        {}
       );
       expect(result).toEqual(expected);
     });
@@ -228,7 +224,7 @@ describe('courseSettings API', () => {
 
       const result = await getProctoringExamErrors('course-v1:Test+T101+2024');
       expect(mockHttpClient.get).toHaveBeenCalledWith(
-        `${process.env.STUDIO_BASE_URL}/api/contentstore/v1/proctoring_errors/course-v1:Test+T101+2024`,
+        `${process.env.STUDIO_BASE_URL}/api/contentstore/v1/proctoring_errors/course-v1:Test+T101+2024`
       );
       expect(result).toEqual(expected);
     });

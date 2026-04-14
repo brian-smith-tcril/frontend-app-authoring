@@ -1,6 +1,4 @@
-import {
-  createContext, useCallback, useContext, useEffect, useMemo, useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToggle } from '@openedx/paragon';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -10,11 +8,7 @@ import { useToggleWithValue } from '@src/hooks';
 import { getBlockType } from '@src/generic/key-utils';
 import { COURSE_BLOCK_NAMES } from '@src/constants';
 import { useCourseAuthoringContext, type ModalState } from '@src/CourseAuthoringContext';
-import {
-  useCreateCourseBlock,
-  useDeleteCourseItem,
-  useDuplicateItem,
-} from './data/apiHooks';
+import { useCreateCourseBlock, useDeleteCourseItem, useDuplicateItem } from './data/apiHooks';
 import { getOutlineIndexData, getSectionsList } from './data/selectors';
 import {
   fetchCourseOutlineIndexQuery,
@@ -46,7 +40,12 @@ export type CourseOutlineContextData = {
   closePublishModal: () => void;
   handleSectionDragAndDrop: (sectionListIds: string[]) => void;
   handleSubsectionDragAndDrop: (sectionId: string, prevSectionId: string, subsectionListIds: string[]) => void;
-  handleUnitDragAndDrop: (sectionId: string, prevSectionId: string, subsectionId: string, unitListIds: string[]) => void;
+  handleUnitDragAndDrop: (
+    sectionId: string,
+    prevSectionId: string,
+    subsectionId: string,
+    unitListIds: string[]
+  ) => void;
   updateSectionOrderByIndex: (currentIndex: number, newIndex: number) => void;
   updateSubsectionOrderByIndex: (section: XBlock, moveDetails: any) => void;
   updateUnitOrderByIndex: (section: XBlock, moveDetails: any) => void;
@@ -71,12 +70,8 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
   const sectionsList = useSelector(getSectionsList);
   const [sections, setSections] = useState<XBlock[]>(sectionsList);
   const [isDeleteModalOpen, openDeleteModal, closeDeleteModal] = useToggle(false);
-  const [
-    isPublishModalOpen,
-    currentPublishModalData,
-    openPublishModal,
-    closePublishModal,
-  ] = useToggleWithValue<ModalState>();
+  const [isPublishModalOpen, currentPublishModalData, openPublishModal, closePublishModal] =
+    useToggleWithValue<ModalState>();
 
   /**
    * This will hold the state of current item that is being operated on,
@@ -102,10 +97,7 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
   const handleAddAndOpenUnit = useCreateCourseBlock(courseId, openUnitPage);
   const handleAddBlock = useCreateCourseBlock(courseId);
 
-  const {
-    mutate: duplicateItem,
-    isPending: isDuplicatingItem,
-  } = useDuplicateItem(courseId);
+  const { mutate: duplicateItem, isPending: isDuplicatingItem } = useDuplicateItem(courseId);
 
   // parentId is required by the API to know where to insert the duplicate.
   // sectionId/subsectionId are required to invalidate the correct React Query caches after duplication.
@@ -128,11 +120,7 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
     dispatch(setSectionOrderListQuery(courseId, sectionListIds, restoreSectionList));
   };
 
-  const handleSubsectionDragAndDrop = (
-    sectionId: string,
-    prevSectionId: string,
-    subsectionListIds: string[],
-  ) => {
+  const handleSubsectionDragAndDrop = (sectionId: string, prevSectionId: string, subsectionListIds: string[]) => {
     dispatch(setSubsectionOrderListQuery(sectionId, prevSectionId, subsectionListIds, restoreSectionList));
   };
 
@@ -140,7 +128,7 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
     sectionId: string,
     prevSectionId: string,
     subsectionId: string,
-    unitListIds: string[],
+    unitListIds: string[]
   ) => {
     dispatch(setUnitOrderListQuery(sectionId, subsectionId, prevSectionId, unitListIds, restoreSectionList));
   };
@@ -166,7 +154,11 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
     const [sectionsCopy, newSubsections] = fn(...args);
     if (newSubsections && sectionId) {
       setSections(sectionsCopy);
-      handleSubsectionDragAndDrop(sectionId, section.id, newSubsections.map((subsection) => subsection.id));
+      handleSubsectionDragAndDrop(
+        sectionId,
+        section.id,
+        newSubsections.map((subsection) => subsection.id)
+      );
     }
   };
 
@@ -179,119 +171,132 @@ export const CourseOutlineProvider = ({ children }: CourseOutlineProviderProps) 
     const [sectionsCopy, newUnits] = fn(...args);
     if (newUnits && subsectionId) {
       setSections(sectionsCopy);
-      handleUnitDragAndDrop(sectionId, section.id, subsectionId, newUnits.map((unit) => unit.id));
+      handleUnitDragAndDrop(
+        sectionId,
+        section.id,
+        subsectionId,
+        newUnits.map((unit) => unit.id)
+      );
     }
   };
 
   const deleteMutation = useDeleteCourseItem();
 
-  const getHandleDeleteItemSubmit = useCallback((callback: () => void) => async () => {
-    // istanbul ignore if
-    if (!currentSelection) {
-      return;
-    }
-    const category = getBlockType(currentSelection.currentId);
-    switch (category) {
-      case COURSE_BLOCK_NAMES.chapter.id:
-        await deleteMutation.mutateAsync(
-          { itemId: currentSelection.currentId },
-          { onSettled: () => dispatch(deleteSection({ itemId: currentSelection.currentId })) },
-        );
-        break;
-      case COURSE_BLOCK_NAMES.sequential.id:
-        await deleteMutation.mutateAsync(
-          { itemId: currentSelection.currentId, sectionId: currentSelection.sectionId },
-          {
-            onSettled: () => dispatch(deleteSubsection({
-              itemId: currentSelection.currentId,
-              sectionId: currentSelection.sectionId,
-            })),
-          },
-        );
-        break;
-      case COURSE_BLOCK_NAMES.vertical.id:
-        await deleteMutation.mutateAsync(
-          {
-            itemId: currentSelection.currentId,
-            subsectionId: currentSelection.subsectionId,
-            sectionId: currentSelection.sectionId,
-          },
-          {
-            onSettled: () => dispatch(deleteUnit({
+  const getHandleDeleteItemSubmit = useCallback(
+    (callback: () => void) => async () => {
+      // istanbul ignore if
+      if (!currentSelection) {
+        return;
+      }
+      const category = getBlockType(currentSelection.currentId);
+      switch (category) {
+        case COURSE_BLOCK_NAMES.chapter.id:
+          await deleteMutation.mutateAsync(
+            { itemId: currentSelection.currentId },
+            { onSettled: () => dispatch(deleteSection({ itemId: currentSelection.currentId })) }
+          );
+          break;
+        case COURSE_BLOCK_NAMES.sequential.id:
+          await deleteMutation.mutateAsync(
+            { itemId: currentSelection.currentId, sectionId: currentSelection.sectionId },
+            {
+              onSettled: () =>
+                dispatch(
+                  deleteSubsection({
+                    itemId: currentSelection.currentId,
+                    sectionId: currentSelection.sectionId,
+                  })
+                ),
+            }
+          );
+          break;
+        case COURSE_BLOCK_NAMES.vertical.id:
+          await deleteMutation.mutateAsync(
+            {
               itemId: currentSelection.currentId,
               subsectionId: currentSelection.subsectionId,
               sectionId: currentSelection.sectionId,
-            })),
-          },
-        );
-        break;
-      default:
-        // istanbul ignore next
-        throw new Error(`Unrecognized category ${category}`);
-    }
-    closeDeleteModal();
-    callback();
-  }, [deleteMutation, closeDeleteModal, currentSelection, dispatch]);
-
-  const context = useMemo<CourseOutlineContextData>(() => ({
-    handleAddBlock,
-    handleAddAndOpenUnit,
-    currentSelection,
-    setCurrentSelection,
-    sections,
-    restoreSectionList,
-    setSections,
-    isDuplicatingItem,
-    isDeleteModalOpen,
-    openDeleteModal,
-    closeDeleteModal,
-    getHandleDeleteItemSubmit,
-    handleDuplicateSectionSubmit,
-    handleDuplicateSubsectionSubmit,
-    handleDuplicateUnitSubmit,
-    isPublishModalOpen,
-    currentPublishModalData,
-    openPublishModal,
-    closePublishModal,
-    handleSectionDragAndDrop,
-    handleSubsectionDragAndDrop,
-    handleUnitDragAndDrop,
-    updateSectionOrderByIndex,
-    updateSubsectionOrderByIndex,
-    updateUnitOrderByIndex,
-  }), [
-    handleAddBlock,
-    handleAddAndOpenUnit,
-    currentSelection,
-    setCurrentSelection,
-    sections,
-    restoreSectionList,
-    setSections,
-    isDuplicatingItem,
-    isDeleteModalOpen,
-    openDeleteModal,
-    closeDeleteModal,
-    getHandleDeleteItemSubmit,
-    handleDuplicateSectionSubmit,
-    handleDuplicateSubsectionSubmit,
-    handleDuplicateUnitSubmit,
-    isPublishModalOpen,
-    currentPublishModalData,
-    openPublishModal,
-    closePublishModal,
-    handleSectionDragAndDrop,
-    handleSubsectionDragAndDrop,
-    handleUnitDragAndDrop,
-    updateSectionOrderByIndex,
-    updateSubsectionOrderByIndex,
-    updateUnitOrderByIndex,
-  ]);
-
-  return (
-    <CourseOutlineContext.Provider value={context}>
-      {children}
-    </CourseOutlineContext.Provider>
+            },
+            {
+              onSettled: () =>
+                dispatch(
+                  deleteUnit({
+                    itemId: currentSelection.currentId,
+                    subsectionId: currentSelection.subsectionId,
+                    sectionId: currentSelection.sectionId,
+                  })
+                ),
+            }
+          );
+          break;
+        default:
+          // istanbul ignore next
+          throw new Error(`Unrecognized category ${category}`);
+      }
+      closeDeleteModal();
+      callback();
+    },
+    [deleteMutation, closeDeleteModal, currentSelection, dispatch]
   );
+
+  const context = useMemo<CourseOutlineContextData>(
+    () => ({
+      handleAddBlock,
+      handleAddAndOpenUnit,
+      currentSelection,
+      setCurrentSelection,
+      sections,
+      restoreSectionList,
+      setSections,
+      isDuplicatingItem,
+      isDeleteModalOpen,
+      openDeleteModal,
+      closeDeleteModal,
+      getHandleDeleteItemSubmit,
+      handleDuplicateSectionSubmit,
+      handleDuplicateSubsectionSubmit,
+      handleDuplicateUnitSubmit,
+      isPublishModalOpen,
+      currentPublishModalData,
+      openPublishModal,
+      closePublishModal,
+      handleSectionDragAndDrop,
+      handleSubsectionDragAndDrop,
+      handleUnitDragAndDrop,
+      updateSectionOrderByIndex,
+      updateSubsectionOrderByIndex,
+      updateUnitOrderByIndex,
+    }),
+    [
+      handleAddBlock,
+      handleAddAndOpenUnit,
+      currentSelection,
+      setCurrentSelection,
+      sections,
+      restoreSectionList,
+      setSections,
+      isDuplicatingItem,
+      isDeleteModalOpen,
+      openDeleteModal,
+      closeDeleteModal,
+      getHandleDeleteItemSubmit,
+      handleDuplicateSectionSubmit,
+      handleDuplicateSubsectionSubmit,
+      handleDuplicateUnitSubmit,
+      isPublishModalOpen,
+      currentPublishModalData,
+      openPublishModal,
+      closePublishModal,
+      handleSectionDragAndDrop,
+      handleSubsectionDragAndDrop,
+      handleUnitDragAndDrop,
+      updateSectionOrderByIndex,
+      updateSubsectionOrderByIndex,
+      updateUnitOrderByIndex,
+    ]
+  );
+
+  return <CourseOutlineContext.Provider value={context}>{children}</CourseOutlineContext.Provider>;
 };
 
 export function useCourseOutlineContext(): CourseOutlineContextData {

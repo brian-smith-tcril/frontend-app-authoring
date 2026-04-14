@@ -103,7 +103,7 @@ const messages = defineMessages({
   },
   conflictingFileAlertDesc: {
     id: 'course-authoring.course-outline.page-alert.paste-alert.new-conflicting.description',
-    defaultMessage: 'The following {conflictingFilesLen, plural, one {file} other {files}} already exist in this course but don\'t match the version used by the component you pasted:  {conflictingFilesStr}',
+    defaultMessage: "The following {conflictingFilesLen, plural, one {file} other {files}} already exist in this course but don't match the version used by the component you pasted:  {conflictingFilesStr}",
     description: 'This alert description is displayed when files being imported conflict with existing files in the course and advises the user to update the conflicting files manually.',
   },
   serverErrorAlert: {
@@ -113,7 +113,7 @@ const messages = defineMessages({
   },
   serverErrorAlertBody: {
     id: 'course-authoring.course-outline.page-alert.server-error.body',
-    defaultMessage: ' An error occurred in Studio and the page could not be loaded. Please try again in a few moments. We\'ve logged the error and our staff is currently working to resolve this error as soon as possible.',
+    defaultMessage: " An error occurred in Studio and the page could not be loaded. Please try again in a few moments. We've logged the error and our staff is currently working to resolve this error as soon as possible.",
     description: 'Generic server error alert title.',
   },
   networkErrorAlert: {

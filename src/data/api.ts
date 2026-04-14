@@ -2,9 +2,8 @@ import { camelCaseObject, getConfig, snakeCaseObject } from '@edx/frontend-platf
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const getStudioBaseUrl = () => getConfig().STUDIO_BASE_URL as string;
-export const getCourseDetailsUrl = (courseId: string, username: string) => (
-  `${getConfig().LMS_BASE_URL}/api/courses/v1/courses/${courseId}?username=${username}`
-);
+export const getCourseDetailsUrl = (courseId: string, username: string) =>
+  `${getConfig().LMS_BASE_URL}/api/courses/v1/courses/${courseId}?username=${username}`;
 
 export type CourseDetailsData = {
   blocksUrl: string;
@@ -17,10 +16,7 @@ export type CourseDetailsData = {
   id: string;
   invitationOnly: boolean;
   isEnrolled: boolean;
-  media: Record<
-  'image' | 'course_image' | 'banner_image' | 'course_video',
-  Record<string, string | null>
-  >;
+  media: Record<'image' | 'course_image' | 'banner_image' | 'course_video', Record<string, string | null>>;
   mobileAvailable: boolean;
   name: string;
   number: string;
@@ -36,7 +32,8 @@ export type CourseDetailsData = {
 /**
  * Get the URL to check the migration task status
  */
-export const getModulestoreMigrationStatusUrl = (migrationId: string) => `${getStudioBaseUrl()}/api/modulestore_migrator/v1/migrations/${migrationId}/`;
+export const getModulestoreMigrationStatusUrl = (migrationId: string) =>
+  `${getStudioBaseUrl()}/api/modulestore_migrator/v1/migrations/${migrationId}/`;
 
 /**
  * Get the URL for bulk migrate content to libraries
@@ -46,9 +43,11 @@ export const bulkModulestoreMigrateUrl = () => `${getStudioBaseUrl()}/api/module
 /**
  * Get the url for the API endpoint to get preview migration
  */
-export const getPreviewModulestoreMigrationUrl = () => `${getStudioBaseUrl()}/api/modulestore_migrator/v1/migration_preview/`;
+export const getPreviewModulestoreMigrationUrl = () =>
+  `${getStudioBaseUrl()}/api/modulestore_migrator/v1/migration_preview/`;
 
-export const getCourseSettingsApiUrl = (courseId: string) => `${getStudioBaseUrl()}/api/contentstore/v1/course_settings/${courseId}`;
+export const getCourseSettingsApiUrl = (courseId: string) =>
+  `${getStudioBaseUrl()}/api/contentstore/v1/course_settings/${courseId}`;
 
 export const getApiWaffleFlagsUrl = (courseId?: string): string => {
   const baseUrl = getStudioBaseUrl();
@@ -58,8 +57,7 @@ export const getApiWaffleFlagsUrl = (courseId?: string): string => {
 };
 
 export async function getCourseDetails(courseId: string, username: string): Promise<CourseDetailsData> {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getCourseDetailsUrl(courseId, username));
+  const { data } = await getAuthenticatedHttpClient().get(getCourseDetailsUrl(courseId, username));
   return {
     id: data.course_id,
     ...camelCaseObject(data),
@@ -108,8 +106,7 @@ export type WaffleFlagsStatus = { id: string | undefined } & Record<WaffleFlagNa
  *    than the system-wide flags.
  */
 export async function getWaffleFlags(courseId?: string): Promise<WaffleFlagsStatus> {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getApiWaffleFlagsUrl(courseId));
+  const { data } = await getAuthenticatedHttpClient().get(getApiWaffleFlagsUrl(courseId));
   return {
     id: data.course_id,
     ...camelCaseObject(data),
@@ -159,9 +156,7 @@ export interface BulkMigrateRequestData {
 /**
  * Get migration task status
  */
-export async function getModulestoreMigrationStatus(
-  migrationId: string,
-): Promise<MigrateTaskStatusData> {
+export async function getModulestoreMigrationStatus(migrationId: string): Promise<MigrateTaskStatusData> {
   const client = getAuthenticatedHttpClient();
   const { data } = await client.get(getModulestoreMigrationStatusUrl(migrationId));
   return camelCaseObject(data);
@@ -170,9 +165,7 @@ export async function getModulestoreMigrationStatus(
 /**
  * Bulk migrate content to libraries
  */
-export async function bulkModulestoreMigrate(
-  requestData: BulkMigrateRequestData,
-): Promise<MigrateTaskStatusData> {
+export async function bulkModulestoreMigrate(requestData: BulkMigrateRequestData): Promise<MigrateTaskStatusData> {
   const client = getAuthenticatedHttpClient();
   const { data } = await client.post(bulkModulestoreMigrateUrl(), snakeCaseObject(requestData));
   return camelCaseObject(data);
@@ -195,7 +188,7 @@ export interface PreviewMigrationInfo {
  */
 export async function getPreviewModulestoreMigration(
   libraryKey: string,
-  sourceKey: string,
+  sourceKey: string
 ): Promise<PreviewMigrationInfo> {
   const client = getAuthenticatedHttpClient();
 
@@ -207,7 +200,8 @@ export async function getPreviewModulestoreMigration(
   return camelCaseObject(data);
 }
 
-export const getUserAgreementRecordApi = (agreementType: string) => `${getConfig().LMS_BASE_URL}/api/agreements/v1/agreement_record/${agreementType}`;
+export const getUserAgreementRecordApi = (agreementType: string) =>
+  `${getConfig().LMS_BASE_URL}/api/agreements/v1/agreement_record/${agreementType}`;
 
 export async function getUserAgreementRecord(agreementType: string) {
   const client = getAuthenticatedHttpClient();
@@ -221,7 +215,8 @@ export async function updateUserAgreementRecord(agreementType: string) {
   return camelCaseObject(data);
 }
 
-export const getUserAgreementApi = (agreementType: string) => `${getConfig().LMS_BASE_URL}/api/agreements/v1/agreement/${agreementType}/`;
+export const getUserAgreementApi = (agreementType: string) =>
+  `${getConfig().LMS_BASE_URL}/api/agreements/v1/agreement/${agreementType}/`;
 
 export async function getUserAgreement(agreementType: string) {
   const client = getAuthenticatedHttpClient();
@@ -255,7 +250,7 @@ export interface CourseSettingsData {
     rerunLink: string;
     run: string;
     url: string;
-  }
+  };
   shortDescriptionEditable: boolean;
   showMinGradeWarning: boolean;
   sidebarHtmlEnabled: boolean;

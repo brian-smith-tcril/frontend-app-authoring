@@ -1,7 +1,5 @@
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, ButtonGroup, Form, Stack,
-} from '@openedx/paragon';
+import { Button, ButtonGroup, Form, Stack } from '@openedx/paragon';
 import { useConfigureSubsection, useCourseDetails, useCourseItemData } from '@src/course-outline/data/apiHooks';
 import { getProctoredExamsFlag, getTimedExamsFlag } from '@src/course-outline/data/selectors';
 import { ConfigureSubsectionData } from '@src/course-outline/data/types';
@@ -11,9 +9,7 @@ import AdvancedTab from '@src/generic/configure-modal/AdvancedTab';
 import { DatepickerControl, DATEPICKER_TYPES } from '@src/generic/datepicker-control';
 import { SidebarContent, SidebarSection } from '@src/generic/sidebar';
 import { useStateWithCallback } from '@src/hooks';
-import {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReleaseSection } from './sharedSettings/ReleaseSection';
 import messages from './messages';
@@ -46,7 +42,7 @@ const GradingSection = ({ subsectionId, onChange }: SubProps) => {
       graderType: itemData?.format,
       dueDate: itemData?.due || '',
     },
-    (val) => onChange(val || {}),
+    (val) => onChange(val || {})
   );
   const didMountRef = useRef(false);
 
@@ -71,30 +67,25 @@ const GradingSection = ({ subsectionId, onChange }: SubProps) => {
     onChange({ graderType: 'notgraded' });
   };
 
-  const createOptions = () => itemData?.courseGraders?.map((option) => (
-    <option key={option} value={option}> {option} </option>
-  ));
+  const createOptions = () =>
+    itemData?.courseGraders?.map((option) => (
+      <option key={option} value={option}>
+        {' '}
+        {option}{' '}
+      </option>
+    ));
 
   return (
-    <SidebarSection
-      title={intl.formatMessage(messages.subsectionGradingTitle)}
-    >
+    <SidebarSection title={intl.formatMessage(messages.subsectionGradingTitle)}>
       <ButtonGroup toggle>
-        <Button
-          variant={graded ? 'outline-primary' : 'primary'}
-          onClick={setUngraded}
-        >
+        <Button variant={graded ? 'outline-primary' : 'primary'} onClick={setUngraded}>
           <FormattedMessage {...messages.subsectionGradingUngradedBtn} />
         </Button>
-        <Button
-          variant={graded ? 'primary' : 'outline-primary'}
-          onClick={() => setGraded(true)}
-        >
+        <Button variant={graded ? 'primary' : 'outline-primary'} onClick={() => setGraded(true)}>
           <FormattedMessage {...messages.subsectionGradingGradedBtn} />
         </Button>
       </ButtonGroup>
-      {graded
-        && (
+      {graded && (
         <Form.Group className="mt-2">
           <Form.Label className="x-small">
             <FormattedMessage {...messages.subsectionGradingDropdownLabel} />
@@ -111,9 +102,8 @@ const GradingSection = ({ subsectionId, onChange }: SubProps) => {
             {createOptions()}
           </Form.Control>
         </Form.Group>
-        )}
-      {!courseDetails?.selfPaced && graded
-        && (
+      )}
+      {!courseDetails?.selfPaced && graded && (
         <Stack direction="horizontal" gap={3}>
           <DatepickerControl
             type={DATEPICKER_TYPES.date}
@@ -131,7 +121,7 @@ const GradingSection = ({ subsectionId, onChange }: SubProps) => {
             onChange={(val) => setLocalState((prev) => ({ ...prev, dueDate: val }))}
           />
         </Stack>
-        )}
+      )}
     </SidebarSection>
   );
 };
@@ -143,7 +133,7 @@ const AssessmentResultVisibilitySection = ({ subsectionId, onChange }: SubProps)
     {
       showCorrectness: itemData?.showCorrectness,
     },
-    (val) => onChange(val || {}),
+    (val) => onChange(val || {})
   );
   const didMountRef = useRef(false);
 
@@ -159,9 +149,7 @@ const AssessmentResultVisibilitySection = ({ subsectionId, onChange }: SubProps)
   }, [itemData?.showCorrectness]);
 
   return (
-    <SidebarSection
-      title={intl.formatMessage(messages.subsectionAssessmentResultsTitle)}
-    >
+    <SidebarSection title={intl.formatMessage(messages.subsectionAssessmentResultsTitle)}>
       <ButtonGroup toggle>
         <Button
           variant={localState?.showCorrectness === 'always' ? 'primary' : 'outline-primary'}
@@ -183,9 +171,11 @@ const AssessmentResultVisibilitySection = ({ subsectionId, onChange }: SubProps)
       <Form.Checkbox
         checked={localState?.showCorrectness === 'past_due'}
         className="mt-2"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalState({
-          showCorrectness: e.target.checked ? 'past_due' : 'never',
-        })}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setLocalState({
+            showCorrectness: e.target.checked ? 'past_due' : 'never',
+          })
+        }
       >
         <FormattedMessage {...messages.subsectionAssessmentResultsCheckbox} />
       </Form.Checkbox>
@@ -198,22 +188,25 @@ const SpecialExamSection = ({ subsectionId, onChange }: SubProps) => {
   const { data: itemData } = useCourseItemData(subsectionId);
   const enableTimedExams = useSelector(getTimedExamsFlag);
   const enableProctoredExams = useSelector(getProctoredExamsFlag);
-  const getLatestLocalState = useCallback(() => ({
-    isProctoredExam: itemData?.isProctoredExam,
-    isTimeLimited: itemData?.isTimeLimited,
-    isOnboardingExam: itemData?.isOnboardingExam,
-    isPracticeExam: itemData?.isPracticeExam,
-    defaultTimeLimitMinutes: itemData?.defaultTimeLimitMinutes,
-    examReviewRules: itemData?.examReviewRules,
-    isPrereq: itemData?.isPrereq,
-    prereqMinScore: defaultPrereqScore(itemData?.prereqMinScore),
-    prereqMinCompletion: defaultPrereqScore(itemData?.prereqMinCompletion),
-    prereqUsageKey: itemData?.prereq,
-  }), [itemData]);
+  const getLatestLocalState = useCallback(
+    () => ({
+      isProctoredExam: itemData?.isProctoredExam,
+      isTimeLimited: itemData?.isTimeLimited,
+      isOnboardingExam: itemData?.isOnboardingExam,
+      isPracticeExam: itemData?.isPracticeExam,
+      defaultTimeLimitMinutes: itemData?.defaultTimeLimitMinutes,
+      examReviewRules: itemData?.examReviewRules,
+      isPrereq: itemData?.isPrereq,
+      prereqMinScore: defaultPrereqScore(itemData?.prereqMinScore),
+      prereqMinCompletion: defaultPrereqScore(itemData?.prereqMinCompletion),
+      prereqUsageKey: itemData?.prereq,
+    }),
+    [itemData]
+  );
 
   const [localState, setLocalState] = useStateWithCallback<Partial<ConfigureSubsectionData>>(
     getLatestLocalState,
-    (val) => onChange(val || {}),
+    (val) => onChange(val || {})
   );
   const didMountRef = useRef(false);
 
@@ -239,9 +232,7 @@ const SpecialExamSection = ({ subsectionId, onChange }: SubProps) => {
   };
 
   return (
-    <SidebarSection
-      title={intl.formatMessage(messages.subsectionSpecialExamTitle)}
-    >
+    <SidebarSection title={intl.formatMessage(messages.subsectionSpecialExamTitle)}>
       <AdvancedTab
         values={localState || {}}
         setFieldValue={setFieldValue}
@@ -282,29 +273,13 @@ export const SubsectionSettings = ({ subsectionId }: Props) => {
 
   return (
     <SidebarContent>
-      { !courseDetails?.selfPaced && (
-      <ReleaseSection
-        itemId={subsectionId}
-        onChange={(val: string) => onChange({ releaseDate: val })}
-      />
-      ) }
-      <GradingSection
-        subsectionId={subsectionId}
-        onChange={onChange}
-      />
-      <VisibilitySection
-        itemId={subsectionId}
-        isSubsection
-        onChange={onChange}
-      />
-      <AssessmentResultVisibilitySection
-        subsectionId={subsectionId}
-        onChange={onChange}
-      />
-      <SpecialExamSection
-        subsectionId={subsectionId}
-        onChange={onChange}
-      />
+      {!courseDetails?.selfPaced && (
+        <ReleaseSection itemId={subsectionId} onChange={(val: string) => onChange({ releaseDate: val })} />
+      )}
+      <GradingSection subsectionId={subsectionId} onChange={onChange} />
+      <VisibilitySection itemId={subsectionId} isSubsection onChange={onChange} />
+      <AssessmentResultVisibilitySection subsectionId={subsectionId} onChange={onChange} />
+      <SpecialExamSection subsectionId={subsectionId} onChange={onChange} />
     </SidebarContent>
   );
 };

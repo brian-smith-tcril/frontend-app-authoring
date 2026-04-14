@@ -17,7 +17,7 @@ describe('HelpSidebarLink Component', () => {
     const { getByText } = render(
       <Router>
         <HelpSidebarLink {...defaultProps} />
-      </Router>,
+      </Router>
     );
 
     const linkElement = getByText('Test Title');
@@ -29,7 +29,7 @@ describe('HelpSidebarLink Component', () => {
     const { getByText } = render(
       <IntlProvider locale="en">
         <HelpSidebarLink {...props} />
-      </IntlProvider>,
+      </IntlProvider>
     );
 
     const hyperlinkElement = getByText('Test Title');
@@ -42,7 +42,7 @@ describe('HelpSidebarLink Component', () => {
     const { container } = render(
       <Router>
         <HelpSidebarLink {...props} />
-      </Router>,
+      </Router>
     );
 
     const tagElement = container.querySelector('div.sidebar-link');

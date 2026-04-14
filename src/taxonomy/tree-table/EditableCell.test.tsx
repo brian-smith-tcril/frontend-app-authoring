@@ -1,26 +1,20 @@
 import React from 'react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
-import {
-  createEvent,
-  fireEvent,
-  render,
-  screen,
-} from '@testing-library/react';
+import { createEvent, fireEvent, render, screen } from '@testing-library/react';
 
 import { EditableCell } from './EditableCell';
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <IntlProvider locale="en" messages={{}}>{children}</IntlProvider>
+  <IntlProvider locale="en" messages={{}}>
+    {children}
+  </IntlProvider>
 );
 
 describe('EditableCell', () => {
   it('renders inline validation message when provided by validator', () => {
     render(
-      <EditableCell
-        initialValue="bad;value"
-        getInlineValidationMessage={() => 'Invalid character in tag name'}
-      />,
-      { wrapper },
+      <EditableCell initialValue="bad;value" getInlineValidationMessage={() => 'Invalid character in tag name'} />,
+      { wrapper }
     );
 
     expect(screen.getByRole('alert')).toHaveTextContent('Invalid character in tag name');
@@ -34,7 +28,7 @@ describe('EditableCell', () => {
         errorMessage="Server error"
         getInlineValidationMessage={() => 'Inline message'}
       />,
-      { wrapper },
+      { wrapper }
     );
 
     expect(screen.getByRole('alert')).toHaveTextContent('Server error');

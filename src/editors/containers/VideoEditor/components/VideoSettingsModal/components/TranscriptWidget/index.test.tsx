@@ -1,16 +1,12 @@
 import React from 'react';
-import {
-  render, screen, initializeMocks,
-} from '@src/testUtils';
+import { render, screen, initializeMocks } from '@src/testUtils';
 import * as reactredux from 'react-redux';
 
 import { RequestKeys } from '../../../../../../data/constants/requests';
 
 import { formatMessage } from '../../../../../../testUtils';
 import { actions, selectors } from '../../../../../../data/redux';
-import {
-  TranscriptWidgetInternal as TranscriptWidget, mapStateToProps, mapDispatchToProps, hooks,
-} from './index';
+import { TranscriptWidgetInternal as TranscriptWidget, mapStateToProps, mapDispatchToProps, hooks } from './index';
 
 jest.mock('../../../../../../data/redux', () => ({
   actions: {
@@ -27,22 +23,25 @@ jest.mock('../../../../../../data/redux', () => ({
 
   selectors: {
     app: {
-      isLibrary: jest.fn(state => ({ isLibrary: state })),
+      isLibrary: jest.fn((state) => ({ isLibrary: state })),
       shouldCreateBlock: jest.fn(() => false),
     },
     video: {
-      transcripts: jest.fn(state => ({ transcripts: state })),
-      selectedVideoTranscriptUrls: jest.fn(state => ({ selectedVideoTranscriptUrls: state })),
-      allowTranscriptDownloads: jest.fn(state => ({ allowTranscriptDownloads: state })),
-      showTranscriptByDefault: jest.fn(state => ({ showTranscriptByDefault: state })),
-      allowTranscriptImport: jest.fn(state => ({ allowTranscriptImport: state })),
+      transcripts: jest.fn((state) => ({ transcripts: state })),
+      selectedVideoTranscriptUrls: jest.fn((state) => ({ selectedVideoTranscriptUrls: state })),
+      allowTranscriptDownloads: jest.fn((state) => ({ allowTranscriptDownloads: state })),
+      showTranscriptByDefault: jest.fn((state) => ({ showTranscriptByDefault: state })),
+      allowTranscriptImport: jest.fn((state) => ({ allowTranscriptImport: state })),
     },
     requests: {
-      isFailed: jest.fn(state => ({ isFailed: state })),
+      isFailed: jest.fn((state) => ({ isFailed: state })),
     },
   },
 }));
-jest.mock('../../../../../../sharedComponents/CollapsibleFormWidget/CollapsibleFormWidget', () => 'CollapsibleFormWidget');
+jest.mock(
+  '../../../../../../sharedComponents/CollapsibleFormWidget/CollapsibleFormWidget',
+  () => 'CollapsibleFormWidget'
+);
 jest.mock('./Transcript', () => 'Transcript');
 
 jest.mock('react-redux', () => ({
@@ -123,12 +122,16 @@ describe('TranscriptWidget', () => {
       test('renders as expected with default props', () => {
         const { container } = render(<TranscriptWidget {...props} />);
         expect(container.querySelector('collapsibleformwidget')).toBeInTheDocument();
-        expect(screen.getByText('Add video transcripts (.srt files only) for improved accessibility.')).toBeInTheDocument();
+        expect(
+          screen.getByText('Add video transcripts (.srt files only) for improved accessibility.')
+        ).toBeInTheDocument();
       });
 
       test('renders as expected with allowTranscriptImport true', () => {
         render(<TranscriptWidget {...props} allowTranscriptImport />);
-        expect(screen.getByText('We found transcript for this video on YouTube. Would you like to import it now?')).toBeInTheDocument();
+        expect(
+          screen.getByText('We found transcript for this video on YouTube. Would you like to import it now?')
+        ).toBeInTheDocument();
       });
 
       test('renders as expected with transcripts', () => {
@@ -138,7 +141,9 @@ describe('TranscriptWidget', () => {
       });
 
       test('renders as expected with transcripts and urls', () => {
-        const { container } = render(<TranscriptWidget {...props} transcripts={['en']} selectedVideoTranscriptUrls={{ en: 'url' }} />);
+        const { container } = render(
+          <TranscriptWidget {...props} transcripts={['en']} selectedVideoTranscriptUrls={{ en: 'url' }} />
+        );
         expect(container.querySelector('transcript')).toBeInTheDocument();
         expect(container.querySelector('transcript')).toHaveAttribute('language', 'en');
         expect(container.querySelector('transcript')).toHaveAttribute('transcriptUrl', 'url');
@@ -181,37 +186,37 @@ describe('TranscriptWidget', () => {
       const testState = { A: 'pple', B: 'anana', C: 'ucumber' };
       test('transcripts from video.transcript', () => {
         expect(
-          mapStateToProps(testState).transcripts,
+          mapStateToProps(testState).transcripts
           // @ts-ignore
         ).toEqual(selectors.video.transcripts(testState));
       });
       test('allowTranscriptDownloads from video.allowTranscriptDownloads', () => {
         expect(
-          mapStateToProps(testState).allowTranscriptDownloads,
+          mapStateToProps(testState).allowTranscriptDownloads
           // @ts-ignore
         ).toEqual(selectors.video.allowTranscriptDownloads(testState));
       });
       test('showTranscriptByDefault from video.showTranscriptByDefault', () => {
         expect(
-          mapStateToProps(testState).showTranscriptByDefault,
+          mapStateToProps(testState).showTranscriptByDefault
           // @ts-ignore
         ).toEqual(selectors.video.showTranscriptByDefault(testState));
       });
       test('allowTranscriptImport from video.allowTranscriptImport', () => {
         expect(
-          mapStateToProps(testState).allowTranscriptImport,
+          mapStateToProps(testState).allowTranscriptImport
           // @ts-ignore
         ).toEqual(selectors.video.allowTranscriptImport(testState));
       });
       test('isUploadError from requests.isFinished', () => {
-        expect(
-          mapStateToProps(testState).isUploadError,
-        ).toEqual(selectors.requests.isFailed(testState, { requestKey: RequestKeys.uploadTranscript }));
+        expect(mapStateToProps(testState).isUploadError).toEqual(
+          selectors.requests.isFailed(testState, { requestKey: RequestKeys.uploadTranscript })
+        );
       });
       test('isDeleteError from requests.isFinished', () => {
-        expect(
-          mapStateToProps(testState).isDeleteError,
-        ).toEqual(selectors.requests.isFailed(testState, { requestKey: RequestKeys.deleteTranscript }));
+        expect(mapStateToProps(testState).isDeleteError).toEqual(
+          selectors.requests.isFailed(testState, { requestKey: RequestKeys.deleteTranscript })
+        );
       });
     });
     describe('mapDispatchToProps', () => {

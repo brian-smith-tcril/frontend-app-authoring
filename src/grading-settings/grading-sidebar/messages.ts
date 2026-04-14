@@ -15,7 +15,7 @@ const messages = defineMessages({
   },
   gradingSidebarAbout3: {
     id: 'course-authoring.grading-settings.sidebar.about.text-3',
-    defaultMessage: 'You can also create assignment types, such as homework, labs, quizzes, and exams, and specify how much of a student\'s grade each assignment type is worth.',
+    defaultMessage: "You can also create assignment types, such as homework, labs, quizzes, and exams, and specify how much of a student's grade each assignment type is worth.",
   },
 });
 

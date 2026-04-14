@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   offlineWarningTitle: {
     id: 'course-authoring.generic.alert.warning.offline.title',
-    defaultMessage: 'Studio\'s having trouble saving your work',
+    defaultMessage: "Studio's having trouble saving your work",
   },
   offlineWarningDescription: {
     id: 'course-authoring.generic.alert.warning.offline.description',

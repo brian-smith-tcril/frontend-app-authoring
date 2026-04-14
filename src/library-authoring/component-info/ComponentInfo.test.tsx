@@ -1,9 +1,4 @@
-import {
-  initializeMocks,
-  render,
-  screen,
-  waitFor,
-} from '@src/testUtils';
+import { initializeMocks, render, screen, waitFor } from '@src/testUtils';
 import { mockContentSearchConfig, mockFetchIndexDocuments } from '@src/search-manager/data/api.mock';
 
 import {
@@ -52,7 +47,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyUnsupportedXBlock),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyUnsupportedXBlock)
     );
 
     const editButton = await screen.findByRole('button', { name: /Edit component/ });
@@ -63,7 +58,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryIdReadOnly, mockLibraryBlockMetadata.usageKeyPublished),
+      withLibraryId(mockContentLibrary.libraryIdReadOnly, mockLibraryBlockMetadata.usageKeyPublished)
     );
 
     expect(screen.queryByRole('button', { name: /Edit component/ })).not.toBeInTheDocument();
@@ -71,10 +66,7 @@ describe('<ComponentInfo> Sidebar', () => {
 
   it('should show a working "Edit" button for a normal component', async () => {
     initializeMocks();
-    render(
-      <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublished),
-    );
+    render(<ComponentInfo />, withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublished));
 
     const editButton = await screen.findByRole('button', { name: /Edit component/ });
     await waitFor(() => expect(editButton).not.toBeDisabled());
@@ -84,7 +76,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishDisabled),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishDisabled)
     );
     expect(await screen.findByText(/Published/)).toBeInTheDocument();
   });
@@ -93,7 +85,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished)
     );
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/ });
     await waitFor(() => expect(publishButton).not.toBeDisabled());
@@ -103,7 +95,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished)
     );
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/ });
     const editButton = screen.getByRole('button', { name: /edit component/i });
@@ -135,7 +127,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished)
     );
 
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/i });
@@ -151,7 +143,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishedWithChanges),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishedWithChanges)
     );
 
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/i });
@@ -168,7 +160,7 @@ describe('<ComponentInfo> Sidebar', () => {
     initializeMocks();
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishedWithChangesV2),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyPublishedWithChangesV2)
     );
 
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/i });
@@ -187,7 +179,7 @@ describe('<ComponentInfo> Sidebar', () => {
     axiosMock.onPost(url).reply(200);
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished)
     );
 
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/i });
@@ -209,7 +201,7 @@ describe('<ComponentInfo> Sidebar', () => {
     axiosMock.onPost(url).reply(500);
     render(
       <ComponentInfo />,
-      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished),
+      withLibraryId(mockContentLibrary.libraryId, mockLibraryBlockMetadata.usageKeyNeverPublished)
     );
 
     const publishButton = await screen.findByRole('button', { name: /Publish Changes/i });

@@ -32,7 +32,7 @@ const CoursesOrderFilterMenu = ({ onItemMenuSelected }) => {
         value: 'oldestCourses',
       },
     ],
-    [intl],
+    [intl]
   );
 
   const handleCourseTypeSelected = (courseOrder) => {

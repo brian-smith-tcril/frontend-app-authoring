@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  ActionRow,
-  Dropdown,
-  Button,
-  Icon,
-} from '@openedx/paragon';
+import { ActionRow, Dropdown, Button, Icon } from '@openedx/paragon';
 
 import { Check } from '@openedx/paragon/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,31 +12,35 @@ import { FileInput, fileInput } from '../../../../../../sharedComponents/FileInp
 import messages from './messages';
 
 export const hooks = {
-  onSelectLanguage: ({
-    dispatch, languageBeforeChange, triggerupload, setLocalLang,
-  }) => ({ newLang }) => {
-    // IF Language is unset, set language and begin upload prompt.
-    setLocalLang(newLang);
-    if (languageBeforeChange === '') {
-      triggerupload();
-      return;
-    }
-    // Else: update language
-    dispatch(
-      thunkActions.video.updateTranscriptLanguage({
-        newLanguageCode: newLang, languageBeforeChange,
-      }),
-    );
-  },
+  onSelectLanguage:
+    ({ dispatch, languageBeforeChange, triggerupload, setLocalLang }) =>
+    ({ newLang }) => {
+      // IF Language is unset, set language and begin upload prompt.
+      setLocalLang(newLang);
+      if (languageBeforeChange === '') {
+        triggerupload();
+        return;
+      }
+      // Else: update language
+      dispatch(
+        thunkActions.video.updateTranscriptLanguage({
+          newLanguageCode: newLang,
+          languageBeforeChange,
+        })
+      );
+    },
 
-  addFileCallback: ({ dispatch, localLang }) => (file) => {
-    dispatch(thunkActions.video.uploadTranscript({
-      file,
-      filename: file.name,
-      language: localLang,
-    }));
-  },
-
+  addFileCallback:
+    ({ dispatch, localLang }) =>
+    (file) => {
+      dispatch(
+        thunkActions.video.uploadTranscript({
+          file,
+          filename: file.name,
+          language: localLang,
+        })
+      );
+    },
 };
 
 const LanguageSelector = ({
@@ -53,7 +52,10 @@ const LanguageSelector = ({
   const [localLang, setLocalLang] = React.useState(language);
   const input = fileInput({ onAddFile: hooks.addFileCallback({ dispatch: useDispatch(), localLang }) });
   const onLanguageChange = hooks.onSelectLanguage({
-    dispatch: useDispatch(), languageBeforeChange: localLang, setLocalLang, triggerupload: input.click,
+    dispatch: useDispatch(),
+    languageBeforeChange: localLang,
+    setLocalLang,
+    triggerupload: input.click,
   });
 
   const getTitle = () => {
@@ -64,7 +66,6 @@ const LanguageSelector = ({
           <ActionRow.Spacer />
           <Icon className="text-primary-500" src={Check} />
         </ActionRow>
-
       );
     }
     return (
@@ -77,10 +78,7 @@ const LanguageSelector = ({
 
   return (
     <>
-
-      <Dropdown
-        className="w-100 mb-2"
-      >
+      <Dropdown className="w-100 mb-2">
         <Dropdown.Toggle
           iconAs={Button}
           aria-label={intl.formatMessage(messages.languageSelectLabel)}
@@ -94,14 +92,25 @@ const LanguageSelector = ({
         <Dropdown.Menu>
           {Object.entries(videoTranscriptLanguages).map(([lang, text]) => {
             if (language === lang) {
-              return <Dropdown.Item key={lang}>{text}<Icon className="text-primary-500" src={Check} /></Dropdown.Item>;
-            }
-            if (openLanguages.some(row => row.includes(lang))) {
               return (
-                <Dropdown.Item key={lang} onClick={() => onLanguageChange({ newLang: lang })}>{text}</Dropdown.Item>
+                <Dropdown.Item key={lang}>
+                  {text}
+                  <Icon className="text-primary-500" src={Check} />
+                </Dropdown.Item>
               );
             }
-            return (<Dropdown.Item key={lang} className="disabled">{text}</Dropdown.Item>);
+            if (openLanguages.some((row) => row.includes(lang))) {
+              return (
+                <Dropdown.Item key={lang} onClick={() => onLanguageChange({ newLang: lang })}>
+                  {text}
+                </Dropdown.Item>
+              );
+            }
+            return (
+              <Dropdown.Item key={lang} className="disabled">
+                {text}
+              </Dropdown.Item>
+            );
           })}
         </Dropdown.Menu>
       </Dropdown>

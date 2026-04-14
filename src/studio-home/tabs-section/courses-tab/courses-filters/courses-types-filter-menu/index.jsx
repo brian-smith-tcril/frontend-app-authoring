@@ -27,7 +27,7 @@ const CoursesTypesFilterMenu = ({ onItemMenuSelected }) => {
         value: 'archivedCourses',
       },
     ],
-    [intl],
+    [intl]
   );
 
   const handleCourseTypeSelected = (courseType) => {

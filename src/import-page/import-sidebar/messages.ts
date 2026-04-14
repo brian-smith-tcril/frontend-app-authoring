@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   warningDescription: {
     id: 'course-authoring.import.sidebar.warningDescription',
-    defaultMessage: 'If you perform an import while your course is running, and you change the URL names (or url_name nodes) of any problem components, the student data associated with those problem components may be lost. This data includes students\' problem scores.',
+    defaultMessage: "If you perform an import while your course is running, and you change the URL names (or url_name nodes) of any problem components, the student data associated with those problem components may be lost. This data includes students' problem scores.",
   },
   learnMoreButtonTitle: {
     id: 'course-authoring.import.sidebar.learnMoreButtonTitle',

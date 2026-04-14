@@ -1,20 +1,10 @@
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { PaginationState } from '@tanstack/react-table';
 import { useTagListData, useCreateTag, useUpdateTag } from '../data/apiHooks';
 import { TagTree } from './tagTree';
 import { TableView } from '../tree-table';
-import type {
-  RowId,
-  TreeColumnDef,
-  TreeRowData,
-} from '../tree-table/types';
-import {
-  TABLE_MODES,
-} from './constants';
+import type { RowId, TreeColumnDef, TreeRowData } from '../tree-table/types';
+import { TABLE_MODES } from './constants';
 import { getColumns } from './tagColumns';
 import { useTableModes, useEditActions } from './hooks';
 
@@ -53,9 +43,7 @@ const TagListTable = ({ taxonomyId, maxDepth }: TagListTableProps) => {
   const hasOpenDraft = isCreatingTopTag || creatingParentId !== null || editingRowId !== null;
 
   // TABLE MODES
-  const {
-    tableMode, enterDraftMode, exitDraftWithoutSave, enterPreviewMode, enterViewMode,
-  } = useTableModes();
+  const { tableMode, enterDraftMode, exitDraftWithoutSave, enterPreviewMode, enterViewMode } = useTableModes();
 
   // PAGINATION
   // TODO: Fix and enable pagination. For now, disable pagination.
@@ -99,20 +87,21 @@ const TagListTable = ({ taxonomyId, maxDepth }: TagListTableProps) => {
   });
 
   const columns = useMemo<TreeColumnDef[]>(
-    () => getColumns({
-      setIsCreatingTopTag,
-      setCreatingParentId,
-      handleUpdateTag,
-      setEditingRowId,
-      onStartDraft: enterDraftMode,
-      setActiveActionMenuRowId,
-      hasOpenDraft,
-      canAddTag: tagList?.canAddTag !== false,
-      draftError,
-      setDraftError,
-      isSavingDraft: createTagMutation.isPending,
-      maxDepth,
-    }),
+    () =>
+      getColumns({
+        setIsCreatingTopTag,
+        setCreatingParentId,
+        handleUpdateTag,
+        setEditingRowId,
+        onStartDraft: enterDraftMode,
+        setActiveActionMenuRowId,
+        hasOpenDraft,
+        canAddTag: tagList?.canAddTag !== false,
+        draftError,
+        setDraftError,
+        isSavingDraft: createTagMutation.isPending,
+        maxDepth,
+      }),
     [
       isCreatingTopTag,
       tableMode,
@@ -130,7 +119,7 @@ const TagListTable = ({ taxonomyId, maxDepth }: TagListTableProps) => {
       enterDraftMode,
       setActiveActionMenuRowId,
       setDraftError,
-    ],
+    ]
   );
 
   // RELOAD DATA IN VIEW MODE

@@ -17,12 +17,7 @@ const settingData = {
   value: 'Setting Value',
 };
 
-jest.mock('react-textarea-autosize', () => jest.fn((props) => (
-  <textarea
-    {...props}
-    onFocus={() => {}}
-  />
-)));
+jest.mock('react-textarea-autosize', () => jest.fn((props) => <textarea {...props} onFocus={() => {}} />));
 
 const RootWrapper = () => (
   <IntlProvider locale="en">
@@ -65,7 +60,7 @@ describe('<SettingCard />', () => {
           isEditable={false}
           saveSettingsPrompt
         />
-      </IntlProvider>,
+      </IntlProvider>
     );
     const deprecatedStatus = getByText(messages.deprecated.defaultMessage);
     expect(deprecatedStatus).toBeInTheDocument();

@@ -13,7 +13,9 @@ jest.mock('@src/hooks', () => ({
     const wrappedSetState = (val: any) => {
       const newVal = typeof val === 'function' ? val(state) : val;
       setState(newVal);
-      if (cb) { cb(newVal); }
+      if (cb) {
+        cb(newVal);
+      }
     };
     return [state, wrappedSetState];
   },
@@ -37,14 +39,18 @@ jest.mock('@src/generic/datepicker-control', () => ({
 jest.mock('./sharedSettings/ReleaseSection', () => ({
   __esModule: true,
   ReleaseSection: ({ onChange }: any) => (
-    <button type="button" onClick={() => onChange('2030-01-01')}>Release</button>
+    <button type="button" onClick={() => onChange('2030-01-01')}>
+      Release
+    </button>
   ),
 }));
 
 jest.mock('./sharedSettings/VisibilitySection', () => ({
   __esModule: true,
   VisibilitySection: ({ onChange }: any) => (
-    <button type="button" onClick={() => onChange({ visibility: 'v' })}>Visibility</button>
+    <button type="button" onClick={() => onChange({ visibility: 'v' })}>
+      Visibility
+    </button>
   ),
 }));
 
@@ -52,7 +58,9 @@ jest.mock('@src/generic/configure-modal/AdvancedTab', () => ({
   __esModule: true,
   default: ({ setFieldValue }: any) => (
     <div>
-      <button type="button" onClick={() => setFieldValue('isProctoredExam', true)}>Set Proctored</button>
+      <button type="button" onClick={() => setFieldValue('isProctoredExam', true)}>
+        Set Proctored
+      </button>
     </div>
   ),
 }));
@@ -112,11 +120,15 @@ describe('SubsectionSettings', () => {
 
     // Release
     await user.click(await screen.findByRole('button', { name: 'Release' }));
-    expect(mutate).toHaveBeenCalledWith(expect.objectContaining({ itemId: subsectionId, sectionId: 'section-abc', releaseDate: '2030-01-01' }));
+    expect(mutate).toHaveBeenCalledWith(
+      expect.objectContaining({ itemId: subsectionId, sectionId: 'section-abc', releaseDate: '2030-01-01' })
+    );
 
     // Visibility
     await user.click(await screen.findByRole('button', { name: 'Visibility' }));
-    expect(mutate).toHaveBeenCalledWith(expect.objectContaining({ itemId: subsectionId, sectionId: 'section-abc', visibility: 'v' }));
+    expect(mutate).toHaveBeenCalledWith(
+      expect.objectContaining({ itemId: subsectionId, sectionId: 'section-abc', visibility: 'v' })
+    );
 
     // Grading -> Ungraded
     await user.click(await screen.findByRole('button', { name: 'Ungraded' }));
@@ -131,7 +143,10 @@ describe('SubsectionSettings', () => {
     apiHooks.useCourseDetails.mockReturnValue({ data: { selfPaced: false } });
     apiHooks.useCourseItemData.mockReturnValue({
       data: {
-        ...baseItemData, graded: false, prereqMinScore: '50', prereqMinCompletion: '75',
+        ...baseItemData,
+        graded: false,
+        prereqMinScore: '50',
+        prereqMinCompletion: '75',
       },
       isPending: false,
     });
@@ -199,7 +214,10 @@ describe('SubsectionSettings', () => {
   it('resets grading local state when itemData changes', async () => {
     apiHooks.useCourseDetails.mockReturnValue({ data: { selfPaced: false } });
     const firstItemData = {
-      ...baseItemData, format: 'g1', due: '2024-01-01', graded: true,
+      ...baseItemData,
+      format: 'g1',
+      due: '2024-01-01',
+      graded: true,
     };
     const secondItemData = { ...firstItemData, format: 'g2', due: '2024-02-02' };
 

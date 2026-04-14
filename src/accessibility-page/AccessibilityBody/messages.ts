@@ -9,7 +9,7 @@ const messages = defineMessages({
   a11yBodyPageHeader: {
     id: 'a11yBodyPageHeader',
     defaultMessage: 'Individualized Accessibility Process for Course Creators',
-    description: 'Heading for studio\'s accessibility policy page.',
+    description: "Heading for studio's accessibility policy page.",
   },
   a11yBodyIntroGraph: {
     id: 'a11yBodyIntroGraph',
@@ -18,7 +18,7 @@ const messages = defineMessages({
       disabilities. To that end, we have adopted a {communityAccessibilityLink} and this process to allow course team creators
       and authors to request assistance if they are unable to develop and post content on our platform via Studio because of their
       disabilities.`,
-    description: 'Introductory paragraph outlining why we care about accessibility, and what we\'re doing about it.',
+    description: "Introductory paragraph outlining why we care about accessibility, and what we're doing about it.",
   },
   a11yBodyStepsHeader: {
     id: 'a11yBodyStepsHeader',

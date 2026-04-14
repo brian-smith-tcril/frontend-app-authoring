@@ -40,14 +40,18 @@ export function fetchCourseSectionVerticalData(courseId, sequenceId) {
       const courseSectionVerticalData = await getVerticalData(courseId);
       dispatch(fetchCourseSectionVerticalDataSuccess(courseSectionVerticalData));
       dispatch(updateLoadingCourseSectionVerticalDataStatus({ status: RequestStatus.SUCCESSFUL }));
-      dispatch(updateModel({
-        modelType: 'sequences',
-        model: courseSectionVerticalData.sequence || [],
-      }));
-      dispatch(updateModels({
-        modelType: 'units',
-        models: courseSectionVerticalData.units || [],
-      }));
+      dispatch(
+        updateModel({
+          modelType: 'sequences',
+          model: courseSectionVerticalData.sequence || [],
+        })
+      );
+      dispatch(
+        updateModels({
+          modelType: 'units',
+          models: courseSectionVerticalData.units || [],
+        })
+      );
       dispatch(fetchStaticFileNoticesSuccess(JSON.parse(localStorage.getItem('staticFileNotices'))));
       localStorage.removeItem('staticFileNotices');
       dispatch(fetchSequenceSuccess({ sequenceId }));
@@ -71,14 +75,18 @@ export function editCourseItemQuery(itemId, displayName, sequenceId) {
           const courseSectionVerticalData = await getVerticalData(itemId);
           dispatch(fetchCourseSectionVerticalDataSuccess(courseSectionVerticalData));
           dispatch(updateLoadingCourseSectionVerticalDataStatus({ status: RequestStatus.SUCCESSFUL }));
-          dispatch(updateModel({
-            modelType: 'sequences',
-            model: courseSectionVerticalData.sequence || [],
-          }));
-          dispatch(updateModels({
-            modelType: 'units',
-            models: courseSectionVerticalData.units || [],
-          }));
+          dispatch(
+            updateModel({
+              modelType: 'sequences',
+              model: courseSectionVerticalData.sequence || [],
+            })
+          );
+          dispatch(
+            updateModels({
+              modelType: 'units',
+              models: courseSectionVerticalData.units || [],
+            })
+          );
           dispatch(fetchSequenceSuccess({ sequenceId }));
           dispatch(updateSavingStatus({ status: RequestStatus.SUCCESSFUL }));
         }
@@ -144,14 +152,9 @@ export function fetchCourseVerticalChildrenData(itemId, isSplitTestType, skipPag
     try {
       const courseVerticalChildrenData = await getCourseContainerChildren(itemId);
       if (isSplitTestType) {
-        const blockIds = courseVerticalChildrenData.children.map(child => child.blockId);
-        const childrenDataArray = await Promise.all(
-          blockIds.map(blockId => getCourseContainerChildren(blockId)),
-        );
-        const allChildren = childrenDataArray.reduce(
-          (acc, data) => acc.concat(data.children || []),
-          [],
-        );
+        const blockIds = courseVerticalChildrenData.children.map((child) => child.blockId);
+        const childrenDataArray = await Promise.all(blockIds.map((blockId) => getCourseContainerChildren(blockId)));
+        const allChildren = childrenDataArray.reduce((acc, data) => acc.concat(data.children || []), []);
         courseVerticalChildrenData.children = [...courseVerticalChildrenData.children, ...allChildren];
       }
       dispatch(updateCourseVerticalChildren(courseVerticalChildrenData));

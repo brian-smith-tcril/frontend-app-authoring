@@ -59,7 +59,7 @@ const messages = defineMessages({
   componentNamePlaceholder: {
     id: 'course-authoring.library-authoring.component.name-confirmation-placeholder',
     defaultMessage: 'this component',
-    description: 'Text shown in place of the component\'s title while we\'re loading the title',
+    description: "Text shown in place of the component's title while we're loading the title",
   },
   deleteComponentConfirm: {
     id: 'course-authoring.library-authoring.component.delete-confirmation-text',

@@ -21,7 +21,11 @@ import { useUnlinkDownstream, UnlinkModal } from '@src/generic/unlink-modal';
 import { useClipboard } from '@src/generic/clipboard';
 import DeleteModal from '@src/generic/delete-modal/DeleteModal';
 import Loading from '@src/generic/Loading';
-import { deleteUnitItemQuery, duplicateUnitItemQuery, fetchCourseVerticalChildrenData } from '@src/course-unit/data/thunk';
+import {
+  deleteUnitItemQuery,
+  duplicateUnitItemQuery,
+  fetchCourseVerticalChildrenData,
+} from '@src/course-unit/data/thunk';
 
 import { useUnitSidebarContext } from '../UnitSidebarContext';
 import messages from './messages';
@@ -38,16 +42,11 @@ export const ComponentInfoSidebar = () => {
   const { copyToClipboard } = useClipboard();
   const unitData = useSelector(getCourseUnitData);
   const { courseId } = useCourseAuthoringContext();
-  const sectionId = unitData?.ancestorInfo?.ancestors?.find(
-    (ancestor) => ancestor.category === 'chapter',
-  )?.id;
+  const sectionId = unitData?.ancestorInfo?.ancestors?.find((ancestor) => ancestor.category === 'chapter')?.id;
   const [isUnlinkModalOpen, openUnlinkModal, closeUnlinkModal] = useToggle(false);
   const [isDeleteModalOpen, openDeleteModal, closeDeleteModal] = useToggle(false);
 
-  const {
-    selectedComponentId,
-    setCurrentPageKey,
-  } = useUnitSidebarContext();
+  const { selectedComponentId, setCurrentPageKey } = useUnitSidebarContext();
   const { mutateAsync: unlinkDownstream } = useUnlinkDownstream();
 
   const { data: componentItemData } = useCourseItemData(selectedComponentId ?? undefined);
@@ -87,14 +86,11 @@ export const ComponentInfoSidebar = () => {
 
   const handleDuplicate = () => {
     if (selectedComponentId && unitData?.id) {
-      dispatch(duplicateUnitItemQuery(
-        unitData.id,
-        selectedComponentId,
-        (courseKey: string, locator: string) => sendMessageToIframe(
-          messageTypes.completeXBlockDuplicating,
-          { courseKey, locator },
-        ),
-      ));
+      dispatch(
+        duplicateUnitItemQuery(unitData.id, selectedComponentId, (courseKey: string, locator: string) =>
+          sendMessageToIframe(messageTypes.completeXBlockDuplicating, { courseKey, locator })
+        )
+      );
     }
   };
 
@@ -112,19 +108,22 @@ export const ComponentInfoSidebar = () => {
 
   const handleUnlinkSubmit = async () => {
     if (selectedComponentId) {
-      await unlinkDownstream({
-        downstreamBlockId: selectedComponentId,
-      }, {
-        onSuccess: () => {
-          closeUnlinkModal();
-          queryClient.invalidateQueries({
-            queryKey: courseOutlineQueryKeys.courseItemId(selectedComponentId),
-          });
-          if (unitData?.id) {
-            dispatch(fetchCourseVerticalChildrenData(unitData.id, false));
-          }
+      await unlinkDownstream(
+        {
+          downstreamBlockId: selectedComponentId,
         },
-      });
+        {
+          onSuccess: () => {
+            closeUnlinkModal();
+            queryClient.invalidateQueries({
+              queryKey: courseOutlineQueryKeys.courseItemId(selectedComponentId),
+            });
+            if (unitData?.id) {
+              dispatch(fetchCourseVerticalChildrenData(unitData.id, false));
+            }
+          },
+        }
+      );
     }
   };
 
@@ -142,7 +141,7 @@ export const ComponentInfoSidebar = () => {
         id: unitData.id,
         displayName: unitData.displayName ?? '',
         category: 'vertical',
-      },
+      }
     );
   };
 
@@ -177,10 +176,7 @@ export const ComponentInfoSidebar = () => {
         postChange={handlePostChange}
       />
       <SidebarContent>
-        <SidebarSection
-          title={intl.formatMessage(messages.sidebarSectionTaxonomies)}
-          icon={Tag}
-        >
+        <SidebarSection title={intl.formatMessage(messages.sidebarSectionTaxonomies)} icon={Tag}>
           <ContentTagsSnippet contentId={selectedComponentId || ''} />
         </SidebarSection>
       </SidebarContent>

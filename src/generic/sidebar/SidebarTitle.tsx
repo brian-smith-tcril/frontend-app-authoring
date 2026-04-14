@@ -22,16 +22,11 @@ interface SidebarTitleProps {
  * This is meant to standardize the look and feel of the sidebar section titles,
  * so that it can be reused across different parts of the application.
  */
-export const SidebarTitle = ({
-  title,
-  icon,
-  onBackBtnClick,
-  menuProps,
-}: SidebarTitleProps) => {
+export const SidebarTitle = ({ title, icon, onBackBtnClick, menuProps }: SidebarTitleProps) => {
   const intl = useIntl();
   return (
     <>
-      <div className='d-flex justify-content-between'>
+      <div className="d-flex justify-content-between">
         <Stack direction="horizontal" gap={2} className="mb-3">
           {onBackBtnClick && (
             <IconButton
@@ -44,9 +39,7 @@ export const SidebarTitle = ({
           <Icon src={icon} className="mr-2 text-primary" />
           <h2 className="text-primary h3 mb-0">{title}</h2>
         </Stack>
-        {menuProps && (
-          <InfoSidebarMenu {...menuProps} />
-        )}
+        {menuProps && <InfoSidebarMenu {...menuProps} />}
       </div>
       <hr className="border" style={{ marginLeft: '-1rem', marginRight: '-1rem' }} />
     </>

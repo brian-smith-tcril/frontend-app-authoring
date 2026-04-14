@@ -22,12 +22,11 @@ async function renderComponent(gatingTypes: AgreementGated[]) {
     <AppProvider>
       <QueryClientProvider client={queryClient}>
         <GatedComponentWrapper gatingTypes={gatingTypes}>
-          <button type="button">
-            Test button
-          </button>
+          <button type="button">Test button</button>
         </GatedComponentWrapper>
-      </QueryClientProvider>,
-    </AppProvider>,
+      </QueryClientProvider>
+      ,
+    </AppProvider>
   );
 }
 

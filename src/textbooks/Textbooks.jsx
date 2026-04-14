@@ -1,11 +1,5 @@
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Breadcrumb,
-  Button,
-  Container,
-  Layout,
-  Row,
-} from '@openedx/paragon';
+import { Breadcrumb, Button, Container, Layout, Row } from '@openedx/paragon';
 import { Add as AddIcon } from '@openedx/paragon/icons';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -64,30 +58,24 @@ const Textbooks = () => {
   return (
     <>
       <Helmet>
-        <title>
-          {`${courseDetails?.name} | ${intl.formatMessage(messages.headingTitle)}`}
-        </title>
+        <title>{`${courseDetails?.name} | ${intl.formatMessage(messages.headingTitle)}`}</title>
       </Helmet>
       <Container size="xl" className="px-4">
         <section className="mb-4 mt-5">
           <SubHeader
             title={intl.formatMessage(messages.headingTitle)}
-            breadcrumbs={(
+            breadcrumbs={
               <Breadcrumb
                 linkAs={Link}
                 ariaLabel={intl.formatMessage(messages.breadcrumbAriaLabel)}
                 links={breadcrumbs}
               />
-            )}
-            headerActions={(
-              <Button
-                iconBefore={AddIcon}
-                onClick={openTextbookForm}
-                disabled={isTextbookFormOpen}
-              >
+            }
+            headerActions={
+              <Button iconBefore={AddIcon} onClick={openTextbookForm} disabled={isTextbookFormOpen}>
                 {intl.formatMessage(messages.newTextbookButton)}
               </Button>
-            )}
+            }
           />
           <Layout
             lg={[{ span: 9 }, { span: 3 }]}
@@ -100,19 +88,19 @@ const Textbooks = () => {
               <article>
                 <section className="textbook-section">
                   <div className="pt-4">
-                    {textbooks.length ? textbooks.map((textbook, index) => (
-                      <TextbookCard
-                        key={textbook.id}
-                        textbook={textbook}
-                        courseId={courseId}
-                        handleSavingStatusDispatch={handleSavingStatusDispatch}
-                        onEditSubmit={handleTextbookEditFormSubmit}
-                        onDeleteSubmit={handleTextbookDeleteSubmit}
-                        textbookIndex={index}
-                      />
-                    )) : (
-                      !isTextbookFormOpen && <EmptyPlaceholder onCreateNewTextbook={openTextbookForm} />
-                    )}
+                    {textbooks.length
+                      ? textbooks.map((textbook, index) => (
+                          <TextbookCard
+                            key={textbook.id}
+                            textbook={textbook}
+                            courseId={courseId}
+                            handleSavingStatusDispatch={handleSavingStatusDispatch}
+                            onEditSubmit={handleTextbookEditFormSubmit}
+                            onDeleteSubmit={handleTextbookDeleteSubmit}
+                            textbookIndex={index}
+                          />
+                        ))
+                      : !isTextbookFormOpen && <EmptyPlaceholder onCreateNewTextbook={openTextbookForm} />}
                     {isTextbookFormOpen && (
                       <TextbookForm
                         closeTextbookForm={closeTextbookForm}
@@ -132,10 +120,7 @@ const Textbooks = () => {
         </section>
       </Container>
       <div className="alert-toast">
-        <SavingErrorAlert
-          savingStatus={savingStatus}
-          errorMessage={errorMessage}
-        />
+        <SavingErrorAlert savingStatus={savingStatus} errorMessage={errorMessage} />
       </div>
     </>
   );

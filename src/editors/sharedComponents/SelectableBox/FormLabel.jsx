@@ -13,7 +13,7 @@ const FormLabel = ({ children, isInline, ...props }) => {
       'pgn__form-label-lg': size === FORM_CONTROL_SIZES.LARGE,
       'pgn__form-label-sm': size === FORM_CONTROL_SIZES.SMALL,
     },
-    props.className,
+    props.className
   );
   const labelProps = getLabelProps({ ...props, className });
   const componentType = isControlGroup ? 'p' : 'label';
